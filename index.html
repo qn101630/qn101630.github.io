@@ -288,318 +288,86 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>开发体验<br>    一、 开发工具<br>    • JDK 1.8<br>    • Maven 3.6.2<br>    • IntelliJ IDEA </p>
-<pre><code>二、 project依赖
-&lt;?xmlversion=&quot;1.0&quot;encoding=&quot;UTF-8&quot;?&gt;
-&lt;projectxmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-&lt;groupId&gt;com.qn&lt;/groupId&gt;
-&lt;artifactId&gt;springcloud&lt;/artifactId&gt;
-&lt;packaging&gt;pom&lt;/packaging&gt;
-&lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-&lt;modules&gt;
-&lt;module&gt;consumer-order&lt;/module&gt;
-&lt;module&gt;provider-user&lt;/module&gt;
-&lt;module&gt;appEureka&lt;/module&gt;
-&lt;/modules&gt;
-
-&lt;properties&gt;
-&lt;java.version&gt;1.8&lt;/java.version&gt;
-&lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;
-&lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;
-&lt;/properties&gt;
-
-&lt;!--springBoot项目--&gt;
-&lt;parent&gt;
-&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
-&lt;version&gt;1.5.10.RELEASE&lt;/version&gt;
-&lt;/parent&gt;
-
-&lt;dependencyManagement&gt;
-&lt;dependencies&gt;
-&lt;dependency&gt;
-&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-&lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
-&lt;version&gt;Camden.SR6&lt;/version&gt;
-&lt;type&gt;pom&lt;/type&gt;
-&lt;scope&gt;import&lt;/scope&gt;
-&lt;/dependency&gt;
-&lt;/dependencies&gt;
-
-&lt;/dependencyManagement&gt;
-
-&lt;dependencies&gt;
-&lt;dependency&gt;
-&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-&lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
-&lt;/dependency&gt;
-
-&lt;dependency&gt;
-&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
-&lt;/dependency&gt;
-
-&lt;dependency&gt;
-&lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
-&lt;artifactId&gt;logback-classic&lt;/artifactId&gt;
-&lt;/dependency&gt;
-
-&lt;dependency&gt;
-&lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
-&lt;artifactId&gt;logback-core&lt;/artifactId&gt;
-&lt;/dependency&gt;
-&lt;/dependencies&gt;
-&lt;/project&gt;
+        <h2 id="二、-project依赖"><a href="#二、-project依赖" class="headerlink" title="二、 project依赖"></a>二、 project依赖</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xmlversion="1.0"encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">projectxmlns="http:</span>//<span class="attr">maven.apache.org</span>/<span class="attr">POM</span>/<span class="attr">4.0.0</span>"</span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.qn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springcloud<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">module</span>&gt;</span>consumer-order<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">module</span>&gt;</span>provider-user<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">module</span>&gt;</span>appEureka<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--springBoot项目--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.10.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>Camden.SR6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>ch.qos.logback<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>logback-classic<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>ch.qos.logback<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>logback-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
-三、 eureka客户端依赖、启动类、配置
-- 依赖
-&lt;?xmlversion=&quot;1.0&quot;encoding=&quot;UTF-8&quot;?&gt;
-&lt;projectxmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-&lt;parent&gt;
-&lt;artifactId&gt;springcloud&lt;/artifactId&gt;
-&lt;groupId&gt;com.qn&lt;/groupId&gt;
-&lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-&lt;/parent&gt;
-&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-&lt;artifactId&gt;appEureka&lt;/artifactId&gt;
-
-&lt;dependencies&gt;
-&lt;dependency&gt;
-&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-&lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;/artifactId&gt;
-&lt;version&gt;1.4.3.RELEASE&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;/dependencies&gt;
-&lt;/project&gt;
-
-- 启动类
-@SpringBootApplication
-@EnableEurekaServer//开启Eurekaserver
-publicclassEureka{
-publicstaticvoidmain(String[]args){
-SpringApplication.run(Eureka.class,args);
-}
-}
-
-- 配置
-server:
-port:9999
-eureka:
-client:
-register-with-eureka:false
-fetch-registry:false
-service-url:
-defaultZone:http://localhost:9999/eureka
-
-四、 消费者依赖、启动类、配置、数据类、业务类
-依赖
-&lt;?xmlversion=&quot;1.0&quot;encoding=&quot;UTF-8&quot;?&gt;
-&lt;projectxmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-&lt;parent&gt;
-&lt;artifactId&gt;springcloud&lt;/artifactId&gt;
-&lt;groupId&gt;com.qn&lt;/groupId&gt;
-&lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-&lt;/parent&gt;
-&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-&lt;artifactId&gt;consumer-order&lt;/artifactId&gt;
-
-&lt;dependencies&gt;
-&lt;dependency&gt;
-&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-&lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;/artifactId&gt;
-&lt;version&gt;1.4.3.RELEASE&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-&lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
-&lt;/dependency&gt;
-&lt;/dependencies&gt;
-
-&lt;/project&gt;
-
-启动类
-@SpringBootApplication
-@EnableEurekaClient
-publicclassConsumerApp{
-publicstaticvoidmain(String[]args){
-SpringApplication.run(ConsumerApp.class,args);
-}
-@Bean
-publicRestTemplaterestTemplate(){
-returnnewRestTemplate();
-}
-}
-
-配置
-server:
-port:8900
-spring:
-application:
-name:consumer-order
-eureka:
-client:
-service-url:
-defaultZone:http://localhost:9999/eureka
-
-数据类
-publicclassUser{
-privateLongid;
-privateDatedate;
-
-publicUser(){
-
-}
-
-publicUser(Longid){
-this.id=id;
-this.date=newDate();
-}
+<h2 id="三、-eureka客户端依赖、启动类、配置"><a href="#三、-eureka客户端依赖、启动类、配置" class="headerlink" title="三、 eureka客户端依赖、启动类、配置"></a>三、 eureka客户端依赖、启动类、配置</h2><ul>
+<li>依赖<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xmlversion="1.0"encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">projectxmlns="http:</span>//<span class="attr">maven.apache.org</span>/<span class="attr">POM</span>/<span class="attr">4.0.0</span>"</span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springcloud<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.qn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>appEureka<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-server<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.3.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
-publicLonggetId(){
-returnid;
-}
+</li>
+</ul>
+<h3 id="启动类"><a href="#启动类" class="headerlink" title="启动类"></a>启动类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableEurekaServer</span><span class="comment">//开启Eurekaserver</span></span><br><span class="line">publicclassEureka&#123;</span><br><span class="line">publicstaticvoidmain(String[]args)&#123;</span><br><span class="line">SpringApplication.run(Eureka<span class="class">.<span class="keyword">class</span>,<span class="title">args</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="string">port:9999</span></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line"><span class="attr">client:</span></span><br><span class="line"><span class="string">register-with-eureka:false</span></span><br><span class="line"><span class="string">fetch-registry:false</span></span><br><span class="line"><span class="attr">service-url:</span></span><br><span class="line"><span class="string">defaultZone:http://localhost:9999/eureka</span></span><br></pre></td></tr></table></figure>
 
-publicvoidsetId(Longid){
-this.id=id;
-}
+<p>四、 消费者依赖、启动类、配置、数据类、业务类<br>依赖<br><?xmlversion="1.0"encoding="UTF-8"?><br>&lt;projectxmlns=”<a href="http://maven.apache.org/POM/4.0.0&quot;" target="_blank" rel="noopener">http://maven.apache.org/POM/4.0.0&quot;</a><br>xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance&quot;" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance&quot;</a><br>xsi:schemaLocation=”<a href="http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;" target="_blank" rel="noopener">http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</a><br><parent><br><artifactId>springcloud</artifactId><br><groupId>com.qn</groupId><br><version>1.0-SNAPSHOT</version><br></parent><br><modelVersion>4.0.0</modelVersion></p>
+<p><artifactId>consumer-order</artifactId></p>
+<dependencies>
+<dependency>
+<groupId>org.springframework.cloud</groupId>
+<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+<version>1.4.3.RELEASE</version>
+</dependency>
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+</dependencies>
 
-publicDategetDate(){
-returndate;
-}
+</project>
 
-publicvoidsetDate(Datedate){
-this.date=date;
-}
-}
+<p>启动类<br>@SpringBootApplication<br>@EnableEurekaClient<br>publicclassConsumerApp{<br>publicstaticvoidmain(String[]args){<br>SpringApplication.run(ConsumerApp.class,args);<br>}<br>@Bean<br>publicRestTemplaterestTemplate(){<br>returnnewRestTemplate();<br>}<br>}</p>
+<p>配置<br>server:<br>port:8900<br>spring:<br>application:<br>name:consumer-order<br>eureka:<br>client:<br>service-url:<br>defaultZone:<a href="http://localhost:9999/eureka" target="_blank" rel="noopener">http://localhost:9999/eureka</a></p>
+<p>数据类<br>publicclassUser{<br>privateLongid;<br>privateDatedate;</p>
+<p>publicUser(){</p>
+<p>}</p>
+<p>publicUser(Longid){<br>this.id=id;<br>this.date=newDate();<br>}</p>
+<p>publicLonggetId(){<br>returnid;<br>}</p>
+<p>publicvoidsetId(Longid){<br>this.id=id;<br>}</p>
+<p>publicDategetDate(){<br>returndate;<br>}</p>
+<p>publicvoidsetDate(Datedate){<br>this.date=date;<br>}<br>}</p>
+<p>业务类<br>@RestController<br>publicclassOrderController{<br>@Autowired<br>privateRestTemplaterestTemplate;</p>
+<p>@Autowired<br>privateEurekaClienteurekaClient;</p>
+<p>@GetMapping(“/order/{id}”)<br>publicUsergetOrder(@PathVariableLongid){<br>InstanceInfonextServerFromEureka=eurekaClient.getNextServerFromEureka(“PROVIDER-USER”,false);<br>Stringurl=nextServerFromEureka.getHomePageUrl();<br>Useruser=restTemplate.getForObject(url+”/user/“+id,User.class);<br>returnuser;<br>}<br>}</p>
+<p>五、 提供者依赖、配置、启动类、数据类、业务类</p>
+<ul>
+<li>依赖<?xmlversion="1.0"encoding="UTF-8"?>
+&lt;projectxmlns=”<a href="http://maven.apache.org/POM/4.0.0&quot;" target="_blank" rel="noopener">http://maven.apache.org/POM/4.0.0&quot;</a><br>xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance&quot;" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance&quot;</a><br>xsi:schemaLocation=”<a href="http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;" target="_blank" rel="noopener">http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</a><parent>
+<artifactId>springcloud</artifactId>
+<groupId>com.qn</groupId>
+<version>1.0-SNAPSHOT</version>
+</parent>
+<modelVersion>4.0.0</modelVersion>
 
-业务类
-@RestController
-publicclassOrderController{
-@Autowired
-privateRestTemplaterestTemplate;
+</li>
+</ul>
+<p><artifactId>provider-user</artifactId><br><dependencies><br><dependency><br><groupId>org.springframework.cloud</groupId><br><artifactId>spring-cloud-starter-netflix-eureka-client</artifactId><br><version>1.4.3.RELEASE</version><br></dependency><br><dependency><br><groupId>org.springframework.boot</groupId><br><artifactId>spring-boot-starter-actuator</artifactId><br></dependency><br></dependencies></p>
+</project>
 
-@Autowired
-privateEurekaClienteurekaClient;
-
-@GetMapping(&quot;/order/{id}&quot;)
-publicUsergetOrder(@PathVariableLongid){
-InstanceInfonextServerFromEureka=eurekaClient.getNextServerFromEureka(&quot;PROVIDER-USER&quot;,false);
-Stringurl=nextServerFromEureka.getHomePageUrl();
-Useruser=restTemplate.getForObject(url+&quot;/user/&quot;+id,User.class);
-returnuser;
-}
-}
-
-五、 提供者依赖、配置、启动类、数据类、业务类
-- 依赖
-&lt;?xmlversion=&quot;1.0&quot;encoding=&quot;UTF-8&quot;?&gt;
-&lt;projectxmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-&lt;parent&gt;
-&lt;artifactId&gt;springcloud&lt;/artifactId&gt;
-&lt;groupId&gt;com.qn&lt;/groupId&gt;
-&lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-&lt;/parent&gt;
-&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-&lt;artifactId&gt;provider-user&lt;/artifactId&gt;
-&lt;dependencies&gt;
-&lt;dependency&gt;
-&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-&lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;/artifactId&gt;
-&lt;version&gt;1.4.3.RELEASE&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-&lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
-&lt;/dependency&gt;
-&lt;/dependencies&gt;
-
-&lt;/project&gt;
-
-- 配置
-server:
-port:7900#自定义boot项目访问端口
-spring:
-application:
-name:provider-user
-eureka:
-client:
-service-url:
-defaultZone:http://localhost:9999/eureka
-
-- 启动类
-@SpringBootApplication
-@EnableEurekaClient//启用eureka客户端
-publicclassProviderApp{
-publicstaticvoidmain(String[]args){
-SpringApplication.run(ProviderApp.class,args);
-}
-}
-
-- 数据类
-publicclassUser{
-privateLongid;
-privateDatedate;
-
-publicUser(){
-
-}
-
-publicUser(Longid){
-this.id=id;
-this.date=newDate();
-}
-
-
-publicLonggetId(){
-returnid;
-}
-
-publicvoidsetId(Longid){
-this.id=id;
-}
-
-publicDategetDate(){
-returndate;
-}
-
-publicvoidsetDate(Datedate){
-this.date=date;
-}
-}
-
-- 业务类
-@RestController
-publicclassUserController{
-@Autowired
-privateEurekaClienteurekaClient;
-
-@GetMapping(&quot;/user/{id}&quot;)
-publicUsergetUser(@PathVariableLongid){
-returnnewUser(id);
-}
-
-@GetMapping(&quot;/eurekaInfo&quot;)
-publicStringinfo(){
-InstanceInfonextServerFromEureka=eurekaClient.getNextServerFromEureka(&quot;PROVIDER-USER&quot;,false);
-System.out.println(nextServerFromEureka.getHomePageUrl());
-returnnextServerFromEureka.getHomePageUrl();
-}
-}</code></pre><p>六、 启动eureka客户端、消费者、提供者</p>
+<ul>
+<li><p>配置<br>server:<br>port:7900#自定义boot项目访问端口<br>spring:<br>application:<br>name:provider-user<br>eureka:<br>client:<br>service-url:<br>defaultZone:<a href="http://localhost:9999/eureka" target="_blank" rel="noopener">http://localhost:9999/eureka</a></p>
+</li>
+<li><p>启动类<br>@SpringBootApplication<br>@EnableEurekaClient//启用eureka客户端<br>publicclassProviderApp{<br>publicstaticvoidmain(String[]args){<br>SpringApplication.run(ProviderApp.class,args);<br>}<br>}</p>
+</li>
+<li><p>数据类<br>publicclassUser{<br>privateLongid;<br>privateDatedate;</p>
+</li>
+</ul>
+<p>publicUser(){</p>
+<p>}</p>
+<p>publicUser(Longid){<br>this.id=id;<br>this.date=newDate();<br>}</p>
+<p>publicLonggetId(){<br>returnid;<br>}</p>
+<p>publicvoidsetId(Longid){<br>this.id=id;<br>}</p>
+<p>publicDategetDate(){<br>returndate;<br>}</p>
+<p>publicvoidsetDate(Datedate){<br>this.date=date;<br>}<br>}</p>
+<ul>
+<li>业务类<br>@RestController<br>publicclassUserController{<br>@Autowired<br>privateEurekaClienteurekaClient;</li>
+</ul>
+<p>@GetMapping(“/user/{id}”)<br>publicUsergetUser(@PathVariableLongid){<br>returnnewUser(id);<br>}</p>
+<p>@GetMapping(“/eurekaInfo”)<br>publicStringinfo(){<br>InstanceInfonextServerFromEureka=eurekaClient.getNextServerFromEureka(“PROVIDER-USER”,false);<br>System.out.println(nextServerFromEureka.getHomePageUrl());<br>returnnextServerFromEureka.getHomePageUrl();<br>}<br>}</p>
+<p>六、 启动eureka客户端、消费者、提供者</p>
 
       
     </div>
