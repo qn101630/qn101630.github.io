@@ -259,6 +259,90 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="springcloud实战之ribbon（一）-springcloud实战之ribbon（一）" class="article article-type-springcloud实战之ribbon（一）" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89/" class="article-date">
+      <time datetime="2019-11-14T02:36:33.848Z" itemprop="datePublished">2019-11-14</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89/">springcloud实战之ribbon（一）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="Ribbon-是什么？"><a href="#Ribbon-是什么？" class="headerlink" title="Ribbon 是什么？"></a>Ribbon 是什么？</h1><blockquote>
+<p>springcloud 的客户端负载均衡组件</p>
+</blockquote>
+<h1 id="服务端负载均衡"><a href="#服务端负载均衡" class="headerlink" title="服务端负载均衡"></a>服务端负载均衡</h1><blockquote>
+<p>分为硬件负载均衡和软件负载均衡</p>
+</blockquote>
+<ul>
+<li>硬件负载均衡主要通过在服务器节点之间按照专门用于负载均衡的设备，比如 F5 等</li>
+<li>软件负载均衡则是通过在服务器上安装一些用于负载均衡功能或模块等软件来完成请求分发工作，比如 Nginx 等</li>
+<li>服务端负载均衡架构图<br><img src="/images/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89_2019-11-14-11-01-18.png" alt="springcloud实战之ribbon（一）_2019-11-14-11-01-18.png"></li>
+</ul>
+<h1 id="客户端负载均衡"><a href="#客户端负载均衡" class="headerlink" title="客户端负载均衡"></a>客户端负载均衡</h1><ul>
+<li>客户端负载均衡和服务端负载均衡最大的不同点在于上面所提到<strong>服务清单所存储的位置</strong>。</li>
+<li>在客户端负载均衡中，所有客户端节点都维护着自己要访问的服务端清单，而这些服务端端清单来自于服务注册中心，比如上一章我们介绍的 Eureka 服务端。同服务端负载均衡的架构类似，在客户端负载均衡中也需要心跳去维护服务端清单的健康性，默认会创建针对各个服务治理框架的 Ribbon 自动化整合配置。</li>
+</ul>
+<h1 id="Ribbon-实现软负载均衡主要有这三点"><a href="#Ribbon-实现软负载均衡主要有这三点" class="headerlink" title="Ribbon 实现软负载均衡主要有这三点"></a>Ribbon 实现软负载均衡主要有这三点</h1><ul>
+<li><p>服务发现：就是发现依赖服务的列表，通俗来说就是依据服务的名字把它的所有服务实例找出来</p>
+</li>
+<li><p>服务选择规则：依据指定的服务规则，从多个有效服务中选择一个服务发起请求</p>
+</li>
+<li><p>服务监听：定时检测服务存活情况，及时高效剔除不可用的服务。</p>
+</li>
+</ul>
+<h1 id="Ribbon-主要组件"><a href="#Ribbon-主要组件" class="headerlink" title="Ribbon 主要组件"></a>Ribbon 主要组件</h1><ul>
+<li><p>ServerList、IRule、ServerListFilter</p>
+</li>
+<li><p>首先通过 ServerList 获取所有可用服务列表，再通过 ServerListFilter 过滤掉一部分服务，最后 IRule 从过滤后的服务中选择一个实例进行 http 请求</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="springcloud实战之eureka（二）-springcloud实战之eureka（二）" class="article article-type-springcloud实战之eureka（二）" itemscope itemprop="blogPost">
   
     <div class="article-meta">
