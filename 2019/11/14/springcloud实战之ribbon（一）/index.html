@@ -15,15 +15,15 @@
 
 
 
-<meta name="description" content="Ribbon 是什么？ springcloud 的客户端负载均衡组件  服务端负载均衡 分为硬件负载均衡和软件负载均衡   硬件负载均衡主要通过在服务器节点之间按照专门用于负载均衡的设备，比如 F5 等 软件负载均衡则是通过在服务器上安装一些用于负载均衡功能或模块等软件来完成请求分发工作，比如 Nginx 等 服务端负载均衡架构图  客户端负载均衡 客户端负载均衡和服务端负载均衡最大的不同点在于上">
+<meta name="description" content="Ribbon 是什么？ springcloud 的客户端负载均衡组件  Ribbon 架构图![springcloud实战之ribbon（一）_2019-11-18-10-01-05.png](&#x2F;images&#x2F;springcloud实战之ribbon（一）_2019-11-18-10-01-05.png)服务端负载均衡 分为硬件负载均衡和软件负载均衡   硬件负载均衡主要通过在服务器节点之间按照专">
 <meta property="og:type" content="article">
 <meta property="og:title" content="springcloud实战之ribbon（一）">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;14&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89&#x2F;index.html">
 <meta property="og:site_name" content="南有乔木的技术博客专栏">
-<meta property="og:description" content="Ribbon 是什么？ springcloud 的客户端负载均衡组件  服务端负载均衡 分为硬件负载均衡和软件负载均衡   硬件负载均衡主要通过在服务器节点之间按照专门用于负载均衡的设备，比如 F5 等 软件负载均衡则是通过在服务器上安装一些用于负载均衡功能或模块等软件来完成请求分发工作，比如 Nginx 等 服务端负载均衡架构图  客户端负载均衡 客户端负载均衡和服务端负载均衡最大的不同点在于上">
+<meta property="og:description" content="Ribbon 是什么？ springcloud 的客户端负载均衡组件  Ribbon 架构图![springcloud实战之ribbon（一）_2019-11-18-10-01-05.png](&#x2F;images&#x2F;springcloud实战之ribbon（一）_2019-11-18-10-01-05.png)服务端负载均衡 分为硬件负载均衡和软件负载均衡   硬件负载均衡主要通过在服务器节点之间按照专">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89_2019-11-14-11-01-18.png">
-<meta property="og:updated_time" content="2019-11-14T03:14:47.284Z">
+<meta property="og:updated_time" content="2019-11-18T02:02:47.845Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89_2019-11-14-11-01-18.png">
 
@@ -296,7 +296,7 @@
         <h1 id="Ribbon-是什么？"><a href="#Ribbon-是什么？" class="headerlink" title="Ribbon 是什么？"></a>Ribbon 是什么？</h1><blockquote>
 <p>springcloud 的客户端负载均衡组件</p>
 </blockquote>
-<h1 id="服务端负载均衡"><a href="#服务端负载均衡" class="headerlink" title="服务端负载均衡"></a>服务端负载均衡</h1><blockquote>
+<h1 id="Ribbon-架构图"><a href="#Ribbon-架构图" class="headerlink" title="Ribbon 架构图"></a>Ribbon 架构图</h1><pre><code>![springcloud实战之ribbon（一）_2019-11-18-10-01-05.png](/images/springcloud实战之ribbon（一）_2019-11-18-10-01-05.png)</code></pre><h1 id="服务端负载均衡"><a href="#服务端负载均衡" class="headerlink" title="服务端负载均衡"></a>服务端负载均衡</h1><blockquote>
 <p>分为硬件负载均衡和软件负载均衡</p>
 </blockquote>
 <ul>
@@ -313,7 +313,23 @@
 <li>服务选择规则：依据指定的服务规则，从多个有效服务中选择一个服务发起请求</li>
 <li>服务监听：定时检测服务存活情况，及时高效剔除不可用的服务。</li>
 </ol>
-<h1 id="Ribbon-主要组件"><a href="#Ribbon-主要组件" class="headerlink" title="Ribbon 主要组件"></a>Ribbon 主要组件</h1><p>ServerList、IRule、ServerListFilter;<br>首先通过 ServerList 获取所有可用服务列表，再通过 ServerListFilter 过滤掉一部分服务，最后 IRule 从过滤后的服务中选择一个实例进行 http 请求</p>
+<h1 id="Ribbon-主要组件"><a href="#Ribbon-主要组件" class="headerlink" title="Ribbon 主要组件"></a>Ribbon 主要组件</h1><p><code>ServerList</code>、<code>IRule</code>、<code>ServerListFilter</code>;<br>首先通过 <code>ServerList</code> 获取所有可用服务列表，再通过 <code>ServerListFilter</code> 过滤掉一部分服务，最后 <code>IRule</code> 从过滤后的服务中选择一个实例进行 <code>http</code> 请求</p>
+<h1 id="Ribbon-负载均衡策略"><a href="#Ribbon-负载均衡策略" class="headerlink" title="Ribbon 负载均衡策略"></a>Ribbon 负载均衡策略</h1><ul>
+<li>简单轮询负载均衡</li>
+<li>加权响应时间负载均衡</li>
+<li>区域感知轮询负载均衡</li>
+<li>随机负载均衡</li>
+</ul>
+<h1 id="Ribbon-配置"><a href="#Ribbon-配置" class="headerlink" title="Ribbon 配置"></a>Ribbon 配置</h1><p>连接超时、重试、重试算法</p>
+<h1 id="Ribbon-功能"><a href="#Ribbon-功能" class="headerlink" title="Ribbon 功能"></a>Ribbon 功能</h1><ul>
+<li>易于与服务发现组件（比如 Netflix 的 Eureka）集成</li>
+<li>使用 Archaius 完成运行时配置</li>
+<li>使用 JMX 暴露运维指标，使用 Servo 发布</li>
+<li>多种可插拔的序列化选择</li>
+<li>异步和批处理操作</li>
+<li>自动 SLA 框架</li>
+<li>系统管理/指标控制台</li>
+</ul>
 
       
     </div>
@@ -325,7 +341,7 @@
         <p><span>本文标题:</span><a href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89/">springcloud实战之ribbon（一）</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
         <p><span>发布时间:</span>2019-11-14, 10:36:33</p>
-        <p><span>最后更新:</span>2019-11-14, 11:14:47</p>
+        <p><span>最后更新:</span>2019-11-18, 10:02:47</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89/" title="springcloud实战之ribbon（一）">http://yoursite.com/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -361,7 +377,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ribbon-是什么？"><span class="toc-number">1.</span> <span class="toc-text">Ribbon 是什么？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#服务端负载均衡"><span class="toc-number">2.</span> <span class="toc-text">服务端负载均衡</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#客户端负载均衡"><span class="toc-number">3.</span> <span class="toc-text">客户端负载均衡</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ribbon-实现软负载均衡主要有这三点"><span class="toc-number">4.</span> <span class="toc-text">Ribbon 实现软负载均衡主要有这三点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ribbon-主要组件"><span class="toc-number">5.</span> <span class="toc-text">Ribbon 主要组件</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ribbon-是什么？"><span class="toc-number">1.</span> <span class="toc-text">Ribbon 是什么？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ribbon-架构图"><span class="toc-number">2.</span> <span class="toc-text">Ribbon 架构图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#服务端负载均衡"><span class="toc-number">3.</span> <span class="toc-text">服务端负载均衡</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#客户端负载均衡"><span class="toc-number">4.</span> <span class="toc-text">客户端负载均衡</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ribbon-实现软负载均衡主要有这三点"><span class="toc-number">5.</span> <span class="toc-text">Ribbon 实现软负载均衡主要有这三点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ribbon-主要组件"><span class="toc-number">6.</span> <span class="toc-text">Ribbon 主要组件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ribbon-负载均衡策略"><span class="toc-number">7.</span> <span class="toc-text">Ribbon 负载均衡策略</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ribbon-配置"><span class="toc-number">8.</span> <span class="toc-text">Ribbon 配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ribbon-功能"><span class="toc-number">9.</span> <span class="toc-text">Ribbon 功能</span></a></li></ol>
         
     </div>
     <style>
