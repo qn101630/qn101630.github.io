@@ -15,15 +15,17 @@
 
 
 
-<meta name="description" content="Feign 是什么？ Feign 是一个声明式 WebService 客户端。 使用 Feign 能让编写的 WebService 客户端更加简洁。 它的使用方法式定义一个接口，然后在上面添加注解 Spring Cloud 对 Feign 进行了封装，使其支持了 Spring MVC 标准注解和 HttpMessageConverters。 Feign 可以与 Eureka 和 Ribbon 组合">
+<meta name="description" content="为什么需要熔断器？ 传统分布式系统面临一些性能上的问题，当复杂分布式体系结构中的应用程序有数十个依赖关系，每个依赖关系在某些时候将不可避免地失败。这时可能会出现服务雪崩。 对于高流量的应用来说，单一的后端依赖可能会导致所有服务器上的所有资源都在几秒钟内饱和。比失败更糟糕的是，这些应用程序还可能导致服务之间的延迟增加，备份队列，线程和其他系统资源紧张，导致整个系统发生更多的级联故障。这些都表示需要对">
 <meta property="og:type" content="article">
-<meta property="og:title" content="springcloud实战之feign（一）">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;19&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89&#x2F;index.html">
+<meta property="og:title" content="springcloud实战之Hystrix（一）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;19&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89&#x2F;index.html">
 <meta property="og:site_name" content="南有乔木的技术博客专栏">
-<meta property="og:description" content="Feign 是什么？ Feign 是一个声明式 WebService 客户端。 使用 Feign 能让编写的 WebService 客户端更加简洁。 它的使用方法式定义一个接口，然后在上面添加注解 Spring Cloud 对 Feign 进行了封装，使其支持了 Spring MVC 标准注解和 HttpMessageConverters。 Feign 可以与 Eureka 和 Ribbon 组合">
+<meta property="og:description" content="为什么需要熔断器？ 传统分布式系统面临一些性能上的问题，当复杂分布式体系结构中的应用程序有数十个依赖关系，每个依赖关系在某些时候将不可避免地失败。这时可能会出现服务雪崩。 对于高流量的应用来说，单一的后端依赖可能会导致所有服务器上的所有资源都在几秒钟内饱和。比失败更糟糕的是，这些应用程序还可能导致服务之间的延迟增加，备份队列，线程和其他系统资源紧张，导致整个系统发生更多的级联故障。这些都表示需要对">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-19T03:08:55.941Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89_2019-11-19-14-44-07.png">
+<meta property="og:updated_time" content="2019-11-19T06:45:43.520Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89_2019-11-19-14-44-07.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -55,7 +57,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>springcloud实战之feign（一） | 南有乔木的技术博客专栏</title>
+<title>springcloud实战之Hystrix（一） | 南有乔木的技术博客专栏</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -255,11 +257,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="springcloud实战之feign（一）-springcloud实战之feign（一）" class="article article-type-springcloud实战之feign（一）" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="springcloud实战之hystrix（一）-springcloud实战之Hystrix（一）" class="article article-type-springcloud实战之hystrix（一）" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89/" class="article-date">
-      <time datetime="2019-11-19T02:48:25.000Z" itemprop="datePublished">2019-11-19</time>
+      <a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89/" class="article-date">
+      <time datetime="2019-11-19T06:23:22.000Z" itemprop="datePublished">2019-11-19</time>
 </a>
 
 
@@ -274,7 +276,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      springcloud实战之feign（一）
+      springcloud实战之Hystrix（一）
     </h1>
   
 
@@ -291,19 +293,36 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="Feign-是什么？"><a href="#Feign-是什么？" class="headerlink" title="Feign 是什么？"></a>Feign 是什么？</h2><ul>
-<li>Feign 是一个声明式 WebService 客户端。</li>
-<li>使用 Feign 能让编写的 WebService 客户端更加简洁。</li>
-<li>它的使用方法式定义一个接口，然后在上面添加注解</li>
-<li>Spring Cloud 对 Feign 进行了封装，使其支持了 Spring MVC 标准注解和 HttpMessageConverters。</li>
-<li>Feign 可以与 Eureka 和 Ribbon 组合使用以支持负载均衡。</li>
+        <h2 id="为什么需要熔断器？"><a href="#为什么需要熔断器？" class="headerlink" title="为什么需要熔断器？"></a>为什么需要熔断器？</h2><ul>
+<li>传统分布式系统面临一些性能上的问题，当复杂分布式体系结构中的应用程序有数十个依赖关系，每个依赖关系在某些时候将不可避免地失败。这时可能会出现<strong>服务雪崩</strong>。</li>
+<li>对于高流量的应用来说，单一的后端依赖可能会导致所有服务器上的所有资源都在几秒钟内饱和。比失败更糟糕的是，这些应用程序还可能导致服务之间的延迟增加，备份队列，线程和其他系统资源紧张，导致整个系统发生更多的级联故障。这些都表示需要对故障和延迟进行隔离和管理，以便单个依赖关系的失败，不能取消整个应用程序或系统。</li>
 </ul>
-<h2 id="为什么要使用-Feign"><a href="#为什么要使用-Feign" class="headerlink" title="为什么要使用 Feign?"></a>为什么要使用 Feign?</h2><ul>
-<li>Feign 旨在使编写 Java Http 客户端变得更容易。</li>
-<li>让我们的服务接口化，改变前面的 Ribben+RestTemplate 的模板化的调用方式。</li>
-<li>Feign 封装了 Ribbon，可以结合 Ribbon 自定义负载均衡策略</li>
-<li><strong>但是在实际开发中，由于对服务依赖的调用可能不止一处，往往一个接口会被多处调用，所以通常都会针对每个微服务自行封装一些客户端类来包装这些依赖服务的调用</strong>。</li>
+<h2 id="什么是服务雪崩？"><a href="#什么是服务雪崩？" class="headerlink" title="什么是服务雪崩？"></a>什么是服务雪崩？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">多个微服务之间调用的时候，假设微服务A调用微服务B和微服务C，微服务B和微服务C又调用其它的微服务，这就是所谓的“扇出”。如果扇出的链路上某个微服务的调用响应时间过长或者不可用，对微服务A的调用就会占用越来越多的系统资源，进而引起系统崩溃，所谓的“雪崩效应”。</span><br></pre></td></tr></table></figure>
+
+<h2 id="什么是熔断器-Hystrix？"><a href="#什么是熔断器-Hystrix？" class="headerlink" title="什么是熔断器 Hystrix？"></a>什么是熔断器 Hystrix？</h2><ul>
+<li>Hystrix 是一个用于处理分布式系统的延迟和容错的开源库，在分布式系统里，许多依赖不可避免的会调用失败，比如超时、异常等，Hystrix 能够保证在一个依赖出问题的情况下，不会导致整体服务失败，避免级联故障，以提高分布式系统的弹性。</li>
+<li>“断路器”本身是一种开关装置，当某个服务单元发生故障之后，通过断路器的故障监控（类似熔断保险丝），向调用方返回一个符合预期的、可处理的备选响应（FallBack），而不是长时间的等待或者抛出调用方无法处理的异常，这样就保证了服务调用方的线程不会被长时间、不必要地占用，从而避免了故障在分布式系统中的蔓延，乃至雪崩。</li>
 </ul>
+<h2 id="Hystrix-能做什么"><a href="#Hystrix-能做什么" class="headerlink" title="Hystrix 能做什么"></a>Hystrix 能做什么</h2><p><img src="/images/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89_2019-11-19-14-44-07.png" alt="springcloud实战之Hystrix（一）_2019-11-19-14-44-07.png"></p>
+<ol>
+<li>断路器</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当Hystrix Command请求后端服务失败数量超过一定比例(默认50%), 断路器会切换到开路状态(Open). 这时所有请求会直接失败而不会发送到后端服务. 断路器保持在开路状态一段时间后(默认5秒), 自动切换到半开路状态(HALF-OPEN). 这时会判断下一次请求的返回情况, 如果请求成功, 断路器切回闭路状态(CLOSED), 否则重新切换到开路状态(OPEN). Hystrix的断路器就像我们家庭电路中的保险丝, 一旦后端服务不可用, 断路器会直接切断请求链, 避免发送大量无效请求影响系统吞吐量, 并且断路器有自我检测并恢复的能力。</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>服务降级</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">对于查询操作, 我们可以实现一个fallback方法, 当请求后端服务出现异常的时候, 可以使用fallback方法返回的值. fallback方法的返回值一般是设置的默认值或者来自缓存。</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>资源隔离</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在Hystrix中, 主要通过线程池来实现资源隔离. 通常在使用的时候我们会根据调用的远程服务划分出多个线程池. 例如调用产品服务的Command放入A线程池, 调用账户服务的Command放入B线程池. 这样做的主要优点是运行环境被隔离开了. 这样就算调用服务的代码存在bug或者由于其他原因导致自己所在线程池被耗尽时, 不会对系统的其他服务造成影响. 但是带来的代价就是维护多个线程池会对系统带来额外的性能开销. 如果是对性能有严格要求而且确信自己调用服务的客户端代码不会出问题的话, 可以使用Hystrix的信号模式(Semaphores)来隔离资源.</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>服务监控 hystrixDashboard</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">除了隔离依赖服务的调用以外，Hystrix还提供了准实时的调用监控（Hystrix Dashboard），Hystrix会持续地记录所有通过Hystrix发起的请求的执行信息，并以统计报表和图形的形式展示给用户，包括每秒执行多少请求多少成功，多少失败等。Netflix通过hystrix-metrics-event-stream项目实现了对以上指标的监控。Spring Cloud也提供了Hystrix Dashboard的整合，对监控内容转化成可视化界面。</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -312,13 +331,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89/">springcloud实战之feign（一）</a></p>
+        <p><span>本文标题:</span><a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89/">springcloud实战之Hystrix（一）</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
-        <p><span>发布时间:</span>2019-11-19, 10:48:25</p>
-        <p><span>最后更新:</span>2019-11-19, 11:08:55</p>
+        <p><span>发布时间:</span>2019-11-19, 14:23:22</p>
+        <p><span>最后更新:</span>2019-11-19, 14:45:43</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89/" title="springcloud实战之feign（一）">http://yoursite.com/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89/" title="springcloud实战之Hystrix（一）">http://yoursite.com/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -330,16 +349,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%BA%8C%EF%BC%89/">
-                    springcloud实战之feign（二）
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%BA%8C%EF%BC%89/">
-                    springcloud实战之ribbon（二）
+                <a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%BA%8C%EF%BC%89/">
+                    springcloud实战之feign（二）
                 </a>
             </div>
         
@@ -351,7 +364,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Feign-是什么？"><span class="toc-number">1.</span> <span class="toc-text">Feign 是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要使用-Feign"><span class="toc-number">2.</span> <span class="toc-text">为什么要使用 Feign?</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么需要熔断器？"><span class="toc-number">1.</span> <span class="toc-text">为什么需要熔断器？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是服务雪崩？"><span class="toc-number">2.</span> <span class="toc-text">什么是服务雪崩？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是熔断器-Hystrix？"><span class="toc-number">3.</span> <span class="toc-text">什么是熔断器 Hystrix？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hystrix-能做什么"><span class="toc-number">4.</span> <span class="toc-text">Hystrix 能做什么</span></a></li></ol>
         
     </div>
     <style>
@@ -387,7 +400,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"springcloud实战之feign（一）　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"springcloud实战之Hystrix（一）　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -407,15 +420,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%BA%8C%EF%BC%89/" title="上一篇: springcloud实战之feign（二）">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%BA%8C%EF%BC%89/" title="下一篇: springcloud实战之ribbon（二）">
+            <a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%BA%8C%EF%BC%89/" title="下一篇: springcloud实战之feign（二）">
                 <i class="fa fa-angle-right"></i>
             </a>
         
