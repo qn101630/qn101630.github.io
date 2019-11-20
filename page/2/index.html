@@ -14,15 +14,15 @@
 <meta name="author" content="南有乔木" />
 
 
+    
+    
 
-<meta name="description" content="Feign 是什么？ Feign 是一个声明式 WebService 客户端。 使用 Feign 能让编写的 WebService 客户端更加简洁。 它的使用方法式定义一个接口，然后在上面添加注解 Spring Cloud 对 Feign 进行了封装，使其支持了 Spring MVC 标准注解和 HttpMessageConverters。 Feign 可以与 Eureka 和 Ribbon 组合">
-<meta property="og:type" content="article">
-<meta property="og:title" content="springcloud实战之feign（一）">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;19&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89&#x2F;index.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="南有乔木的技术博客专栏">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;page&#x2F;2&#x2F;index.html">
 <meta property="og:site_name" content="南有乔木的技术博客专栏">
-<meta property="og:description" content="Feign 是什么？ Feign 是一个声明式 WebService 客户端。 使用 Feign 能让编写的 WebService 客户端更加简洁。 它的使用方法式定义一个接口，然后在上面添加注解 Spring Cloud 对 Feign 进行了封装，使其支持了 Spring MVC 标准注解和 HttpMessageConverters。 Feign 可以与 Eureka 和 Ribbon 组合">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-19T03:08:55.941Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -51,11 +51,13 @@
 <link rel="stylesheet" href="/css/style.css">
 
 
+    <style> .article { opacity: 0;} </style>
+
 
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>springcloud实战之feign（一） | 南有乔木的技术博客专栏</title>
+<title>南有乔木的技术博客专栏</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -64,8 +66,8 @@
     var yiliaConfig = {
         fancybox: true,
         animate: true,
-        isHome: false,
-        isPost: true,
+        isHome: true,
+        isPost: false,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -255,11 +257,13 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="springcloud实战之feign（一）-springcloud实战之feign（一）" class="article article-type-springcloud实战之feign（一）" itemscope itemprop="blogPost">
+      <div class="body-wrap">
+  
+    <article id="微服务是什么-微服务是什么" class="article article-type-微服务是什么" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89/" class="article-date">
-      <time datetime="2019-11-19T02:48:25.000Z" itemprop="datePublished">2019-11-19</time>
+      <a href="/2019/11/13/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E4%BB%80%E4%B9%88/" class="article-date">
+      <time datetime="2019-11-13T09:25:03.000Z" itemprop="datePublished">2019-11-13</time>
 </a>
 
 
@@ -273,126 +277,51 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      springcloud实战之feign（一）
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/13/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E4%BB%80%E4%B9%88/">微服务是什么</a>
     </h1>
   
 
       </header>
       
-      <div class="article-info article-info-post">
-        
-
-        
-        <div class="clearfix"></div>
-      </div>
-      
     
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="Feign-是什么？"><a href="#Feign-是什么？" class="headerlink" title="Feign 是什么？"></a>Feign 是什么？</h2><ul>
-<li>Feign 是一个声明式 WebService 客户端。</li>
-<li>使用 Feign 能让编写的 WebService 客户端更加简洁。</li>
-<li>它的使用方法式定义一个接口，然后在上面添加注解</li>
-<li>Spring Cloud 对 Feign 进行了封装，使其支持了 Spring MVC 标准注解和 HttpMessageConverters。</li>
-<li>Feign 可以与 Eureka 和 Ribbon 组合使用以支持负载均衡。</li>
-</ul>
-<h2 id="为什么要使用-Feign"><a href="#为什么要使用-Feign" class="headerlink" title="为什么要使用 Feign?"></a>为什么要使用 Feign?</h2><ul>
-<li>Feign 旨在使编写 Java Http 客户端变得更容易。</li>
-<li>让我们的服务接口化，改变前面的 Ribben+RestTemplate 的模板化的调用方式。</li>
-<li>Feign 封装了 Ribbon，可以结合 Ribbon 自定义负载均衡策略</li>
-<li><strong>但是在实际开发中，由于对服务依赖的调用可能不止一处，往往一个接口会被多处调用，所以通常都会针对每个微服务自行封装一些客户端类来包装这些依赖服务的调用</strong>。</li>
-</ul>
+        <h1 id="什么是微服务架构"><a href="#什么是微服务架构" class="headerlink" title="什么是微服务架构"></a>什么是微服务架构</h1><p><img src="/images/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E4%BB%80%E4%B9%88_2019-11-20-13-53-42.png" alt="微服务是什么_2019-11-20-13-53-42.png"></p>
+<hr>
+<p>微服务架构是一种架构模式，它提倡将单一应用程序划分成一组小的服务，服务之间相互协调、互相配合，为用户提供最终价值。每个服务运行在其独立的进程中，服务和服务之间采用轻量级的通信机制相互沟通（通常是基于 HTTP 的 Restful API).每个服务都围绕着具体的业务进行构建，并且能够被独立的部署到生产环境、类生产环境等</p>
+<h1 id="单体应用-VS-微服务架构"><a href="#单体应用-VS-微服务架构" class="headerlink" title="单体应用 VS 微服务架构"></a>单体应用 VS 微服务架构</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><pre><code>1. 提升开发交流，每个服务足够内聚，足够小，代码容易理解；
+2. 服务独立测试、部署、升级、发布；
+3. 按需定制的DFX，资源利用率，每个服务可以各自进行x扩展和z扩展，而且，每个服务可以根据自己的需要部署到合适的硬件服务器上；每个服务按
+4. 需要选择HA的模式，选择接受服务的实例个数；
+5. 容易扩大开发团队，可以针对每个服务（service）组件开发团队；
+6. 提高容错性（fault isolation），一个服务的内存泄露并不会让整个系统瘫痪；
+7. 新技术的应用，系统不会被长期限制在某个技术栈上；</code></pre><h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><pre><code>1. 没有银弹，微服务提高了系统的复杂度；
+2. 开发人员要处理分布式系统的复杂性；
+3. 服务之间的分布式通信问题；
+4. 服务的注册与发现问题；
+5. 服务之间的分布式事务问题；
+6. 数据隔离再来的报表处理问题；
+7. 服务之间的分布式一致性问题；
+8. 服务管理的复杂性，服务的编排；
+9. 不同服务实例的管理。</code></pre>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
 
       
+      
+      <div class="clearfix"></div>
     </div>
     
   </div>
   
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89/">springcloud实战之feign（一）</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
-        <p><span>发布时间:</span>2019-11-19, 10:48:25</p>
-        <p><span>最后更新:</span>2019-11-19, 11:08:55</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89/" title="springcloud实战之feign（一）">http://yoursite.com/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
-        </p>
-    </div>
-
-
-
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%BA%8C%EF%BC%89/">
-                    springcloud实战之feign（二）
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%BA%8C%EF%BC%89/">
-                    springcloud实战之ribbon（二）
-                </a>
-            </div>
-        
-    </nav>
-
-  
 </article>
 
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Feign-是什么？"><span class="toc-number">1.</span> <span class="toc-text">Feign 是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要使用-Feign"><span class="toc-number">2.</span> <span class="toc-text">为什么要使用 Feign?</span></a></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
-
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-    <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
-    </script>
-
-
-
-    
-<div class="share">
-    
-        <div class="bdsharebuttonbox">
-            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
-            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
-            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
-            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
-            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
-            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
-        </div>
-        <script>
-            window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"springcloud实战之feign（一）　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        </script>
-    
-
-    
-</div>
 
 
 
@@ -400,35 +329,13 @@
 
 
 
-    
 
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%BA%8C%EF%BC%89/" title="上一篇: springcloud实战之feign（二）">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%BA%8C%EF%BC%89/" title="下一篇: springcloud实战之ribbon（二）">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/11/20/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BZuul%EF%BC%88%E4%B8%80%EF%BC%89/">springcloud实战之Zuul（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%89%EF%BC%89/">springcloud实战之Hystrix（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%BA%8C%EF%BC%89/">springcloud实战之Hystrix（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89/">springcloud实战之Hystrix（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%BA%8C%EF%BC%89/">springcloud实战之feign（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/19/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bfeign%EF%BC%88%E4%B8%80%EF%BC%89/">springcloud实战之feign（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%BA%8C%EF%BC%89/">springcloud实战之ribbon（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89/">springcloud实战之ribbon（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Beureka%EF%BC%88%E4%BA%8C%EF%BC%89/">springcloud实战之eureka（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/14/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Beureka%EF%BC%88%E4%B8%80%EF%BC%89/">springcloud实战之eureka（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/13/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E4%BB%80%E4%B9%88/">微服务是什么</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </nav>
+  
 </div>
       <footer id="footer">
     <div class="outer">
