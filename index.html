@@ -329,6 +329,8 @@
 <li>要在 SpringCloud 中使用 Zuul，需要加上<code>@EnableZuulProxy</code>注解。加上这个注解之后 SpringCloud 会构造一些 bean，比如 ZuulHandlerMapping、DiscoveryClientRouteLocator、各种 filter 等。其中<code>DiscoveryClientRouteLocato</code>r 是一个基于服务发现的路由规则生成器，它会基于 zuul 的配置构造路由规则。<code>ZuulHandlerMapping</code>是一个 HandlerMapping 的实现，它跟基于路由规则注册 handler，其中 key 为路由规则对应的路径，handler 都是 ZuulController，ZuulController 内部使用 ZuulServlet 进行请求的处理。</li>
 <li>Zuul 把真正的服务调用放在了 filter 中实现。它提供了<code>SimpleHostRoutingFilter</code>和<code>RibbonRoutingFilter</code>这 2 个 route 类型的 filter 用于执行服务。从名字也可以看出来，SimpleHostRoutingFilter 用于执行基于 host 方式的调用 url 接口，RibbonRoutingFilter 基于服务发现的方式调用服务。<strong>一般我们都建议使用 RibbonRoutingFilter，因为它内部使用 ribbon，更加健壮。</strong></li>
 </ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://fangjian0423.github.io/2017/02/22/springcloud-zuul/" target="_blank" rel="noopener">SpringCloud 网关服务 zuul 介绍</a></p>
+<p><a href="https://www.cnblogs.com/duanxz/p/7527765.html" target="_blank" rel="noopener">服务网关 zuul 之一：入门介绍</a></p>
 
       
     </div>
