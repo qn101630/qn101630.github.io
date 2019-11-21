@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/appEureka" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/config-server" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/consumer-feign" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/consumer-feign-2" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/consumer-order-ribbon" charset="UTF-8" />

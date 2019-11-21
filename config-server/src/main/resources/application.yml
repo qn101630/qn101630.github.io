@@ -1,0 +1,13 @@
+server:
+  port: 8769
+spring:
+  application:
+    name: spring-cloud-config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/qn101630/qn101630.github.io.git # 配置git仓库的地址
+          search-paths: config-repo                              # git仓库地址下的相对地址，可以配置多个，用,分割。
+          username: qn101630                               # git仓库的账号
+          password: qn192837QN
