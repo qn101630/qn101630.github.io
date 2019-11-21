@@ -1,0 +1,14 @@
+server:
+  port: 8900
+spring:
+  application:
+    name: consumer-order-ribbon
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9999/eureka
+  instance:
+    prefer-ip-address: true
+PROVIDER-USER:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule

@@ -1,0 +1,15 @@
+server:
+  port: 7901 #自定义boot项目访问端口
+spring:
+  application:
+    name: provider-user-2
+eureka:
+  instance:
+    hostname: localhost
+    # 发呆时间，即服务失效时间（缺省为90s）,就是超过15秒没有续约就会从注册表中剔除
+    lease-expiration-duration-in-seconds: 15
+    # 心跳时间，即服务续约间隔时间（缺省为30s）
+    lease-renewal-interval-in-seconds: 5
+  client:
+    service-url:
+      defaultZone: http://localhost:9999/eureka

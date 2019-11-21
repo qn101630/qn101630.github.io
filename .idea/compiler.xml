@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="consumer-feign-2" />
+        <module name="hystrixdashboardturbine" />
+        <module name="consumer-order-ribbon" />
+        <module name="consumerfeign" />
+        <module name="appEureka" />
+        <module name="provider-user-2" />
+        <module name="provideruser" />
+        <module name="consumerorderfeign" />
+        <module name="zuul" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="consumer-order-feign" target="1.8" />
+      <module name="consumerorder" target="1.8" />
+      <module name="consumerorderfeign" target="1.8" />
+      <module name="privoderuser" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="appEureka" options="-parameters" />
+      <module name="consumer-feign-2" options="-parameters" />
+      <module name="consumer-order-feign" options="-parameters" />
+      <module name="consumer-order-ribbon" options="-parameters" />
+      <module name="consumerfeign" options="-parameters" />
+      <module name="consumerorder" options="-parameters" />
+      <module name="consumerorderfeign" options="-parameters" />
+      <module name="hystrixdashboardturbine" options="-parameters" />
+      <module name="provider-user-2" options="-parameters" />
+      <module name="provideruser" options="-parameters" />
+      <module name="zuul" options="-parameters" />
+    </option>
+  </component>
+</project>

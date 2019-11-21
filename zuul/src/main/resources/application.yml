@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: zuul
+server:
+  port: 8773
+#服务中心注册
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9999/eureka/
+#自定义负载均衡策略
+provider-user:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+# 服务网关设置
+zuul:
+  routes:
+    hello:
+      path: /producer/**
+      serviceId: provider-user
