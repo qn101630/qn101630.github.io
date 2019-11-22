@@ -15,15 +15,18 @@
 
 
 
-<meta name="description" content="友情链接大狗哥传奇 git大狗哥传奇 coding">
-<meta property="og:type" content="website">
-<meta property="og:title" content="about">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;about&#x2F;index.html">
+<meta name="description" content="为什么需要熔断器？ 传统分布式系统面临一些性能上的问题，当复杂分布式体系结构中的应用程序有数十个依赖关系，每个依赖关系在某些时候将不可避免地失败。这时可能会出现服务雪崩。 对于高流量的应用来说，单一的后端依赖可能会导致所有服务器上的所有资源都在几秒钟内饱和。比失败更糟糕的是，这些应用程序还可能导致服务之间的延迟增加，备份队列，线程和其他系统资源紧张，导致整个系统发生更多的级联故障。这些都表示需要对">
+<meta name="keywords" content="hystrix 熔断器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springcloud解析之Hystrix">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix&#x2F;index.html">
 <meta property="og:site_name" content="南有乔木的技术博客专栏">
-<meta property="og:description" content="友情链接大狗哥传奇 git大狗哥传奇 coding">
+<meta property="og:description" content="为什么需要熔断器？ 传统分布式系统面临一些性能上的问题，当复杂分布式体系结构中的应用程序有数十个依赖关系，每个依赖关系在某些时候将不可避免地失败。这时可能会出现服务雪崩。 对于高流量的应用来说，单一的后端依赖可能会导致所有服务器上的所有资源都在几秒钟内饱和。比失败更糟糕的是，这些应用程序还可能导致服务之间的延迟增加，备份队列，线程和其他系统资源紧张，导致整个系统发生更多的级联故障。这些都表示需要对">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-20T08:37:45.550Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89_2019-11-19-14-44-07.png">
+<meta property="og:updated_time" content="2019-11-22T08:42:02.408Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89_2019-11-19-14-44-07.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -55,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>about | 南有乔木的技术博客专栏</title>
+<title>springcloud解析之Hystrix | 南有乔木的技术博客专栏</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -65,7 +68,7 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -270,11 +273,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-springcloud解析之Hystrix" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/about/index.html" class="article-date">
-      <time datetime="2019-11-20T08:35:22.000Z" itemprop="datePublished">2019-11-20</time>
+      <a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/" class="article-date">
+      <time datetime="2019-11-22T08:41:09.000Z" itemprop="datePublished">2019-11-22</time>
 </a>
 
 
@@ -289,7 +292,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      about
+      springcloud解析之Hystrix
     </h1>
   
 
@@ -297,8 +300,16 @@
       
       <div class="article-info article-info-post">
         
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/springcloud/">springcloud</a>
+    </div>
+
 
         
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hystrix-%E7%86%94%E6%96%AD%E5%99%A8/" rel="tag">hystrix 熔断器</a></li></ul>
+    </div>
+
         <div class="clearfix"></div>
       </div>
       
@@ -306,26 +317,40 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <style>
-    .article-meta { display: none; }
-    #container .article .article-title { padding-right: 0; }
-    .article-header {
-        padding: 0;
-        padding-top: 26px;
-        border-left: none;
-        text-align: center;
-    }
-    .article-header:hover { border-left: none; }
-    .article-title { font-size: 1.6em }
-    .article-entry hr { margin: 0;}
-    .article-meta,
-    #container .article-info-post.article-info { display: none;}
-    #container .article .article-title { padding: 0; }
-</style>
-
-
-          
-        <h1 id="友情链接"><a href="#友情链接" class="headerlink" title="友情链接"></a>友情链接</h1><p><a href="https://leaderli.github.io/" target="_blank" rel="noopener">大狗哥传奇 git</a><br><a href="https://leaderli.coding.me/" target="_blank" rel="noopener">大狗哥传奇 coding</a></p>
+        <h2 id="为什么需要熔断器？"><a href="#为什么需要熔断器？" class="headerlink" title="为什么需要熔断器？"></a>为什么需要熔断器？</h2><ul>
+<li>传统分布式系统面临一些性能上的问题，当复杂分布式体系结构中的应用程序有数十个依赖关系，每个依赖关系在某些时候将不可避免地失败。这时可能会出现<strong>服务雪崩</strong>。</li>
+<li>对于高流量的应用来说，单一的后端依赖可能会导致所有服务器上的所有资源都在几秒钟内饱和。比失败更糟糕的是，这些应用程序还可能导致服务之间的延迟增加，备份队列，线程和其他系统资源紧张，导致整个系统发生更多的级联故障。这些都表示需要对故障和延迟进行隔离和管理，以便单个依赖关系的失败，不能取消整个应用程序或系统。</li>
+</ul>
+<h2 id="什么是服务雪崩？"><a href="#什么是服务雪崩？" class="headerlink" title="什么是服务雪崩？"></a>什么是服务雪崩？</h2><blockquote>
+<p>多个微服务之间调用的时候，假设微服务 A 调用微服务 B 和微服务 C，微服务 B 和微服务 C 又调用其它的微服务，这就是所谓的“扇出”。如果扇出的链路上某个微服务的调用响应时间过长或者不可用，对微服务 A 的调用就会占用越来越多的系统资源，进而引起系统崩溃，所谓的“雪崩效应”。</p>
+</blockquote>
+<h2 id="什么是熔断器-Hystrix？"><a href="#什么是熔断器-Hystrix？" class="headerlink" title="什么是熔断器 Hystrix？"></a>什么是熔断器 Hystrix？</h2><ul>
+<li>Hystrix 是一个用于处理分布式系统的延迟和容错的开源库，在分布式系统里，许多依赖不可避免的会调用失败，比如超时、异常等，Hystrix 能够保证在一个依赖出问题的情况下，不会导致整体服务失败，避免级联故障，以提高分布式系统的弹性。</li>
+<li>“断路器”本身是一种开关装置，当某个服务单元发生故障之后，通过断路器的故障监控（类似熔断保险丝），向调用方返回一个符合预期的、可处理的备选响应（FallBack），而不是长时间的等待或者抛出调用方无法处理的异常，这样就保证了服务调用方的线程不会被长时间、不必要地占用，从而避免了故障在分布式系统中的蔓延，乃至雪崩。</li>
+</ul>
+<h2 id="Hystrix-能做什么"><a href="#Hystrix-能做什么" class="headerlink" title="Hystrix 能做什么"></a>Hystrix 能做什么</h2><p><img src="/images/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%88%E4%B8%80%EF%BC%89_2019-11-19-14-44-07.png" alt="springcloud实战之Hystrix（一）_2019-11-19-14-44-07.png"></p>
+<ol>
+<li><p>断路器</p>
+<blockquote>
+<p>当 Hystrix Command 请求后端服务失败数量超过一定比例(默认 50%), 断路器会切换到开路状态(Open). 这时所有请求会直接失败而不会发送到后端服务. 断路器保持在开路状态一段时间后(默认 5 秒), 自动切换到半开路状态(HALF-OPEN). 这时会判断下一次请求的返回情况, 如果请求成功, 断路器切回闭路状态(CLOSED), 否则重新切换到开路状态(OPEN). Hystrix 的断路器就像我们家庭电路中的保险丝, 一旦后端服务不可用, 断路器会直接切断请求链, 避免发送大量无效请求影响系统吞吐量, 并且断路器有自我检测并恢复的能力。</p>
+</blockquote>
+</li>
+<li><p>服务降级</p>
+<blockquote>
+<p>对于查询操作, 我们可以实现一个 fallback 方法, 当请求后端服务出现异常的时候, 可以使用 fallback 方法返回的值. fallback 方法的返回值一般是设置的默认值或者来自缓存。</p>
+</blockquote>
+</li>
+<li><p>资源隔离</p>
+<blockquote>
+<p>在 Hystrix 中, 主要通过线程池来实现资源隔离. 通常在使用的时候我们会根据调用的远程服务划分出多个线程池. 例如调用产品服务的 Command 放入 A 线程池, 调用账户服务的 Command 放入 B 线程池. 这样做的主要优点是运行环境被隔离开了. 这样就算调用服务的代码存在 bug 或者由于其他原因导致自己所在线程池被耗尽时, 不会对系统的其他服务造成影响. 但是带来的代价就是维护多个线程池会对系统带来额外的性能开销. 如果是对性能有严格要求而且确信自己调用服务的客户端代码不会出问题的话, 可以使用 Hystrix 的信号模式(Semaphores)来隔离资源.</p>
+</blockquote>
+</li>
+<li><p>服务监控 hystrixDashboard</p>
+<blockquote>
+<p>除了隔离依赖服务的调用以外，Hystrix 还提供了准实时的调用监控（Hystrix Dashboard），Hystrix 会持续地记录所有通过 Hystrix 发起的请求的执行信息，并以统计报表和图形的形式展示给用户，包括每秒执行多少请求多少成功，多少失败等。Netflix 通过 hystrix-metrics-event-stream 项目实现了对以上指标的监控。Spring Cloud 也提供了 Hystrix Dashboard 的整合，对监控内容转化成可视化界面。</p>
+</blockquote>
+</li>
+</ol>
 
       
     </div>
@@ -333,10 +358,65 @@
   </div>
   
     
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/">springcloud解析之Hystrix</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
+        <p><span>发布时间:</span>2019-11-22, 16:41:09</p>
+        <p><span>最后更新:</span>2019-11-22, 16:42:02</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/" title="springcloud解析之Hystrix">http://yoursite.com/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
 
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%881%EF%BC%89/">
+                    springcloud实战之Hystrix（1）
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BEuraka/">
+                    springcloud实战之Euraka
+                </a>
+            </div>
+        
+    </nav>
 
   
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么需要熔断器？"><span class="toc-number">1.</span> <span class="toc-text">为什么需要熔断器？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是服务雪崩？"><span class="toc-number">2.</span> <span class="toc-text">什么是服务雪崩？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是熔断器-Hystrix？"><span class="toc-number">3.</span> <span class="toc-text">什么是熔断器 Hystrix？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hystrix-能做什么"><span class="toc-number">4.</span> <span class="toc-text">Hystrix 能做什么</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
 
 
 
@@ -354,7 +434,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"about　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"springcloud解析之Hystrix　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -373,8 +453,8 @@
     <div id="disqus_thread"></div>
     <script>
         var disqus_config = function(){
-            this.page.url = 'http://yoursite.com/about/index.html';
-            this.page.identifier = 'about/index.html';
+            this.page.url = 'http://yoursite.com/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/';
+            this.page.identifier = '2019/11/22/springcloud解析之Hystrix/';
         };
         var loadComment = function(){
             var d = document, s = d.createElement('script');
@@ -391,6 +471,26 @@
 
     
 
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%881%EF%BC%89/" title="上一篇: springcloud实战之Hystrix（1）">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BEuraka/" title="下一篇: springcloud实战之Euraka">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BZuul/">springcloud实战之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BZuul/">springcloud解析之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%882%EF%BC%89/">springcloud实战之Hystrix（2）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%881%EF%BC%89/">springcloud实战之Hystrix（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/">springcloud解析之Hystrix</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BEuraka/">springcloud实战之Euraka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BEureka/">springcloud解析之Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/">springcloud实战之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/">springcloud解析之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BRibbon/">springcloud实战之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BRibbon/">springcloud解析之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/">微服务之初见</a></li></ul>
 
 
 

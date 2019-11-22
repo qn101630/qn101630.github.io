@@ -15,18 +15,16 @@
 
 
 
-<meta name="description" content="什么是微服务架构  微服务架构是一种架构模式，它提倡将单一应用程序划分成一组小的服务，服务之间相互协调、互相配合，为用户提供最终价值。每个服务运行在其独立的进程中，服务和服务之间采用轻量级的通信机制相互沟通（通常是基于 HTTP 的 Restful API).每个服务都围绕着具体的业务进行构建，并且能够被独立的部署到生产环境、类生产环境等 单体应用 VS 微服务架构优点1. 提升开发交流，每个服务">
-<meta name="keywords" content="微服务介绍">
+<meta name="description" content="创建一个 Feign 客户端简单实践 依赖  1234567891011121314&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;&amp;lt;project xmlns=&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;         xmlns:xsi=&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance">
+<meta name="keywords" content="feign实战">
 <meta property="og:type" content="article">
-<meta property="og:title" content="微服务之初见">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81&#x2F;index.html">
+<meta property="og:title" content="springcloud实战之Feign">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign&#x2F;index.html">
 <meta property="og:site_name" content="南有乔木的技术博客专栏">
-<meta property="og:description" content="什么是微服务架构  微服务架构是一种架构模式，它提倡将单一应用程序划分成一组小的服务，服务之间相互协调、互相配合，为用户提供最终价值。每个服务运行在其独立的进程中，服务和服务之间采用轻量级的通信机制相互沟通（通常是基于 HTTP 的 Restful API).每个服务都围绕着具体的业务进行构建，并且能够被独立的部署到生产环境、类生产环境等 单体应用 VS 微服务架构优点1. 提升开发交流，每个服务">
+<meta property="og:description" content="创建一个 Feign 客户端简单实践 依赖  1234567891011121314&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;&amp;lt;project xmlns=&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;         xmlns:xsi=&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E4%BB%80%E4%B9%88_2019-11-20-13-53-42.png">
-<meta property="og:updated_time" content="2019-11-22T08:15:19.898Z">
+<meta property="og:updated_time" content="2019-11-22T08:40:04.218Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E4%BB%80%E4%B9%88_2019-11-20-13-53-42.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -58,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>微服务之初见 | 南有乔木的技术博客专栏</title>
+<title>springcloud实战之Feign | 南有乔木的技术博客专栏</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -273,11 +271,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-微服务之初见" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-springcloud实战之Feign" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/" class="article-date">
-      <time datetime="2019-11-22T08:10:06.000Z" itemprop="datePublished">2019-11-22</time>
+      <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/" class="article-date">
+      <time datetime="2019-11-22T08:32:31.000Z" itemprop="datePublished">2019-11-22</time>
 </a>
 
 
@@ -292,7 +290,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      微服务之初见
+      springcloud实战之Feign
     </h1>
   
 
@@ -307,7 +305,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D/" rel="tag">微服务介绍</a></li></ul>
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/feign%E5%AE%9E%E6%88%98/" rel="tag">feign实战</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -317,24 +315,45 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h1 id="什么是微服务架构"><a href="#什么是微服务架构" class="headerlink" title="什么是微服务架构"></a>什么是微服务架构</h1><p><img src="/images/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E4%BB%80%E4%B9%88_2019-11-20-13-53-42.png" alt="微服务是什么_2019-11-20-13-53-42.png"></p>
-<hr>
-<p>微服务架构是一种架构模式，它提倡将单一应用程序划分成一组小的服务，服务之间相互协调、互相配合，为用户提供最终价值。每个服务运行在其独立的进程中，服务和服务之间采用轻量级的通信机制相互沟通（通常是基于 HTTP 的 Restful API).每个服务都围绕着具体的业务进行构建，并且能够被独立的部署到生产环境、类生产环境等</p>
-<h1 id="单体应用-VS-微服务架构"><a href="#单体应用-VS-微服务架构" class="headerlink" title="单体应用 VS 微服务架构"></a>单体应用 VS 微服务架构</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><pre><code>1. 提升开发交流，每个服务足够内聚，足够小，代码容易理解；
-2. 服务独立测试、部署、升级、发布；
-3. 按需定制的DFX，资源利用率，每个服务可以各自进行x扩展和z扩展，而且，每个服务可以根据自己的需要部署到合适的硬件服务器上；每个服务按
-4. 需要选择HA的模式，选择接受服务的实例个数；
-5. 容易扩大开发团队，可以针对每个服务（service）组件开发团队；
-6. 提高容错性（fault isolation），一个服务的内存泄露并不会让整个系统瘫痪；
-7. 新技术的应用，系统不会被长期限制在某个技术栈上；</code></pre><h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><pre><code>1. 没有银弹，微服务提高了系统的复杂度；
-2. 开发人员要处理分布式系统的复杂性；
-3. 服务之间的分布式通信问题；
-4. 服务的注册与发现问题；
-5. 服务之间的分布式事务问题；
-6. 数据隔离再来的报表处理问题；
-7. 服务之间的分布式一致性问题；
-8. 服务管理的复杂性，服务的编排；
-9. 不同服务实例的管理。</code></pre><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://www.zhihu.com/question/65502802" target="_blank" rel="noopener">什么是微服务架构？</a></p>
+        <h1 id="创建一个-Feign-客户端"><a href="#创建一个-Feign-客户端" class="headerlink" title="创建一个 Feign 客户端"></a>创建一个 Feign 客户端</h1><h2 id="简单实践"><a href="#简单实践" class="headerlink" title="简单实践"></a>简单实践</h2><ul>
+<li>依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springcloud<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.qn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>consumer-feign<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server</span>:<span class="string"></span></span><br><span class="line">  <span class="attr">port</span>: <span class="string">8900</span></span><br><span class="line"><span class="attr">spring</span>:<span class="string"></span></span><br><span class="line">  <span class="attr">application</span>:<span class="string"></span></span><br><span class="line">    <span class="attr">name</span>: <span class="string">consumer-order-ribbon</span></span><br><span class="line"><span class="attr">eureka</span>:<span class="string"></span></span><br><span class="line">  <span class="attr">instance</span>:<span class="string"></span></span><br><span class="line">    <span class="attr">hostname</span>: <span class="string">localhost</span></span><br><span class="line"><span class="comment">    # 发呆时间，即服务失效时间（缺省为90s）,就是超过15秒没有续约就会从注册表中剔除</span></span><br><span class="line">    <span class="meta">lease-expiration-duration-in-seconds</span>: <span class="string">15</span></span><br><span class="line"><span class="comment">    # 心跳时间，即服务续约间隔时间（缺省为30s）</span></span><br><span class="line">    <span class="meta">lease-renewal-interval-in-seconds</span>: <span class="string">5</span></span><br><span class="line">  <span class="attr">client</span>:<span class="string"></span></span><br><span class="line">    <span class="meta">service-url</span>:<span class="string"></span></span><br><span class="line">      <span class="attr">defaultZone</span>: <span class="string">http://localhost:9999/eureka</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="comment">//通过注解@EnableEurekaClient 表明自己是一个eurekaclient.</span></span><br><span class="line"><span class="meta">@EnableEurekaClient</span></span><br><span class="line"><span class="comment">//开启Feign的功能</span></span><br><span class="line"><span class="meta">@EnableFeignClients</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerFeignApp</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(ConsumerFeignApp<span class="class">.<span class="keyword">class</span>,<span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>服务接口</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 定义一个feign接口，通过@ FeignClient（“服务名”），来指定调用哪个服务</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@FeignClient</span>(value =<span class="string">"provider-user"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/user/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function">User <span class="title">getUser</span><span class="params">(@PathVariable Long id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>业务类（数据类同上省略）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/order/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">getOrder</span><span class="params">(@PathVariable Long id)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> userService.getUser(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">启动eureka、同时启动两个提供者、启动Feign客户端，访问地址http://localhost:8900/order/1，可以看到，轮流访问两个提供者服务。说明 Feign 默认是集成了 Ribbon 的轮询方案。</span><br></pre></td></tr></table></figure>
+
+<h2 id="Feign-如何结合-Ribbon-切换均衡算法"><a href="#Feign-如何结合-Ribbon-切换均衡算法" class="headerlink" title="Feign 如何结合 Ribbon 切换均衡算法"></a>Feign 如何结合 Ribbon 切换均衡算法</h2><ul>
+<li>可以在 application.yml 中指定，如下:</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">PROVIDER-USER</span>:<span class="string"></span></span><br><span class="line">  <span class="attr">ribbon</span>:<span class="string"></span></span><br><span class="line">    <span class="attr">NFLoadBalancerRuleClassName</span>: <span class="string">com.netflix.loadbalancer.RandomRule</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">重启Feign客户端，访问上面那个url，可以发现随机访问负载策略是生效的。</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -343,13 +362,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/">微服务之初见</a></p>
+        <p><span>本文标题:</span><a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/">springcloud实战之Feign</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
-        <p><span>发布时间:</span>2019-11-22, 16:10:06</p>
-        <p><span>最后更新:</span>2019-11-22, 16:15:19</p>
+        <p><span>发布时间:</span>2019-11-22, 16:32:31</p>
+        <p><span>最后更新:</span>2019-11-22, 16:40:04</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/" title="微服务之初见">http://yoursite.com/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/" title="springcloud实战之Feign">http://yoursite.com/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -362,11 +381,17 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BRibbon/">
-                    springcloud解析之Ribbon
+                <a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BEureka/">
+                    springcloud解析之Eureka
                 </a>
             </div>
         
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/">
+                    springcloud解析之Feign
+                </a>
+            </div>
         
     </nav>
 
@@ -376,7 +401,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#什么是微服务架构"><span class="toc-number">1.</span> <span class="toc-text">什么是微服务架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#单体应用-VS-微服务架构"><span class="toc-number">2.</span> <span class="toc-text">单体应用 VS 微服务架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#优点"><span class="toc-number">2.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缺点"><span class="toc-number">2.2.</span> <span class="toc-text">缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">2.3.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建一个-Feign-客户端"><span class="toc-number">1.</span> <span class="toc-text">创建一个 Feign 客户端</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单实践"><span class="toc-number">1.1.</span> <span class="toc-text">简单实践</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Feign-如何结合-Ribbon-切换均衡算法"><span class="toc-number">1.2.</span> <span class="toc-text">Feign 如何结合 Ribbon 切换均衡算法</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -412,7 +437,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"微服务之初见　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"springcloud实战之Feign　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -431,8 +456,8 @@
     <div id="disqus_thread"></div>
     <script>
         var disqus_config = function(){
-            this.page.url = 'http://yoursite.com/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/';
-            this.page.identifier = '2019/11/22/微服务之初见/';
+            this.page.url = 'http://yoursite.com/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/';
+            this.page.identifier = '2019/11/22/springcloud实战之Feign/';
         };
         var loadComment = function(){
             var d = document, s = d.createElement('script');
@@ -454,7 +479,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BRibbon/" title="上一篇: springcloud解析之Ribbon">
+            <a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BEureka/" title="上一篇: springcloud解析之Eureka">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -462,7 +487,9 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/" title="下一篇: springcloud解析之Feign">
+                <i class="fa fa-angle-right"></i>
+            </a>
         
     </div>
 
