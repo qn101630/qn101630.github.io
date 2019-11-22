@@ -15,15 +15,18 @@
 
 
 
-<meta name="description" content="hexo博客">
+<meta name="description" content="什么是微服务架构  微服务架构是一种架构模式，它提倡将单一应用程序划分成一组小的服务，服务之间相互协调、互相配合，为用户提供最终价值。每个服务运行在其独立的进程中，服务和服务之间采用轻量级的通信机制相互沟通（通常是基于 HTTP 的 Restful API).每个服务都围绕着具体的业务进行构建，并且能够被独立的部署到生产环境、类生产环境等 单体应用 VS 微服务架构优点1. 提升开发交流，每个服务">
+<meta name="keywords" content="微服务介绍">
 <meta property="og:type" content="article">
-<meta property="og:title" content="springcloud实战之config（一）">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bconfig%EF%BC%88%E4%B8%80%EF%BC%89&#x2F;index.html">
+<meta property="og:title" content="微服务之初见">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81&#x2F;index.html">
 <meta property="og:site_name" content="南有乔木的技术博客专栏">
-<meta property="og:description" content="hexo博客">
+<meta property="og:description" content="什么是微服务架构  微服务架构是一种架构模式，它提倡将单一应用程序划分成一组小的服务，服务之间相互协调、互相配合，为用户提供最终价值。每个服务运行在其独立的进程中，服务和服务之间采用轻量级的通信机制相互沟通（通常是基于 HTTP 的 Restful API).每个服务都围绕着具体的业务进行构建，并且能够被独立的部署到生产环境、类生产环境等 单体应用 VS 微服务架构优点1. 提升开发交流，每个服务">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-22T02:58:20.212Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E4%BB%80%E4%B9%88_2019-11-20-13-53-42.png">
+<meta property="og:updated_time" content="2019-11-22T08:15:19.898Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E4%BB%80%E4%B9%88_2019-11-20-13-53-42.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -55,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>springcloud实战之config（一） | 南有乔木的技术博客专栏</title>
+<title>微服务之初见 | 南有乔木的技术博客专栏</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -270,11 +273,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="springcloud实战之config（一）-springcloud实战之config（一）" class="article article-type-springcloud实战之config（一）" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-微服务之初见" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bconfig%EF%BC%88%E4%B8%80%EF%BC%89/" class="article-date">
-      <time datetime="2019-11-22T02:58:20.000Z" itemprop="datePublished">2019-11-22</time>
+      <a href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/" class="article-date">
+      <time datetime="2019-11-22T08:10:06.000Z" itemprop="datePublished">2019-11-22</time>
 </a>
 
 
@@ -289,7 +292,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      springcloud实战之config（一）
+      微服务之初见
     </h1>
   
 
@@ -297,8 +300,16 @@
       
       <div class="article-info article-info-post">
         
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/springcloud/">springcloud</a>
+    </div>
+
 
         
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D/" rel="tag">微服务介绍</a></li></ul>
+    </div>
+
         <div class="clearfix"></div>
       </div>
       
@@ -306,7 +317,25 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        
+        <h1 id="什么是微服务架构"><a href="#什么是微服务架构" class="headerlink" title="什么是微服务架构"></a>什么是微服务架构</h1><p><img src="/images/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E4%BB%80%E4%B9%88_2019-11-20-13-53-42.png" alt="微服务是什么_2019-11-20-13-53-42.png"></p>
+<hr>
+<p>微服务架构是一种架构模式，它提倡将单一应用程序划分成一组小的服务，服务之间相互协调、互相配合，为用户提供最终价值。每个服务运行在其独立的进程中，服务和服务之间采用轻量级的通信机制相互沟通（通常是基于 HTTP 的 Restful API).每个服务都围绕着具体的业务进行构建，并且能够被独立的部署到生产环境、类生产环境等</p>
+<h1 id="单体应用-VS-微服务架构"><a href="#单体应用-VS-微服务架构" class="headerlink" title="单体应用 VS 微服务架构"></a>单体应用 VS 微服务架构</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><pre><code>1. 提升开发交流，每个服务足够内聚，足够小，代码容易理解；
+2. 服务独立测试、部署、升级、发布；
+3. 按需定制的DFX，资源利用率，每个服务可以各自进行x扩展和z扩展，而且，每个服务可以根据自己的需要部署到合适的硬件服务器上；每个服务按
+4. 需要选择HA的模式，选择接受服务的实例个数；
+5. 容易扩大开发团队，可以针对每个服务（service）组件开发团队；
+6. 提高容错性（fault isolation），一个服务的内存泄露并不会让整个系统瘫痪；
+7. 新技术的应用，系统不会被长期限制在某个技术栈上；</code></pre><h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><pre><code>1. 没有银弹，微服务提高了系统的复杂度；
+2. 开发人员要处理分布式系统的复杂性；
+3. 服务之间的分布式通信问题；
+4. 服务的注册与发现问题；
+5. 服务之间的分布式事务问题；
+6. 数据隔离再来的报表处理问题；
+7. 服务之间的分布式一致性问题；
+8. 服务管理的复杂性，服务的编排；
+9. 不同服务实例的管理。</code></pre><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://www.zhihu.com/question/65502802" target="_blank" rel="noopener">什么是微服务架构？</a></p>
+
       
     </div>
     
@@ -314,13 +343,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bconfig%EF%BC%88%E4%B8%80%EF%BC%89/">springcloud实战之config（一）</a></p>
+        <p><span>本文标题:</span><a href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/">微服务之初见</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
-        <p><span>发布时间:</span>2019-11-22, 10:58:20</p>
-        <p><span>最后更新:</span>2019-11-22, 10:58:20</p>
+        <p><span>发布时间:</span>2019-11-22, 16:10:06</p>
+        <p><span>最后更新:</span>2019-11-22, 16:15:19</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bconfig%EF%BC%88%E4%B8%80%EF%BC%89/" title="springcloud实战之config（一）">http://yoursite.com/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bconfig%EF%BC%88%E4%B8%80%EF%BC%89/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bconfig%EF%BC%88%E4%B8%80%EF%BC%89/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/" title="微服务之初见">http://yoursite.com/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -332,16 +361,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bconfig%EF%BC%88%E4%BA%8C%EF%BC%89/">
-                    springcloud实战之config（二）
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/11/20/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bzuul%EF%BC%88%E4%BA%8C%EF%BC%89/">
-                    springcloud实战之zuul（二）
+                <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bconfig%EF%BC%88%E4%BA%8C%EF%BC%89/">
+                    springcloud实战之config（二）
                 </a>
             </div>
         
@@ -353,7 +376,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#什么是微服务架构"><span class="toc-number">1.</span> <span class="toc-text">什么是微服务架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#单体应用-VS-微服务架构"><span class="toc-number">2.</span> <span class="toc-text">单体应用 VS 微服务架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#优点"><span class="toc-number">2.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缺点"><span class="toc-number">2.2.</span> <span class="toc-text">缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">2.3.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -389,7 +412,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"springcloud实战之config（一）　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"微服务之初见　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -408,8 +431,8 @@
     <div id="disqus_thread"></div>
     <script>
         var disqus_config = function(){
-            this.page.url = 'http://yoursite.com/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bconfig%EF%BC%88%E4%B8%80%EF%BC%89/';
-            this.page.identifier = '2019/11/22/springcloud实战之config（一）/';
+            this.page.url = 'http://yoursite.com/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/';
+            this.page.identifier = '2019/11/22/微服务之初见/';
         };
         var loadComment = function(){
             var d = document, s = d.createElement('script');
@@ -431,15 +454,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bconfig%EF%BC%88%E4%BA%8C%EF%BC%89/" title="上一篇: springcloud实战之config（二）">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/11/20/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bzuul%EF%BC%88%E4%BA%8C%EF%BC%89/" title="下一篇: springcloud实战之zuul（二）">
+            <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bconfig%EF%BC%88%E4%BA%8C%EF%BC%89/" title="下一篇: springcloud实战之config（二）">
                 <i class="fa fa-angle-right"></i>
             </a>
         
