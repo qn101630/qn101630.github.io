@@ -310,7 +310,29 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        
+        <h3 id="动态-SQL"><a href="#动态-SQL" class="headerlink" title="动态 SQL"></a>动态 SQL</h3><p>动态 SQL 是 <code>mybatis</code> 的强大特性之一，也是它优于其他 ORM 框架的一个重要原因。<code>mybatis</code> 在对 sql 语句进行预编译之前，会对 sql 进行动态解析，解析为一个 BoundSql 对象，也是在此处对动态 SQL 进行处理的。在动态 SQL 解析阶段， <code>#{ }</code> 和 <code>${ }</code> 会有不同的表现</p>
+<h3 id="和-的异同"><a href="#和-的异同" class="headerlink" title="#和$的异同"></a>#和$的异同</h3><h4 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h4><p>都可以获取对象中的属性值,<code>$[name]</code> 和<code>#[name]</code>相同</p>
+<h4 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h4><p><code>#</code> 可以防止 sql 注入，先把 sql 中使用#的地方变成?占位，再设置参数值,会把传入的参数使用引号包起来，参数值?: ‘name’，如下：</p>
+<blockquote>
+<p>SELECT * FROM user WHERE name = #{name} AND password = #{password}</p>
+</blockquote>
+<blockquote>
+<p>SELECT * FROM user WHERE name = ? AND password = ?</p>
+</blockquote>
+<p><code>$</code> 在动态解析的时候，会将我们传入的参数当做 String 字符串填充到我们的语句中，进行预编译，此时的<code>SQL</code>语句已经不包含变量了，完全已经是常量数据了。相当于我们普通没有变量的 sql 了。如下：</p>
+<blockquote>
+<p>select * from user where name = “xxx”;</p>
+</blockquote>
+<p>由于预编译的存在，<code>$</code>的使用会导致<strong>sql 注入</strong>，可以拼接 sql，如下：</p>
+<blockquote>
+<p>SELECT * FROM user WHERE name = $[name] AND password  = $[password]</p>
+</blockquote>
+<p>但如果 name = OR 1 = 1 OR，sql 注入就会影响到 sql 语句的原意，如下：</p>
+<blockquote>
+<p>SELECT * FROM user WHERE name = OR 1 = 1 OR AND password =</p>
+</blockquote>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>#</code>方式能够很大程度防止 sql 注入，<code>$</code>方式无法防止 Sql 注入。<br><code>$</code>方式一般用于传入数据库对象，例如传入表名.<br>一般能用<code>#</code>的就别用<code>$</code>.</p>
+
       
     </div>
     
