@@ -23,8 +23,11 @@
 <meta property="og:site_name" content="南有乔木的技术博客专栏">
 <meta property="og:description" content="开启更新机制依赖（父 pom 已经添加过）1234&amp;lt;dependency&amp;gt;            &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;&#x2F;groupId&amp;gt;            &amp;lt;artifactId&amp;gt;spring-boot-starter-actuator&amp;lt;&#x2F;artifactId&amp;gt;        &amp;lt;&#x2F;">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-29T07:37:49.597Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89_2019-12-02-14-18-14.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89_2019-12-02-14-18-50.png">
+<meta property="og:updated_time" content="2019-12-02T06:19:40.569Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89_2019-12-02-14-18-14.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -315,7 +318,12 @@
 
 <h3 id="对需要刷新的类加上注解-RefreshScope"><a href="#对需要刷新的类加上注解-RefreshScope" class="headerlink" title="对需要刷新的类加上注解@RefreshScope"></a>对需要刷新的类加上注解@RefreshScope</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RefreshScope</span> <span class="comment">//不配置这个注解刷新的时候会报错</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="comment">//这个@Value会根据配置的配置中心地址找到git仓库对应的配置和本地服务的配置文件</span></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;config.hello&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span> String hello;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"testConfig"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"读取到配置中心："</span> + hello;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="client-配置，将端口暴露"><a href="#client-配置，将端口暴露" class="headerlink" title="client 配置，将端口暴露"></a>client 配置，将端口暴露</h3>
+<h3 id="client-端配置，将端口暴露"><a href="#client-端配置，将端口暴露" class="headerlink" title="client 端配置，将端口暴露"></a>client 端配置，将端口暴露</h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">management</span>:<span class="string"></span></span><br><span class="line">  <span class="attr">endpoints</span>:<span class="string"></span></span><br><span class="line">    <span class="attr">web</span>:<span class="string"></span></span><br><span class="line">      <span class="attr">exposure</span>:<span class="string"></span></span><br><span class="line">        <span class="attr">include</span>: <span class="string">refresh</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Server-端配置，将端口暴露"><a href="#Server-端配置，将端口暴露" class="headerlink" title="Server 端配置，将端口暴露"></a>Server 端配置，将端口暴露</h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">management</span>:<span class="string"></span></span><br><span class="line">  <span class="attr">endpoints</span>:<span class="string"></span></span><br><span class="line">    <span class="attr">web</span>:<span class="string"></span></span><br><span class="line">      <span class="attr">exposure</span>:<span class="string"></span></span><br><span class="line">        <span class="attr">include</span>: <span class="string">"*"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>启动 server 与 client,修改 git 上的 dev 配置属性，通过 post 请求的方式更新配置文件：<br><img src="/images/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89_2019-12-02-14-18-14.png" alt="springcloud实战之Config（2）_2019-12-02-14-18-14.png"><br><img src="/images/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89_2019-12-02-14-18-50.png" alt="springcloud实战之Config（2）_2019-12-02-14-18-50.png"><br>再次访问 <code>http://localhost:8771/testConfig</code>就可以得到最新的配置结果。</p>
+
       
     </div>
     
@@ -326,7 +334,7 @@
         <p><span>本文标题:</span><a href="/2019/11/29/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89/">springcloud实战之Config（2）</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
         <p><span>发布时间:</span>2019-11-29, 11:00:39</p>
-        <p><span>最后更新:</span>2019-11-29, 15:37:49</p>
+        <p><span>最后更新:</span>2019-12-02, 14:19:40</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/11/29/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89/" title="springcloud实战之Config（2）">http://yoursite.com/2019/11/29/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/29/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -362,7 +370,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#开启更新机制"><span class="toc-number">1.</span> <span class="toc-text">开启更新机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#依赖（父-pom-已经添加过）"><span class="toc-number">1.1.</span> <span class="toc-text">依赖（父 pom 已经添加过）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对需要刷新的类加上注解-RefreshScope"><span class="toc-number">1.2.</span> <span class="toc-text">对需要刷新的类加上注解@RefreshScope</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#client-配置，将端口暴露"><span class="toc-number">1.3.</span> <span class="toc-text">client 配置，将端口暴露</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#开启更新机制"><span class="toc-number">1.</span> <span class="toc-text">开启更新机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#依赖（父-pom-已经添加过）"><span class="toc-number">1.1.</span> <span class="toc-text">依赖（父 pom 已经添加过）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对需要刷新的类加上注解-RefreshScope"><span class="toc-number">1.2.</span> <span class="toc-text">对需要刷新的类加上注解@RefreshScope</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#client-端配置，将端口暴露"><span class="toc-number">1.3.</span> <span class="toc-text">client 端配置，将端口暴露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Server-端配置，将端口暴露"><span class="toc-number">1.4.</span> <span class="toc-text">Server 端配置，将端口暴露</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-number">2.</span> <span class="toc-text">测试</span></a></li></ol>
         
     </div>
     <style>
