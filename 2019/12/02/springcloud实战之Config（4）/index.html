@@ -24,7 +24,7 @@
 <meta property="og:description" content="回顾在springcloud实战之Config（2） ，我们简单的实现了动态刷新。但如果有大量的微服务，就需要为每个 client 去 refresh,明显是不合理的。而 Spring Cloud Bus 可以完美解决这一问题。 通过消息总线 Spring Cloud Bus 更新客户端配置文件（使用 Kafka）原理核心Spring bus 的一个核心思想是通过分布式的启动器对 spring b">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89_2019-12-04-16-28-26.png">
-<meta property="og:updated_time" content="2019-12-04T08:44:04.083Z">
+<meta property="og:updated_time" content="2019-12-04T08:46:15.388Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89_2019-12-04-16-28-26.png">
 
@@ -318,7 +318,8 @@
 <h4 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h4><p><img src="/images/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89_2019-12-04-16-28-26.png" alt="springcloud实战之Config（4）_2019-12-04-16-28-26.png"></p>
 <h4 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h4><ul>
 <li>提交代码触发 post 请求给 bus/refresh</li>
-<li>server 端接收到请求并发送给 Spring Cloud Bus<br>-Spring Cloud bus 接到消息并通知给其它客户端</li>
+<li>server 端接收到请求并发送给 Spring Cloud Bus</li>
+<li>Spring Cloud bus 接到消息并通知给其它客户端</li>
 <li>其它客户端接收到通知，请求 Server 端获取最新配置</li>
 <li>全部客户端均获取到最新的配置</li>
 </ul>
@@ -348,7 +349,7 @@
         <p><span>本文标题:</span><a href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89/">springcloud实战之Config（4）</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
         <p><span>发布时间:</span>2019-12-02, 14:24:04</p>
-        <p><span>最后更新:</span>2019-12-04, 16:44:04</p>
+        <p><span>最后更新:</span>2019-12-04, 16:46:15</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89/" title="springcloud实战之Config（4）">http://yoursite.com/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

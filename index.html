@@ -426,7 +426,8 @@
 <h4 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h4><p><img src="/images/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89_2019-12-04-16-28-26.png" alt="springcloud实战之Config（4）_2019-12-04-16-28-26.png"></p>
 <h4 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h4><ul>
 <li>提交代码触发 post 请求给 bus/refresh</li>
-<li>server 端接收到请求并发送给 Spring Cloud Bus<br>-Spring Cloud bus 接到消息并通知给其它客户端</li>
+<li>server 端接收到请求并发送给 Spring Cloud Bus</li>
+<li>Spring Cloud bus 接到消息并通知给其它客户端</li>
 <li>其它客户端接收到通知，请求 Server 端获取最新配置</li>
 <li>全部客户端均获取到最新的配置</li>
 </ul>
