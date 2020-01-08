@@ -4,6 +4,106 @@
   
     
     <entry>
+      <title>JVM性能监控之线程—jstack</title>
+      <link href="/2020/01/08/JVM%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E4%B9%8B%E7%BA%BF%E7%A8%8B%E2%80%94jstack/"/>
+      <url>/2020/01/08/JVM%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E4%B9%8B%E7%BA%BF%E7%A8%8B%E2%80%94jstack/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 线程分析 jvm </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>CPU飙升到100%的原因</title>
+      <link href="/2020/01/08/CPU%E9%A3%99%E5%8D%87%E5%88%B0100-%E7%9A%84%E5%8E%9F%E5%9B%A0/"/>
+      <url>/2020/01/08/CPU%E9%A3%99%E5%8D%87%E5%88%B0100-%E7%9A%84%E5%8E%9F%E5%9B%A0/</url>
+      
+        <content type="html"><![CDATA[<h3 id="什么是-cpu-使用率？"><a href="#什么是-cpu-使用率？" class="headerlink" title="什么是 cpu 使用率？"></a>什么是 cpu 使用率？</h3><p>CPU％= 1 - idleTime / sysTime * 100<br>idleTime：CPU 空闲的时间<br>sysTime：CPU 处于用户模式和内核模式的时间总和</p><h3 id="与-cpu-有关的是什么？"><a href="#与-cpu-有关的是什么？" class="headerlink" title="与 cpu 有关的是什么？"></a>与 cpu 有关的是什么？</h3><p><strong>计算密集型程序的 CPU 密集程度更高</strong>。<br>那么，JAVA 应用程序中的哪些操作更加 CPU 密集？<br>以下列出了常见的 CPU 密集型操作：</p><ol><li>频繁的 GC; 如果访问量很高，可能会导致频繁的 GC 甚至 FGC。当调用量很大时，内存分配将如此之快以至于 GC 线程将连续执行，这将导致 CPU 飙升。</li><li>序列化和反序列化。稍后将给出一个示例：当程序执行 xml 解析时，调用量会增加，从而导致 CPU 变满。</li><li>序列化和反序列化;</li><li>正则表达式。我遇到了正则表达式使 CPU 充满的情况; 原因可能是 Java 正则表达式使用的引擎实现是 NFA 自动机，它将在字符匹配期间执行回溯。</li><li>线程上下文切换; 有许多已启动的线程，这些线程的状态在 Blocked（锁定等待，IO 等待等）和 Running 之间发生变化。当锁争用激烈时，这种情况很容易发生。</li><li>有些线程正在执行非阻塞操作，例如 while(true)语句。如果在程序中计算需要很长时间，则可以使线程休眠。</li></ol><h3 id="cpu-是否与进程和线程有关？"><a href="#cpu-是否与进程和线程有关？" class="headerlink" title="cpu 是否与进程和线程有关？"></a>cpu 是否与进程和线程有关？</h3><p>线程的等待及阻塞不会使用 CPU 资源，线程的频繁的上下文切换（锁竞争激烈）容易造成 CPU 飙升。</p><h3 id="一问一答"><a href="#一问一答" class="headerlink" title="一问一答"></a>一问一答</h3><ol><li><p>while 的无限循环会导致 CPU 使用率飙升吗？<br>会。<br>首先，无限循环将调用 CPU 寄存器进行计数，此操作将占用 CPU 资源。那么，如果线程始终处于无限循环状态，CPU 是否会切换线程？<br>除非操作系统时间片到期，否则无限循环不会放弃占用的 CPU 资源，并且无限循环将继续向系统请求时间片，直到系统没有空闲时间来执行任何其他操作。<br>stackoverflow 中也提出了这个问题：<a href="https://stackoverflow.com/questions/2846165/why-does-an-infinite-loop-of-the-unintended-kind-increase-the-cpu-use" target="_blank" rel="noopener">为什么无意的无限循环增加了 CPU 的使用？</a></p></li><li><p>频繁的 Young GC 会导致 CPU 占用率飙升吗？<br>会。<br>Young GC 本身就是 JVM 用于垃圾收集的操作，它需要计算内存和调用寄存器。因此，频繁的 Young GC 必须占用 CPU 资源。<br>让我们来看一个现实世界的案例。for 循环从数据库中查询数据集合，然后再次封装新的数据集合。如果内存不足以存储，JVM 将回收不再使用的数据。因此，如果所需的存储空间很大，您可能会收到 CPU 使用率警报。</p></li><li><p>对于 CPU 占用率高的应用程序，线程数是否较大？<br>不是。<br>高 CPU 使用率的关键因素是计算密集型操作。如果一个线程中有大量计算，则 CPU 使用率也可能很高。这也是数据脚本任务需要在大规模集群上运行的原因。</p></li><li><p>如果分时操作系统中 CPU 的值 us 或 sy 值很高，这意味着什么？<br>您可以使用命令查找 CPU 的值 us 和 sy 值 top<br>us：用户空间占用 CPU 的百分比。简单来说，高我们是由程序引起的。通过分析线程堆栈很容易找到有问题的线程。整编：微信公众号，搜云库技术团队，ID：souyunku<br>sy：内核空间占用 CPU 的百分比。当 sy 为高时，如果它是由程序引起的，那么它基本上是由于线程上下文切换。</p></li></ol><h3 id="如何找出-CPU-使用率高的原因"><a href="#如何找出-CPU-使用率高的原因" class="headerlink" title="如何找出 CPU 使用率高的原因"></a>如何找出 CPU 使用率高的原因</h3><p>如果发现应用程序服务器的 CPU 使用率很高，请首先检查线程数，JVM，系统负载等参数，然后使用这些参数来证明问题的原因。其次，使用 jstack 打印堆栈信息并使用工具分析线程使用情况<a href="/2020/01/08/JVM%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E4%B9%8B%E7%BA%BF%E7%A8%8B%E2%80%94jstack/" title="JVM性能监控之线程—jstack">JVM性能监控之线程—jstack</a></p><h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p><a href="https://mp.weixin.qq.com/s?__biz=MzA3MTUzOTcxOQ==&mid=2452969215&idx=1&sn=1dc1a52231895d8cd15f0f33f774a8ef&scene=21#wechat_redirect" target="_blank" rel="noopener">这六种原因，真能让 Java 应用 CPU 使用率飙升至 100% 吗？</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 运维 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> cpu </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>linux之shell脚本学习</title>
+      <link href="/2019/12/16/linux%E4%B9%8Bshell%E8%84%9A%E6%9C%AC%E5%AD%A6%E4%B9%A0/"/>
+      <url>/2019/12/16/linux%E4%B9%8Bshell%E8%84%9A%E6%9C%AC%E5%AD%A6%E4%B9%A0/</url>
+      
+        <content type="html"><![CDATA[<h2 id="什么是-shell？"><a href="#什么是-shell？" class="headerlink" title="什么是 shell？"></a>什么是 shell？</h2><p>代理，linux 命令与 linux 内核间的代理； 对一个纯文本的文件进行解析，然后执行这些功能，也可以说 Shell 脚本就是一系列命令的集合。</p><h2 id="shell-能做什么？"><a href="#shell-能做什么？" class="headerlink" title="shell 能做什么？"></a>shell 能做什么？</h2><ul><li>将一些复杂的命令简单化(平时我们提交一次 github 代码可能需要很多步骤，但是可以用 Shell 简化成一步)</li><li>可以写一些脚本自动实现一个工程中自动更换最新的 sdk(库)</li><li>自动打包、编译、发布等功能</li><li>清理磁盘中空文件夹</li><li>总之一切有规律的活脚本都可以尝试一下</li></ul><h2 id="shell-不能做什么？"><a href="#shell-不能做什么？" class="headerlink" title="shell 不能做什么？"></a>shell 不能做什么？</h2><ul><li>需要精密的运算的时候</li><li>需要语言效率很高的时候</li><li>需要一些网络操作的时候</li><li>总之 Shell 就是可以快速开发一个脚本简化开发流程，并不可以用来替代高级语言</li></ul><h2 id="shell-工作原理"><a href="#shell-工作原理" class="headerlink" title="shell 工作原理"></a>shell 工作原理</h2><p>Shell 可以被称作是脚本语言，因为它本身是不需要编译的，而是通过解释器解释之后再编译执行，和传统语言相比多了解释的过程所以效率会略差于传统的直接编译的语言。</p><h2 id="hello-world-脚本"><a href="#hello-world-脚本" class="headerlink" title="hello world 脚本"></a>hello world 脚本</h2><blockquote><p>#!/bin/bash<br>echo “Hello World”</p></blockquote><h2 id="运行脚本"><a href="#运行脚本" class="headerlink" title="运行脚本"></a>运行脚本</h2><blockquote><p>cd 到该目录下<br>chmod +x ./test.sh #给脚本权限<br>./test.sh #执行脚本<br>也可以直接 sh test.sh，无须#!/bin/bash</p></blockquote><p><img src="/images/linux%E4%B9%8Bshell%E8%84%9A%E6%9C%AC%E5%AD%A6%E4%B9%A0_2019-12-19-15-29-37.png" alt="linux之shell脚本学习_2019-12-19-15-29-37.png"></p><h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><h4 id="创建变量"><a href="#创建变量" class="headerlink" title="创建变量"></a>创建变量</h4><blockquote><p>myText=”hello world”<br>muNum=100</p></blockquote><p>“=”前后不能有空格，命名规则就和其它语言一样。</p><h4 id="访问变量"><a href="#访问变量" class="headerlink" title="访问变量"></a>访问变量</h4><blockquote><p>myText=”hello world”<br>muNum=100<br>echo $myText<br>echo muNum</p></blockquote><p>当想要访问变量的时候，需要使用$，否则输出的将是纯文本内容:</p><blockquote><p>root@8f24935911d1:/home/qn/shell# ./hello.sh<br>hello world<br>muNum</p></blockquote><h3 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h3><h4 id="加减乘除"><a href="#加减乘除" class="headerlink" title="加减乘除 + - * /"></a>加减乘除 + - * /</h4><blockquote><p>#!/bin/bash<br>echo “Hello World !”<br>a=3<br>b=5<br>val=<code>expr $a + $b</code><br>echo “Total value : $val”<br>val=<code>expr $a - $b</code><br>echo “Total value : $val”<br>val=<code>expr $a \* $b</code><br>echo “Total value : $val”<br>val=<code>expr $a / $b</code><br>echo “Total value : $val”</p></blockquote><p>定义变量的时候“=”前后是不能有空格的，但是进行四则运算的时候运算符号前后一定要有空格，乘法的时候需要进行转义</p><blockquote><p>root@8f24935911d1:/home/qn/shell# ./hello.sh<br>Hello World !<br>Total value : 8<br>Total value : -2<br>Total value : 15<br>Total value : 0</p></blockquote><h4 id="其它运算符-、-、-、！、-o、-a"><a href="#其它运算符-、-、-、！、-o、-a" class="headerlink" title="其它运算符 =、==、!=、！、-o、-a"></a>其它运算符 =、==、!=、！、-o、-a</h4><p><img src="/images/linux%E4%B9%8Bshell%E8%84%9A%E6%9C%AC%E5%AD%A6%E4%B9%A0_2019-12-19-15-49-19.png" alt="linux之shell脚本学习_2019-12-19-15-49-19.png"></p><blockquote><p>a=3<br>b=5<br>val=<code>expr $a / $b</code><br>echo “Total value : $val”<br>val=<code>expr $a % $b</code><br>echo “Total value : $val”<br>if [ $a == $b ]<br>then<br>&emsp;&emsp;echo “a is equal to b”<br>fi<br>if [ $a != $b ]<br>then<br>&emsp;&emsp;echo “a is not equal to b”<br>fi</p></blockquote><blockquote><p>root@8f24935911d1:/home/qn/shell# ./hello.sh<br>Total value : 0<br>Total value : 3<br>a is not equal to b</p></blockquote><h4 id="关系运算符"><a href="#关系运算符" class="headerlink" title="关系运算符"></a>关系运算符</h4><p><img src="/images/linux%E4%B9%8Bshell%E8%84%9A%E6%9C%AC%E5%AD%A6%E4%B9%A0_2019-12-19-15-58-30.png" alt="linux之shell脚本学习_2019-12-19-15-58-30.png"></p><blockquote><p>a=10<br>b=20<br>if [ $a -eq $b ]<br>then<br>&emsp;&emsp;echo “true”<br>else<br>&emsp;&emsp;echo “false”<br>fi<br>if [ $a -ne $b ]<br>then<br>&emsp;&emsp;echo “true”<br>else<br>&emsp;&emsp;echo “false”<br>fi<br>if [ $a -gt $b ]<br>then<br>&emsp;&emsp;echo “true”<br>else<br>&emsp;&emsp;echo “false”<br>fi<br>if [ $a -lt $b ]<br>then<br>&emsp;&emsp;echo “true”<br>else<br>&emsp;&emsp;echo “false”<br>fi<br>if [ $a -ge $b ]<br>then<br>&emsp;&emsp;echo “true”<br>else<br>&emsp;&emsp;echo “false”<br>fi<br>if [ $a -le $b ]<br>then<br>&emsp;&emsp;echo “true”<br>else<br>&emsp;&emsp;echo “false”<br>fi</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> linux脚本 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> shell </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>linux脚本之crontab(定时任务)</title>
+      <link href="/2019/12/16/linux%E8%84%9A%E6%9C%AC%E4%B9%8Bcrontab-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/"/>
+      <url>/2019/12/16/linux%E8%84%9A%E6%9C%AC%E4%B9%8Bcrontab-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/</url>
+      
+        <content type="html"><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul><li>crontab 命令常见于 Unix 和类 Unix 的操作系统之中，用于设置周期性被执行的指令。</li><li>该命令从标准输入设备读取指令，并将其存放于 crontab 文件中</li><li>crontab 储存的指令被守护进程激活，crond 常常在后台运行，每一分钟检查是否有预定的作业需要执行。这类作业一般称为 cron jobs。</li></ul><h2 id="安装-cron-docker-ubuntu"><a href="#安装-cron-docker-ubuntu" class="headerlink" title="安装 cron(docker ubuntu)"></a>安装 cron(docker ubuntu)</h2><h3 id="确认是否安装"><a href="#确认是否安装" class="headerlink" title="确认是否安装"></a>确认是否安装</h3><p>一般 linux 版本都已经安装了 crontab，我们可以执行 crontab 确认：</p><blockquote><p>-bash: crontab: command not found</p></blockquote><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><blockquote><p>apt-get install cron</p></blockquote><p>如果报出这个错误：Unable to locate package，这个错误一般是因为软件源未更新造成的，于是采用命令：sudo apt-get update 来更新软件源</p><h3 id="确认-cron-安装成功"><a href="#确认-cron-安装成功" class="headerlink" title="确认 cron 安装成功"></a>确认 cron 安装成功</h3><blockquote><p>crontab -l</p></blockquote><h3 id="设置定时任务"><a href="#设置定时任务" class="headerlink" title="设置定时任务"></a>设置定时任务</h3><blockquote><p>crontab -e</p></blockquote><p>_/1 _ * * * cd /home/qn/shell&amp;&amp;sh test.sh &gt; time.log</p><h3 id="启动定时任务"><a href="#启动定时任务" class="headerlink" title="启动定时任务"></a>启动定时任务</h3><blockquote><p>service cron start</p></blockquote><h2 id="安装日志服务-rsyslog"><a href="#安装日志服务-rsyslog" class="headerlink" title="安装日志服务 rsyslog"></a>安装日志服务 rsyslog</h2><h3 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h3><blockquote><p>vi /etc/rsyslog.d/50-default.conf</p></blockquote><p>cron.* /var/log/cron.log #将 cron 前面的注释符去掉</p><h3 id="启动日志服务"><a href="#启动日志服务" class="headerlink" title="启动日志服务"></a>启动日志服务</h3><blockquote><p>service rsyslog start</p></blockquote><h3 id="重启-cron"><a href="#重启-cron" class="headerlink" title="重启 cron"></a>重启 cron</h3><blockquote><p>service cron restart</p></blockquote><h3 id="查看日志"><a href="#查看日志" class="headerlink" title="查看日志"></a>查看日志</h3><blockquote><p>tail -f /var/log/cron.log</p></blockquote><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>时程表的格式如下:</p><blockquote><p>f1 f2 f3 f4 f5 program</p></blockquote><p>其中 f1 是表示分钟，f2 表示小时，f3 表示一个月份中的第几日，f4 表示月份，f5 表示一个星期中的第几天。program 表示要执行的程式。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> linux脚本 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 定时任务 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Kafka的原理解析</title>
       <link href="/2019/12/05/Kafka%E7%9A%84%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/"/>
       <url>/2019/12/05/Kafka%E7%9A%84%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/</url>
