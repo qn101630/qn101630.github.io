@@ -273,6 +273,107 @@
       <div class="body-wrap">
   
     <article
+  id="post-springcloud解析之Ribbon"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+>
+  
+  <div class="article-meta">
+    <a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BRibbon/" class="article-date">
+      <time datetime="2019-11-22T08:26:13.000Z" itemprop="datePublished">2019-11-22</time>
+</a>
+
+ 
+    <a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BRibbon/#comments" title="查看评论">
+        <i class="fa fa-comments-o" aria-hidden="true"></i>
+        <span class="count-comment"></span>
+        
+        
+            <span class="disqus-comment-count" data-disqus-identifier="2019/11/22/springcloud解析之Ribbon/"></span>
+        
+    </a>
+
+  </div>
+  
+  <div class="article-inner">
+    
+    <input type="hidden" class="isFancy" />
+     
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BRibbon/">springcloud解析之Ribbon</a>
+    </h1>
+  
+ 
+    </header>
+     
+    <div class="article-entry" itemprop="articleBody">
+        <h2 id="Ribbon-是什么？"><a href="#Ribbon-是什么？" class="headerlink" title="Ribbon 是什么？"></a>Ribbon 是什么？</h2><blockquote>
+<p>springcloud 的客户端负载均衡组件</p>
+</blockquote>
+<h2 id="Ribbon-架构图"><a href="#Ribbon-架构图" class="headerlink" title="Ribbon 架构图"></a>Ribbon 架构图</h2><p><img src="/images/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89_2019-11-18-10-30-38.png" alt="springcloud实战之ribbon（一）_2019-11-18-10-30-38.png"></p>
+<h2 id="服务端负载均衡"><a href="#服务端负载均衡" class="headerlink" title="服务端负载均衡"></a>服务端负载均衡</h2><blockquote>
+<p>硬件负载均衡和软件负载均衡</p>
+</blockquote>
+<ul>
+<li>硬件负载均衡主要通过在服务器节点之间按照专门用于负载均衡的设备，比如 F5 等</li>
+<li>软件负载均衡则是通过在服务器上安装一些用于负载均衡功能或模块等软件来完成请求分发工作，比如 Nginx 等</li>
+<li>服务端负载均衡架构图<br><img src="/images/springcloud%E5%AE%9E%E6%88%98%E4%B9%8Bribbon%EF%BC%88%E4%B8%80%EF%BC%89_2019-11-14-11-01-18.png" alt="springcloud实战之ribbon（一）_2019-11-14-11-01-18.png"></li>
+</ul>
+<h2 id="客户端负载均衡"><a href="#客户端负载均衡" class="headerlink" title="客户端负载均衡"></a>客户端负载均衡</h2><ul>
+<li>客户端负载均衡和服务端负载均衡最大的不同点在于上面所提到<strong>服务清单所存储的位置</strong>。</li>
+<li>在客户端负载均衡中，所有客户端节点都维护着自己要访问的服务端清单，而这些服务端端清单来自于服务注册中心，比如上一章我们介绍的 Eureka 服务端。同服务端负载均衡的架构类似，在客户端负载均衡中也需要心跳去维护服务端清单的健康性，默认会创建针对各个服务治理框架的 Ribbon 自动化整合配置。</li>
+</ul>
+<h2 id="Ribbon-实现软负载均衡主要有这三点"><a href="#Ribbon-实现软负载均衡主要有这三点" class="headerlink" title="Ribbon 实现软负载均衡主要有这三点"></a>Ribbon 实现软负载均衡主要有这三点</h2><ol>
+<li>服务发现：就是发现依赖服务的列表，通俗来说就是依据服务的名字把它的所有服务实例找出来</li>
+<li>服务选择规则：依据指定的服务规则，从多个有效服务中选择一个服务发起请求</li>
+<li>服务监听：定时检测服务存活情况，及时高效剔除不可用的服务。</li>
+</ol>
+<h2 id="Ribbon-主要组件"><a href="#Ribbon-主要组件" class="headerlink" title="Ribbon 主要组件"></a>Ribbon 主要组件</h2><p><code>ServerList</code>、<code>IRule</code>、<code>ServerListFilter</code>;<br>首先通过 <code>ServerList</code> 获取所有可用服务列表，再通过 <code>ServerListFilter</code> 过滤掉一部分服务，最后 <code>IRule</code> 从过滤后的服务中选择一个实例进行 <code>http</code> 请求</p>
+<h2 id="Ribbon-负载均衡策略"><a href="#Ribbon-负载均衡策略" class="headerlink" title="Ribbon 负载均衡策略"></a>Ribbon 负载均衡策略</h2><ul>
+<li>简单轮询负载均衡（RoundRobin）</li>
+<li>随机负载均衡 （Random）</li>
+<li>随机选择状态为 UP 的 Server</li>
+<li>加权响应时间负载均衡 （WeightedResponseTime）</li>
+<li>区域感知轮询负载均衡（ZoneAware）</li>
+</ul>
+<h2 id="Ribbon-配置"><a href="#Ribbon-配置" class="headerlink" title="Ribbon 配置"></a>Ribbon 配置</h2><p>连接超时、重试、重试算法</p>
+<h2 id="Ribbon-功能"><a href="#Ribbon-功能" class="headerlink" title="Ribbon 功能"></a>Ribbon 功能</h2><ul>
+<li>易于与服务发现组件（比如 Netflix 的 Eureka）集成</li>
+<li>使用 Archaius 完成运行时配置</li>
+<li>使用 JMX 暴露运维指标，使用 Servo 发布</li>
+<li>多种可插拔的序列化选择</li>
+<li>异步和批处理操作</li>
+<li>自动 SLA 框架</li>
+<li>系统管理/指标控制台</li>
+</ul>
+ 
+    </div>
+    
+    <div class="article-info article-info-index">
+       
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/springcloud%E7%AC%94%E8%AE%B0/">springcloud笔记</a>
+    </div>
+
+ 
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ribbon-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" rel="tag">ribbon 负载均衡</a></li></ul>
+    </div>
+ 
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+    
+
+  
+    <article
   id="post-微服务之初见"
   class="article article-type-post"
   itemscope
