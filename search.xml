@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>JAVA容器——ArrayList</title>
+      <link href="/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/"/>
+      <url>/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/</url>
+      
+        <content type="html"><![CDATA[<h3 id="ArrayList-有用过吗？它是一个什么东西？可以用来干嘛？"><a href="#ArrayList-有用过吗？它是一个什么东西？可以用来干嘛？" class="headerlink" title="ArrayList 有用过吗？它是一个什么东西？可以用来干嘛？"></a>ArrayList 有用过吗？它是一个什么东西？可以用来干嘛？</h3><p>有用过，ArrayList 就是数组列表，主要用来装载数据，当我们装载的是基本类型的数据 int，long，boolean，short，byte…的时候我们只能存储他们对应的包装类，它的主要底层实现是数组 Object[] elementData。</p><p>与它类似的是 LinkedList，和 LinkedList 相比，它的查找和访问元素的速度较快，但新增，删除的速度较慢。</p><ul><li>ArrayList 底层是用数组实现的存储。</li><li>查询效率高，增删效率低，线程不安全。使用频率很高。</li></ul><h3 id="为啥线程-不安全还使用他呢？"><a href="#为啥线程-不安全还使用他呢？" class="headerlink" title="为啥线程 不安全还使用他呢？"></a>为啥线程 不安全还使用他呢？</h3><p>因为我们正常使用的场景中，都是用来查询，不会涉及太频繁的增删，如果涉及频繁的增删，可以使用 LinkedList，如果你需要线程安全就使用 Vector，这就是三者的区别了，实际开发过程中还是 ArrayList 使用最多的。</p><p>不存在一个集合工具是查询效率又高，增删效率也高的，还线程安全的，至于为啥大家看代码就知道了，因为数据结构的特性就是优劣共存的，想找个平衡点很难，牺牲了性能，那就安全，牺牲了安全那就快速。</p><h3 id="您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？"><a href="#您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？" class="headerlink" title="您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？"></a>您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？</h3><p>ArrayList 可以通过构造方法在初始化的时候指定底层数组的大小。</p><p>通过无参构造方法的方式 ArrayList()初始化，则赋值底层数 Object[] elementData 为一个默认空数组 Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {}所以数组容量为 0，只有真正对数据进行添加 add 时，才分配默认 DEFAULT_CAPACITY = 10 的初始容量。</p><p>容量超过 10 时，会创建一个容量 1.5 倍的空数组，将原有数据拷贝过去。</p><h3 id="能具体说下-1-7-和-1-8-版本初始化的时候的区别么？"><a href="#能具体说下-1-7-和-1-8-版本初始化的时候的区别么？" class="headerlink" title="能具体说下 1.7 和 1.8 版本初始化的时候的区别么？"></a>能具体说下 1.7 和 1.8 版本初始化的时候的区别么？</h3><p>arrayList1.7 开始变化有点大，一个是初始化的时候，1.7 以前会调用 this(10)才是真正的容量为 10，1.7 即本身以后是默认走了空数组，只有第一次 add 的时候容量会变成 10。</p><h3 id="我记得你说到了，他增删很慢，你能说一下-ArrayList-在增删的时候是怎么做的么？主要说一下他为啥慢。"><a href="#我记得你说到了，他增删很慢，你能说一下-ArrayList-在增删的时候是怎么做的么？主要说一下他为啥慢。" class="headerlink" title="我记得你说到了，他增删很慢，你能说一下 ArrayList 在增删的时候是怎么做的么？主要说一下他为啥慢。"></a>我记得你说到了，他增删很慢，你能说一下 ArrayList 在增删的时候是怎么做的么？主要说一下他为啥慢。</h3><p>他有指定 index 新增，也有直接新增的，在这之前他会有一步校验长度的判断 ensureCapacityInternal，就是说如果长度不够，是需要扩容的。</p><p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-15-55-53.png" alt="JAVA容器——ArrayList_2020-02-24-15-55-53.png"></p><p>在扩容的时候，老版本的 jdk 和 8 以后的版本是有区别的，8 之后的效率更高了，采用了位运算，右移一位，其实就是除以 2 这个操作。</p><p>1.7 的时候 3/2+1 ，1.8 直接就是 3/2。</p><p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-15-56-30.png" alt="JAVA容器——ArrayList_2020-02-24-15-56-30.png"></p><p>指定位置新增的时候，在校验之后的操作很简单，就是数组的 copy，大家可以看下代码。</p><p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-04-27.png" alt="JAVA容器——ArrayList_2020-02-24-16-04-27.png"></p><p>不知道大家看懂 arraycopy 的代码没有，我画个图解释下，你可能就明白一点：</p><p>比如有下面这样一个数组我需要在 index 5 的位置去新增一个元素 A</p><p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-04-56.png" alt="JAVA容器——ArrayList_2020-02-24-16-04-56.png"></p><p>那从代码里面我们可以看到，他复制了一个数组，是从 index 5 的位置开始的，然后把它放在了 index 5+1 的位置</p><p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-05-25.png" alt="JAVA容器——ArrayList_2020-02-24-16-05-25.png"></p><p>给我们要新增的元素腾出了位置，然后在 index 的位置放入元素 A 就完成了新增的操作了</p><p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-05-52.png" alt="JAVA容器——ArrayList_2020-02-24-16-05-52.png"></p><p>至于为啥说他效率低，我想我不说你也应该知道了，我这只是在一个这么小的 List 里面操作，要是我去一个几百几千几万大小的 List 新增一个元素，那就需要后面所有的元素都复制，然后如果再涉及到扩容啥的就更慢了不是嘛。</p><h3 id="ArrayList-插入删除一定慢么？"><a href="#ArrayList-插入删除一定慢么？" class="headerlink" title="ArrayList 插入删除一定慢么？"></a>ArrayList 插入删除一定慢么？</h3><p>取决于你删除的元素离数组末端有多远，ArrayList 拿来作为堆栈来用还是挺合适的，push 和 pop 操作完全不涉及数据移动操作。</p><h3 id="那他的删除是怎么实现的那？"><a href="#那他的删除是怎么实现的那？" class="headerlink" title="那他的删除是怎么实现的那？"></a>那他的删除是怎么实现的那？</h3><p>删除其实跟新增是一样的，不过叫是叫删除，但是在代码里面我们发现，他还是在 copy 一个数组。</p><h3 id="ArrayList-的遍历和-LinkedList-遍历性能比较如何？"><a href="#ArrayList-的遍历和-LinkedList-遍历性能比较如何？" class="headerlink" title="ArrayList 的遍历和 LinkedList 遍历性能比较如何？"></a>ArrayList 的遍历和 LinkedList 遍历性能比较如何？</h3><p>论遍历 ArrayList 要比 LinkedList 快得多，ArrayList 遍历最大的优势在于内存的连续性，CPU 的内部缓存结构会缓存连续的内存片段，可以大幅降低读取内存的性能开销。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>ArrayList 就是动态数组，用 MSDN 中的说法，就是 Array 的复杂版本，它提供了动态的增加和减少元素，实现了 ICollection 和 IList 接口，灵活的设置数组的大小等好处。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JAVA容器 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> java容器 ArrayList </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>JAVA容器——概述</title>
       <link href="/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/"/>
       <url>/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/</url>
