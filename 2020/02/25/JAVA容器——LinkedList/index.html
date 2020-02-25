@@ -15,15 +15,15 @@
 
 
 
-<meta name="description" content="Feign 是什么？ Feign 是一个声明式 WebService 客户端。 使用 Feign 能让编写的 WebService 客户端更加简洁。 它的使用方法式定义一个接口，然后在上面添加注解 Spring Cloud 对 Feign 进行了封装，使其支持了 Spring MVC 标准注解和 HttpMessageConverters。 Feign 可以与 Eureka 和 Ribbon 组合">
-<meta name="keywords" content="feign 服务接口化">
+<meta name="description" content="请简单介绍一下您所了解的 LinkedList，它可以用来做什么，怎么使用？LinkedList 底层是双向链表，同时实现了List接口和Deque接口，所以它既可以看作是一个顺序容器，也可以看作是一个队列(Queue)，同时也可以看作是一个栈(Stack)，但如果想使用栈或队列等数据结构的话，推荐使用 ArrayDeque，它作为栈或队列会比 LinkedList 有更好的使用性能。 Linke">
+<meta name="keywords" content="java容器 LinkedList">
 <meta property="og:type" content="article">
-<meta property="og:title" content="springcloud解析之Feign">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign&#x2F;index.html">
+<meta property="og:title" content="JAVA容器——LinkedList">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;25&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList&#x2F;index.html">
 <meta property="og:site_name" content="南有乔木的技术博客专栏">
-<meta property="og:description" content="Feign 是什么？ Feign 是一个声明式 WebService 客户端。 使用 Feign 能让编写的 WebService 客户端更加简洁。 它的使用方法式定义一个接口，然后在上面添加注解 Spring Cloud 对 Feign 进行了封装，使其支持了 Spring MVC 标准注解和 HttpMessageConverters。 Feign 可以与 Eureka 和 Ribbon 组合">
+<meta property="og:description" content="请简单介绍一下您所了解的 LinkedList，它可以用来做什么，怎么使用？LinkedList 底层是双向链表，同时实现了List接口和Deque接口，所以它既可以看作是一个顺序容器，也可以看作是一个队列(Queue)，同时也可以看作是一个栈(Stack)，但如果想使用栈或队列等数据结构的话，推荐使用 ArrayDeque，它作为栈或队列会比 LinkedList 有更好的使用性能。 Linke">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-22T09:40:23.822Z">
+<meta property="og:updated_time" content="2020-02-25T08:06:19.509Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -56,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>springcloud解析之Feign | 南有乔木的技术博客专栏</title>
+<title>JAVA容器——LinkedList | 南有乔木的技术博客专栏</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -268,15 +268,15 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap"><article
-  id="post-springcloud解析之Feign"
+  id="post-JAVA容器——LinkedList"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
 >
   
   <div class="article-meta">
-    <a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/" class="article-date">
-      <time datetime="2019-11-22T08:30:46.000Z" itemprop="datePublished">2019-11-22</time>
+    <a href="/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/" class="article-date">
+      <time datetime="2020-02-25T07:58:23.000Z" itemprop="datePublished">2020-02-25</time>
 </a>
 
 
@@ -290,7 +290,7 @@
       
   
     <h1 class="article-title" itemprop="name">
-      springcloud解析之Feign
+      JAVA容器——LinkedList
     </h1>
   
  
@@ -299,44 +299,34 @@
     <div class="article-info article-info-post">
       
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/springcloud%E7%AC%94%E8%AE%B0/">springcloud笔记</a>
+    <a class="article-category-link" href="/categories/JAVA%E5%AE%B9%E5%99%A8/">JAVA容器</a>
     </div>
 
  
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/feign-%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%8F%A3%E5%8C%96/" rel="tag">feign 服务接口化</a></li></ul>
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-LinkedList/" rel="tag">java容器 LinkedList</a></li></ul>
     </div>
 
       <div class="clearfix"></div>
     </div>
      
     <div class="article-entry" itemprop="articleBody">
-        <h2 id="Feign-是什么？"><a href="#Feign-是什么？" class="headerlink" title="Feign 是什么？"></a>Feign 是什么？</h2><ul>
-<li>Feign 是一个声明式 WebService 客户端。</li>
-<li>使用 Feign 能让编写的 WebService 客户端更加简洁。</li>
-<li>它的使用方法式定义一个接口，然后在上面添加注解</li>
-<li>Spring Cloud 对 Feign 进行了封装，使其支持了 Spring MVC 标准注解和 HttpMessageConverters。</li>
-<li>Feign 可以与 Eureka 和 Ribbon 组合使用以支持负载均衡。</li>
-</ul>
-<h2 id="为什么要使用-Feign"><a href="#为什么要使用-Feign" class="headerlink" title="为什么要使用 Feign?"></a>为什么要使用 Feign?</h2><ul>
-<li>Feign 旨在使编写 Java Http 客户端变得更容易。</li>
-<li>让我们的服务接口化，改变前面的 Ribben+RestTemplate 的模板化的调用方式。</li>
-<li>Feign 封装了 Ribbon，可以结合 Ribbon 自定义负载均衡策略</li>
-<li><strong>但是在实际开发中，由于对服务依赖的调用可能不止一处，往往一个接口会被多处调用，所以通常都会针对每个微服务自行封装一些客户端类来包装这些依赖服务的调用</strong>。</li>
-</ul>
- 
+        <h3 id="请简单介绍一下您所了解的-LinkedList，它可以用来做什么，怎么使用？"><a href="#请简单介绍一下您所了解的-LinkedList，它可以用来做什么，怎么使用？" class="headerlink" title="请简单介绍一下您所了解的 LinkedList，它可以用来做什么，怎么使用？"></a>请简单介绍一下您所了解的 LinkedList，它可以用来做什么，怎么使用？</h3><p>LinkedList 底层是双向链表，同时实现了<code>List</code>接口和<code>Deque</code>接口，所以它既可以看作是一个顺序容器，也可以看作是一个队列(Queue)，同时也可以看作是一个栈(Stack)，但如果想使用栈或队列等数据结构的话，推荐使用 ArrayDeque，它作为栈或队列会比 LinkedList 有更好的使用性能。</p>
+<p>LinkedList 底层实现是双向链表，核心组成元素有：<code>int size = 0</code>用于记录链表长度；<code>Node&lt;E&gt; first</code>;用于记录头（第一个）结点（储存的是头结点的引用）；<code>Node&lt;E&gt; last</code>;用于记录尾（最后一个）结点（储存的是尾结点的引用）。</p>
+<p>双向链表的核心组成元素还有一个最重要的<code>Node&lt;E&gt;</code>，<code>Node&lt;E&gt;</code>包含：<code>E item</code>; 用于存储元素数据，<code>Node&lt;E&gt; next</code>; 指向当前元素的后继结点，<code>Node&lt;E&gt; prev</code>; 指向当前元素的前驱结点。</p>
+<h3 id="请分别分析一下它是如何获取元素，修改元素，新增元素与删除元素，并分析这些操作对应的时间复杂度。"><a href="#请分别分析一下它是如何获取元素，修改元素，新增元素与删除元素，并分析这些操作对应的时间复杂度。" class="headerlink" title="请分别分析一下它是如何获取元素，修改元素，新增元素与删除元素，并分析这些操作对应的时间复杂度。"></a>请分别分析一下它是如何获取元素，修改元素，新增元素与删除元素，并分析这些操作对应的时间复杂度。</h3> 
     </div>
     
   </div>
    
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/">springcloud解析之Feign</a></p>
+        <p><span>本文标题:</span><a href="/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/">JAVA容器——LinkedList</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
-        <p><span>发布时间:</span>2019-11-22, 16:30:46</p>
-        <p><span>最后更新:</span>2019-11-22, 17:40:23</p>
+        <p><span>发布时间:</span>2020-02-25, 15:58:23</p>
+        <p><span>最后更新:</span>2020-02-25, 16:06:19</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/" title="springcloud解析之Feign">http://yoursite.com/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/" title="JAVA容器——LinkedList">http://yoursite.com/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -348,16 +338,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/">
-                    springcloud实战之Feign
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BRibbon/">
-                    springcloud实战之Ribbon
+                <a href="/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/">
+                    JAVA容器——ArrayList
                 </a>
             </div>
         
@@ -368,7 +352,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Feign-是什么？"><span class="toc-number">1.</span> <span class="toc-text">Feign 是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要使用-Feign"><span class="toc-number">2.</span> <span class="toc-text">为什么要使用 Feign?</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#请简单介绍一下您所了解的-LinkedList，它可以用来做什么，怎么使用？"><span class="toc-number">1.</span> <span class="toc-text">请简单介绍一下您所了解的 LinkedList，它可以用来做什么，怎么使用？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#请分别分析一下它是如何获取元素，修改元素，新增元素与删除元素，并分析这些操作对应的时间复杂度。"><span class="toc-number">2.</span> <span class="toc-text">请分别分析一下它是如何获取元素，修改元素，新增元素与删除元素，并分析这些操作对应的时间复杂度。</span></a></li></ol>
         
     </div>
     <style>
@@ -401,7 +385,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"springcloud解析之Feign　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"JAVA容器——LinkedList　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -415,8 +399,8 @@
     <div id="disqus_thread"></div>
     <script>
         var disqus_config = function(){
-            this.page.url = 'http://yoursite.com/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/';
-            this.page.identifier = '2019/11/22/springcloud解析之Feign/';
+            this.page.url = 'http://yoursite.com/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/';
+            this.page.identifier = '2020/02/25/JAVA容器——LinkedList/';
         };
         var loadComment = function(){
             var d = document, s = d.createElement('script');
@@ -434,15 +418,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/" title="上一篇: springcloud实战之Feign">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BRibbon/" title="下一篇: springcloud实战之Ribbon">
+            <a href="/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/" title="下一篇: JAVA容器——ArrayList">
                 <i class="fa fa-angle-right"></i>
             </a>
         

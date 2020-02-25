@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>JAVA容器——LinkedList</title>
+      <link href="/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/"/>
+      <url>/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/</url>
+      
+        <content type="html"><![CDATA[<h3 id="请简单介绍一下您所了解的-LinkedList，它可以用来做什么，怎么使用？"><a href="#请简单介绍一下您所了解的-LinkedList，它可以用来做什么，怎么使用？" class="headerlink" title="请简单介绍一下您所了解的 LinkedList，它可以用来做什么，怎么使用？"></a>请简单介绍一下您所了解的 LinkedList，它可以用来做什么，怎么使用？</h3><p>LinkedList 底层是双向链表，同时实现了<code>List</code>接口和<code>Deque</code>接口，所以它既可以看作是一个顺序容器，也可以看作是一个队列(Queue)，同时也可以看作是一个栈(Stack)，但如果想使用栈或队列等数据结构的话，推荐使用 ArrayDeque，它作为栈或队列会比 LinkedList 有更好的使用性能。</p><p>LinkedList 底层实现是双向链表，核心组成元素有：<code>int size = 0</code>用于记录链表长度；<code>Node&lt;E&gt; first</code>;用于记录头（第一个）结点（储存的是头结点的引用）；<code>Node&lt;E&gt; last</code>;用于记录尾（最后一个）结点（储存的是尾结点的引用）。</p><p>双向链表的核心组成元素还有一个最重要的<code>Node&lt;E&gt;</code>，<code>Node&lt;E&gt;</code>包含：<code>E item</code>; 用于存储元素数据，<code>Node&lt;E&gt; next</code>; 指向当前元素的后继结点，<code>Node&lt;E&gt; prev</code>; 指向当前元素的前驱结点。</p><h3 id="请分别分析一下它是如何获取元素，修改元素，新增元素与删除元素，并分析这些操作对应的时间复杂度。"><a href="#请分别分析一下它是如何获取元素，修改元素，新增元素与删除元素，并分析这些操作对应的时间复杂度。" class="headerlink" title="请分别分析一下它是如何获取元素，修改元素，新增元素与删除元素，并分析这些操作对应的时间复杂度。"></a>请分别分析一下它是如何获取元素，修改元素，新增元素与删除元素，并分析这些操作对应的时间复杂度。</h3>]]></content>
+      
+      
+      <categories>
+          
+          <category> JAVA容器 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> java容器 LinkedList </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>JAVA容器——ArrayList</title>
       <link href="/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/"/>
       <url>/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/</url>
