@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>JAVA并发——不可变对象</title>
+      <link href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/"/>
+      <url>/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/</url>
+      
+        <content type="html"><![CDATA[<h1 id="不可变对象需要满足的条件"><a href="#不可变对象需要满足的条件" class="headerlink" title="不可变对象需要满足的条件"></a>不可变对象需要满足的条件</h1><ul><li>对象创建以后其状态就不可修改</li><li>对象所有域都是 final 类型</li><li>对象都是正确创建的（安全发布）</li></ul><h1 id="final-关键字"><a href="#final-关键字" class="headerlink" title="final 关键字"></a>final 关键字</h1><ul><li>修饰类：不能被继承，final 类中的变量可以根据需要设置为 final，final 类中的方法隐式的被设置为 final 方法。</li><li>修饰方法：不能被继承类修改，一个类的 private 方法会被隐式的指定为 final 方法。</li><li>修饰变量：<ul><li>基本数据类型变量：初始化之后，值不会改变。</li><li>引用数据类型变量：初始化之后，不能指向另外的引用。</li></ul></li></ul><h1 id="Collections-unmodifiableXXX"><a href="#Collections-unmodifiableXXX" class="headerlink" title="Collections.unmodifiableXXX"></a>Collections.unmodifiableXXX</h1><p>被这个类方法修饰的 Collection、List、Set、Map…为不可变对象。</p><h1 id="Guava-InmutableXXX"><a href="#Guava-InmutableXXX" class="headerlink" title="Guava:InmutableXXX"></a>Guava:InmutableXXX</h1><p>初始化方法包含的 Collection、List、Set、Map…为不可变对象。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JAVA并发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> java并发 不可变对象 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>JAVA并发——安全发布对象</title>
       <link href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/"/>
       <url>/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/</url>
