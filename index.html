@@ -311,75 +311,7 @@
     </header>
      
     <div class="article-entry" itemprop="articleBody">
-        <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h2><p>想了解线程首先要知道进程。</p>
-<p><strong>进程</strong> 是一个具有一定独立功能的程序在一个数据集上的一次动态执行的过程，是操作系统进行资源分配和调度的一个独立单位，是应用程序运行的载体。</p>
-<p>可以这样理解，我们在电脑上打开的 eclipse 软件，就会创建一个进程去执行它。</p>
-<p><strong>线程</strong> 是指进程中的一个执行流程，一个进程中可以运行多个线程。</p>
-<p>线程没有自己的虚拟地址空间，与进程内的其他线程一起共享分配给该进程的所有资源。</p>
-<h2 id="啥是多线程？-串行，并行，并发"><a href="#啥是多线程？-串行，并行，并发" class="headerlink" title="啥是多线程？ 串行，并行，并发"></a>啥是多线程？ 串行，并行，并发</h2><p><strong>多线程</strong> 指的是这个程序（一个进程）运行时产生了不止一个线程。</p>
-<p><strong>并发</strong>：是指同一个时间段内多个任务同时都在执行，并且都没有执行结束。并发任务强调在一个时间段内同时执行，而一个时间段由多个单位时间累积而成，所以说并发的多个任务在单位时间内不一定同时在执行。</p>
-<p><strong>并行</strong>：是说在单位时间内多个任务同时在执行 。<br>在多线程编程实践中，线程的个数往往多于 CPU 的个数，所以一般都称多线程并发编程而不是多线程并行编程。</p>
-<p>多线程的作用要分着看：</p>
-<ul>
-<li>单核 CPU：多线程的调用实际上是一种高速切换，并不是真正的并发。</li>
-<li>多核 CPU：多个线程真正的共同完成一个进程的多个工作。</li>
-</ul>
-<p>这样理解比较晦涩，举个例子：</p>
-<p>一个程序员一天的工作：看文档 发邮件 摸鱼 写代码 ，正常来说这几件事不可能顺序执行，我们通常都是开会文档摸会鱼，写会代码摸会鱼。</p>
-<p>单核 CPU 处理多线程的调度也是一样，只是看上去让你认为它在同时执行多个任务，实际上只是<strong>串行</strong>执行。</p>
-<p>多核 CPU 处理多线程的调度，就像多个程序员协同工作，有的在看文档，有的在写代码，有的在摸鱼。这时候哪怕有人啥事不干，也比一个人工作效率高。</p>
-<p>那单核 CPU 下还有多线程的必要吗？有的，比如我们写代码时遇到了问题，暂时解决不了，我们不至于停在那儿，可以先去看看文档，找找解决方法。 单核 CPU 下多线程也是如此，有一个任务被堵塞住了，我们可以先执行其他任务。</p>
-<p>所以多核 CPU 下的多线程调度才是真正的并行，也是多线程开发的真正目的。</p>
-<h1 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h1><p><img src="/images/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B_2020-03-19-17-36-41.png" alt="JAVA并发——线程_2020-03-19-17-36-41.png"></p>
-<p><img src="/images/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B_2020-03-19-17-38-13.png" alt="JAVA并发——线程_2020-03-19-17-38-13.png"></p>
-<ol>
-<li><p>初始化状态：新建一个线程对象</p>
-</li>
-<li><p>可运行状态：其他线程调用了该线程对象的 start()方法。该状态的线程位于可运行线程池中，变得可运行，等待获取 CPU 的使用权</p>
-</li>
-<li><p>运行状态：可运行状态的线程获得了 cpu 时间片（timeslice），执行程序代码</p>
-</li>
-<li><p>阻塞状态：线程因为某种原因放弃 CPU 使用权，暂时停止运行。直到线程再次进入可运行状态，才有机会转到运行状态。如图所示，会有三种不同类型的阻塞状态：</p>
-<ul>
-<li>等待阻塞：运行中的线程执行 wait()方法，线程会进入等待队列中。等待 notify()、notifyAll()或 interrupt()对其唤醒或中断</li>
-<li>同步阻塞：运行中的线程执行在获取同步锁（注：只有 synchronized 这种方式的锁（monitor 锁）才会让线程出现 BLOCKED 状态，等待 ReentrantLock 则不会）时，若该锁已被其他线程占用，线程则会进入锁池队列。等待获取到锁</li>
-<li>其他阻塞：运行的线程执行 sleep()、join()，或触发了 I/O 请求，该该线程被置为阻塞状态。当 sleep()状态超时、join()等待线程终止或超时、I/O 处理完成，线程会重新进入可运行状态。</li>
-</ul>
-</li>
-<li><p>死亡状态：线程执行完或因异常退出 run()方法，线程生命周期结束</p>
-</li>
-</ol>
-<h1 id="常见方法"><a href="#常见方法" class="headerlink" title="常见方法"></a>常见方法</h1><ol>
-<li><p><code>Thread.sleep(long millis)</code> 静态方法。当前线程调用此方法，使当前线程进入阻塞状态（其他阻塞），但不释放任何锁资源，一定时间后线程自动进入 runnable 状态。给其它线程执行机会的最佳方式。</p>
-</li>
-<li><p><code>obj.wait()</code> 或 <code>obj.wait(long timeout)</code> 当前线程调用某对象的 wait()方法，当前线程释放对象锁（wait 一定在 synchronized 代码块/方法中，故一定得到了锁，才进来的此方法），进入阻塞状态（等待队列）。等待 notify 或 wait 设置的 timeout 到期，方可进入另外一个阻塞状态（锁池）。</p>
-</li>
-<li><p><code>t.join()</code> 或 <code>t.join(long millis)</code> 非静态方法。当前线程 A 执行过程中，调用 B 线程的 join 方法，使当前线程进入阻塞状态（其他阻塞），但不释放对象锁，等待 B 线程执行完后或一定时间 millis 后，A 线程进入 runnable 状态。</p>
-</li>
-<li><p><code>Thread.yield()</code> 静态方法。当前线程调用此方法，使线程由 running 态进入 runnable 态，放弃 cpu 使用权，让 cpu 再次选择要执行的线程。 注：实际过程中，yield 仅仅是让其它具有同等优先级的 runnable 线程获取执行权，但并不能保证其它具有同等优先级的线程就一定能获得 cpu 执行权。因为做出让步的当前线程，可能会被 cpu 再次选中，进入 running 状态。yield()不会导致阻塞。</p>
-</li>
-</ol>
-<h1 id="线程创建"><a href="#线程创建" class="headerlink" title="线程创建"></a>线程创建</h1><h2 id="继承-Thread"><a href="#继承-Thread" class="headerlink" title="继承 Thread"></a>继承 Thread</h2><p><img src="/images/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B_2020-03-19-17-42-47.png" alt="JAVA并发——线程_2020-03-19-17-42-47.png"></p>
-<p>在这里我们思考一下为什么不直接调用 <code>run（）</code>方法而是去调用 <code>start（）</code>方法？</p>
-<p>线程的 <code>run()</code>方法是由 java 虚拟机直接调用的</p>
-<p>如果我们没有启动线程（没有调用线程的 <code>start()</code>方法）而是在应用代码中直接调用 <code>run()</code>方法，那么这个线程的 <code>run()</code>方法其实运行在当前线程（即 <code>run()</code>方法的调用方所在的线程）之中，而不是运行在其自身的线程中。</p>
-<p>所以就是先访问 start 创建线程 jvm 去调用 <code>run（）</code>方法！</p>
-<p>这种方式的弊端是一个类只能继承一个父类，如果这个类本身已经继承了其它类，就不能使用这种方式了。</p>
-<h2 id="实现-Runnable-接口"><a href="#实现-Runnable-接口" class="headerlink" title="实现 Runnable 接口"></a>实现 Runnable 接口</h2><p><img src="/images/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B_2020-03-19-17-48-06.png" alt="JAVA并发——线程_2020-03-19-17-48-06.png"></p>
-<p>实现 Runnable 接口，这种方式的好处是一个类可以实现多个接口，不影响其继承体系。</p>
-<h2 id="实现-Callabe-接口"><a href="#实现-Callabe-接口" class="headerlink" title="实现 Callabe 接口"></a>实现 Callabe 接口</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreatingThread04</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> Long <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"> Thread.sleep(<span class="number">2000</span>);</span><br><span class="line"> System.out.println(Thread.currentThread().getId() + <span class="string">" is running"</span>);</span><br><span class="line"> <span class="keyword">return</span> Thread.currentThread().getId();</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException, InterruptedException </span>&#123;</span><br><span class="line"> FutureTask&lt;Long&gt; task = <span class="keyword">new</span> FutureTask&lt;&gt;(<span class="keyword">new</span> CreatingThread04());</span><br><span class="line"> <span class="keyword">new</span> Thread(task).start();</span><br><span class="line"> System.out.println(<span class="string">"等待完成任务"</span>);</span><br><span class="line"> Long result = task.get();</span><br><span class="line"> System.out.println(<span class="string">"任务结果："</span> + result);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>实现 Callabe 接口，可以获取线程执行的结果，FutureTask 实际上实现了 Runnable 接口。</p>
-<h2 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreatingThread05</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> Timer timer = <span class="keyword">new</span> Timer();</span><br><span class="line"> <span class="comment">// 每隔1秒执行一次</span></span><br><span class="line">        timer.schedule(<span class="keyword">new</span> TimerTask() &#123;</span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> System.out.println(Thread.currentThread().getName() + <span class="string">" is running"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;, <span class="number">0</span> , <span class="number">1000</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用定时器 java.util.Timer 可以快速地实现定时任务，TimerTask 实际上实现了 Runnable 接口。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>上文我们讲到了创建线程的几种方法，其中最常见的是继承 Thread 类与实现 Runable 接口，其实 Thread 类的源码也是实现 Runnbale，所以 Runnale 是基础的作业。</p>
-<p>相比 Thread,使用 Runnale 创建线程，由以下好处：</p>
-<ul>
-<li>java 不允许多继承，因此实现了 Runnable 接口的类可以再继承其他类。</li>
-<li>松耦合，将真正处理线程的操作交给一个个 Thread 对象操作。</li>
-</ul>
- 
+        多线程的理解以及创建线程的几种方式  
     </div>
     
     <div class="article-info article-info-index">
@@ -393,6 +325,10 @@
         <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80/" rel="tag">java并发 基础</a></li></ul>
     </div>
  
+      <p class="article-more-link">
+        <a href="/2020/03/19/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B/#more">more >></a>
+      </p>
+      
       <div class="clearfix"></div>
     </div>
     
