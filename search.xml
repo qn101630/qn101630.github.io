@@ -4,6 +4,158 @@
   
     
     <entry>
+      <title>JVM——命令调优</title>
+      <link href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/"/>
+      <url>/2020/04/01/JVM%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>JVM——垃圾回收</title>
+      <link href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/"/>
+      <url>/2020/04/01/JVM%E2%80%94%E2%80%94%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>JVM——类的加载机制</title>
+      <link href="/2020/04/01/JVM%E2%80%94%E2%80%94%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/"/>
+      <url>/2020/04/01/JVM%E2%80%94%E2%80%94%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>JVM——内存结构</title>
+      <link href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/"/>
+      <url>/2020/04/01/JVM%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</url>
+      
+        <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这里主要介绍一下 <code>JVM</code> 在启动后，作为操作系统的一个进程的基本结构，以及从操作系统角度看，<code>JVM</code> 如何管理它从操作系统里申请来的内存的，也就是 <code>JVM</code> 的内存结构或者叫 <code>JVM</code> 内存模型。</p><h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>根据 JVM 规范，JVM 把内存划分成了如下几个区域：</p><ol><li>堆区（Heap）</li><li>方法区（Method Area）</li><li>虚拟机栈（VM Stack）</li><li>本地方法栈（Native Method Stack）</li><li>程序计数器（Program Counter Register）</li></ol><p><img src="/images/JVM%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84_2020-04-01-14-35-50.png" alt="JVM——内存结构_2020-04-01-14-35-50.png"></p><h2 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h2><p>对于大多数应用来说，Java 堆（Java Heap）是 Java 虚拟机所管理的内存中最大的一块。Java 堆是被所有线程共享的一块内存区域，在虚拟机启动时创建。此内存区域的唯一目的就是存放对象实例，<strong>几乎所有的对象实例都在这里分配内存</strong>。</p><p>Java 堆是垃圾收集器管理的主要区域，因此很多时候也被称做“GC 堆”。如果从内存回收的角度看，由于现在收集器基本都是采用的分代收集算法，所以 Java 堆中还可以细分为：<strong>新生代和老年代；再细致一点的有 Eden 空间、From Survivor 空间、To Survivor 空间等</strong>。</p><p>根据 Java 虚拟机规范的规定，Java 堆可以处于物理上不连续的内存空间中，只要逻辑上是连续的即可，就像我们的磁盘空间一样。<strong>在实现时，既可以实现成固定大小的，也可以是可扩展的，不过当前主流的虚拟机都是按照可扩展来实现的（通过-Xmx 和-Xms 控制）</strong>。</p><p>如果在堆中没有内存完成实例分配，并且堆也无法再扩展时，将会抛出 <code>OutOfMemoryError</code> 异常。</p><h2 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h2><p>方法区（Method Area）与 Java 堆一样，是各个线程共享的内存区域，<strong>它用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据</strong>。虽然 Java 虚拟机规范把方法区描述为堆的一个逻辑部分，但是它却有一个别名叫做 Non-Heap（非堆），目的应该是与 Java 堆区分开来。</p><p>对于习惯在 HotSpot 虚拟机上开发和部署程序的开发者来说，<strong>很多人愿意把方法区称为“永久代”（Permanent Generation）</strong>，本质上两者并不等价，仅仅是因为 HotSpot 虚拟机的设计团队选择把 GC 分代收集扩展至方法区，或者说使用永久代来实现方法区而已。</p><p>不需要连续的内存和可以选择固定大小或者可扩展外，还可以选择不实现垃圾收集。相对而言，垃圾收集行为在这个区域是比较少出现的，但并非数据进入了方法区就如永久代的名字一样“永久”存在了。这个区域的内存回收目标主要是针对<strong>常量池的回收和对类型的卸载</strong>，一般来说这个区域的回收“成绩”比较难以令人满意，尤其是类型的卸载，条件相当苛刻，但是这部分区域的回收确实是有必要的。</p><p>根据 Java 虚拟机规范的规定，当方法区无法满足内存分配需求时，将抛出 <code>OutOfMemoryError</code> 异常。</p><h2 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> jvm 内存结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>JVM——学习导读</title>
+      <link href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/"/>
+      <url>/2020/04/01/JVM%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/</url>
+      
+        <content type="html"><![CDATA[<h1 id="什么是-JVM"><a href="#什么是-JVM" class="headerlink" title="什么是 JVM?"></a>什么是 JVM?</h1><p>JVM（Java Virtual Machine）Java 虚拟机是整个 java 平台的基石，是 Java 语言实现一处编译、到处运行的基础。</p><p>要想说明白什么 <code>JVM</code> 就不得不提另外两个概念，<code>JRE</code> 和 <code>JDK</code></p><h2 id="JDK"><a href="#JDK" class="headerlink" title="JDK"></a>JDK</h2><p>JDK(Java Development Kit) 是 Java 语言的软件开发工具包（SDK）。JDK 物理存在，是 programming tools、JRE 和 JVM 的一个集合。</p><p><img src="/images/JVM%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB_2020-04-01-13-42-01.png" alt="JVM——学习导读_2020-04-01-13-42-01.png"></p><h2 id="JRE"><a href="#JRE" class="headerlink" title="JRE"></a>JRE</h2><p>JRE（Java Runtime Environment）Java 运行时环境，JRE 物理存在，主要由 Java API(java 类库) 和 JVM 组成，提供了用于执行 java 应用程序最低要求的环境。</p><p><img src="/images/JVM%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB_2020-04-01-13-52-20.png" alt="JVM——学习导读_2020-04-01-13-52-20.png"></p><h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><p>JVM 是一种用于计算设备的规范，它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。 Java 虚拟机在执行字节码时，把字节码解释成具体平台上的机器指令执行。这就是 Java 的能够“一次编译，到处运行”的原因。</p><h2 id="三者的联系和区别"><a href="#三者的联系和区别" class="headerlink" title="三者的联系和区别"></a>三者的联系和区别</h2><p>JDK,JRE,JVM 是层层包含的</p><p>JDK 有 javac.exe 而 JRE 里面没有，javac 指令是用来将 java 文件编译成 class 文件的，这是开发环境需要的。只有 JRE 的话，只是满足了运行环境的需要</p><p>JRE 有 lib 和 JVM,JVM 并能不能单独解析字节码，需要和 JRE 的 lib 支持，将字节码解释成机器能明白的指令。</p><h2 id="编译和执行过程"><a href="#编译和执行过程" class="headerlink" title="编译和执行过程"></a>编译和执行过程</h2><p><img src="/images/JVM%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB_2020-04-01-14-11-26.png" alt="JVM——学习导读_2020-04-01-14-11-26.png"></p><h1 id="JVM-学习体系"><a href="#JVM-学习体系" class="headerlink" title="JVM 学习体系"></a>JVM 学习体系</h1><ol><li><p>内存结构</p></li><li><p>类的加载机制</p></li><li><p>GC 算法 垃圾回收</p></li><li><p>GC 分析 命令调优</p></li></ol><p>这些知识点在之后的文章中有详细的介绍，这里只做主干的梳理。</p><h2 id="内存结构"><a href="#内存结构" class="headerlink" title="内存结构"></a>内存结构</h2><a href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" title="JVM——内存结构">JVM——内存结构</a><p>主要关注点：</p><ol><li><p>jvm 内存结构都是什么</p></li><li><p>对象分配规则</p></li></ol><h2 id="类的加载机制"><a href="#类的加载机制" class="headerlink" title="类的加载机制"></a>类的加载机制</h2><a href="/2020/04/01/JVM%E2%80%94%E2%80%94%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" title="JVM——类的加载机制">JVM——类的加载机制</a><p>主要关注点：</p><ol><li><p>什么是类的加载</p></li><li><p>类的生命周期</p></li><li><p>类加载器</p></li><li><p>双亲委派模型</p></li></ol><h2 id="GC-算法-垃圾回收"><a href="#GC-算法-垃圾回收" class="headerlink" title="GC 算法 垃圾回收"></a>GC 算法 垃圾回收</h2><a href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" title="JVM——垃圾回收">JVM——垃圾回收</a><p>主要关注点：</p><ol><li><p>对象存活判断</p></li><li><p>GC 算法</p></li><li><p>垃圾回收器</p></li></ol><h2 id="GC-分析-命令调优"><a href="#GC-分析-命令调优" class="headerlink" title="GC 分析 命令调优"></a>GC 分析 命令调优</h2><a href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/" title="JVM——命令调优">JVM——命令调优</a><p>主要关注点：</p><ol><li><p>GC 日志分析</p></li><li><p>调优命令</p></li><li><p>调优工具</p></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> jvm 学习导读 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>数据结构与算法（十）——总结</title>
+      <link href="/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%8D%81%EF%BC%89%E2%80%94%E2%80%94%E6%80%BB%E7%BB%93/"/>
+      <url>/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%8D%81%EF%BC%89%E2%80%94%E2%80%94%E6%80%BB%E7%BB%93/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>JAVA并发——高并发之高可用手段（七）</title>
+      <link href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E9%AB%98%E5%8F%AF%E7%94%A8%E6%89%8B%E6%AE%B5%EF%BC%88%E4%B8%83%EF%BC%89/"/>
+      <url>/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E9%AB%98%E5%8F%AF%E7%94%A8%E6%89%8B%E6%AE%B5%EF%BC%88%E4%B8%83%EF%BC%89/</url>
+      
+        <content type="html"><![CDATA[<h1 id="什么是高可用？"><a href="#什么是高可用？" class="headerlink" title="什么是高可用？"></a>什么是高可用？</h1><p>系统无中断地执行其功能的能力，代表系统的可用性程度，是进行系统设计时的准则之一。</p><p>这个难点或是重点在于“无中断”，要做到 7x24 小时无中断无异常的服务提供。</p><h1 id="高可用的评价维度"><a href="#高可用的评价维度" class="headerlink" title="高可用的评价维度"></a>高可用的评价维度</h1><p>在业界有一套比较出名的评定网站可用性的指标，常用 N 个 9 来量化可用性，可以直接映射到网站正常运行时间的百分比上：</p><p><img src="/images/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E9%AB%98%E5%8F%AF%E7%94%A8%E6%89%8B%E6%AE%B5%EF%BC%88%E4%B8%83%EF%BC%89_2020-03-31-15-12-02.png" alt="JAVA并发——高并发之高可用手段（七）_2020-03-31-15-12-02.png"></p><p>科学方式：</p><p>一段时间内的停机影响请求量占比</p><p>停机时间的响应请求量/总的请求量</p><h1 id="影响高可用"><a href="#影响高可用" class="headerlink" title="影响高可用"></a>影响高可用</h1><ol><li><p>突发大流量</p></li><li><p>秒杀设计</p></li><li><p>硬件方面 等等</p></li></ol><h1 id="高可用手段"><a href="#高可用手段" class="headerlink" title="高可用手段"></a>高可用手段</h1><p>高可用是一个比较复杂的命题，基本上在所有的处理中都会涉及到高可用，所有在设计高可用方案也涉及到了方方面面。</p><p><img src="/images/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E9%AB%98%E5%8F%AF%E7%94%A8%E6%89%8B%E6%AE%B5%EF%BC%88%E4%B8%83%EF%BC%89_2020-03-31-15-14-04.png" alt="JAVA并发——高并发之高可用手段（七）_2020-03-31-15-14-04.png"></p><h2 id="服务冗余"><a href="#服务冗余" class="headerlink" title="服务冗余"></a>服务冗余</h2><p>为了防止一台机器因为软件或硬件问题导致不可用，需要部署多个服务器，单机房保证服务部署在不同的机架或机柜上，防止一台机架或机柜停电导致不可用。多台机器就会使服务冗余。</p><p>服务冗余的结果就是要做无状态化。所谓的无状态化就是要使冗余部署的服务是对等的，比如部署两台，请求进来通过网关不管传入哪一台服务器，都是不影响的。</p><h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>在网关接收到请求时，需要转发，一般应用服务器有多台，如何合理的进行请求转发到不同的服务器使用的策略就是负载均衡策略，使用负载均衡可以使请求合理的分配到不同的服务器上进行处理。</p><p>做负载均衡的同时，也需要考虑做<strong>幂等</strong>设计，避免多次接受请求。</p><h2 id="超时机制"><a href="#超时机制" class="headerlink" title="超时机制"></a>超时机制</h2><p>如果请求等待时间过长，获取不到请求结果，需要设计一个超时等待的机制。</p><p>异步化设计: 做架构的异步化是提高吞吐量。</p><p>使用好处: 在不关心的数据和结果可以使用异步化来做。核心的流量采样同步来做，非核心的采用异步化来做。</p><h2 id="服务限流熔断降级"><a href="#服务限流熔断降级" class="headerlink" title="服务限流熔断降级"></a>服务限流熔断降级</h2><p>降低服务的请求量，不同服务之间调用异常，会导致等待时间过久，需要做服务熔断。在某些场景下，某些服务访问量会突然飙升，为了降低服务器压力，会把某些冷门服务进行降级关闭，把资源分配到比较常用的服务上。</p><h2 id="数据复制-缓存-sharding"><a href="#数据复制-缓存-sharding" class="headerlink" title="数据复制/缓存/sharding"></a>数据复制/缓存/sharding</h2><p>数据复制可以保证数据的同步性，使用缓存可以是数据访问效率较快提高吞吐量</p><h2 id="服务拆分"><a href="#服务拆分" class="headerlink" title="服务拆分"></a>服务拆分</h2><p>架构拆分可以降低应用的复杂度，进行服务治理也是。同时架构拆分还可以降低服务的压力</p><h2 id="服务实时监控"><a href="#服务实时监控" class="headerlink" title="服务实时监控"></a>服务实时监控</h2><p>更快的预先判断哪些服务可能会发生某些问题，在不可用之前进行监控改进。</p><h2 id="开关控制"><a href="#开关控制" class="headerlink" title="开关控制"></a>开关控制</h2><p>限流开关、业务开关等等</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JAVA并发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 高并发 高可用 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>JAVA并发——高并发之数据库分库、切库、分表（六）</title>
+      <link href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8%EF%BC%88%E5%85%AD%EF%BC%89/"/>
+      <url>/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8%EF%BC%88%E5%85%AD%EF%BC%89/</url>
+      
+        <content type="html"><![CDATA[<h1 id="数据库瓶颈"><a href="#数据库瓶颈" class="headerlink" title="数据库瓶颈"></a>数据库瓶颈</h1><ul><li>单个库数据量太大；考虑多个库解决问题。</li><li>单个数据库服务器压力过大、读写瓶颈；考虑多个库、读写分离解决问题。</li><li>单个表数据量过大；考虑分表解决问题。</li></ul><h1 id="分库和切库"><a href="#分库和切库" class="headerlink" title="分库和切库"></a>分库和切库</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>对数据库的操作中读多写少，且读操作占用系统资源多，耗时长，适用多个分库进行负载均衡。</p><p>它们都是底层是多个数据库在提供服务。</p><p><strong>分库</strong>是属于在微服务应用拆分的时候都有自己的数据库。</p><p><strong>切库</strong>是在没有进行应用拆分的时候就已经分成两个库了，根据业务使用不同的代码连接不同的数据库。</p><h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p><a href="https://www.cnblogs.com/shamo89/p/10032117.html" target="_blank" rel="noopener">SpringBoot+SpringAOP+Java 自定义注解+mybatis 实现切库读写分离</a></p><p><a href="https://www.cnblogs.com/shamo89/p/10032390.html" target="_blank" rel="noopener">SpringBoot+mybatis 实现多数据源支持</a></p><h1 id="分表"><a href="#分表" class="headerlink" title="分表"></a>分表</h1><h2 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h2><p>一张表的数据量很大，即使我们进行了一系列 sql 优化之后依然效率很低，我们就要考虑将它的数据进行分表。</p><h2 id="分表的好处"><a href="#分表的好处" class="headerlink" title="分表的好处"></a>分表的好处</h2><ul><li>分表后单表的并发能力提高了，写操作效率也会提高。其次是查询一次的时间短了，数据分布在不同的文件里，磁盘的 io 磁盘 io 性能也提高了，</li><li>磁盘的读写锁影响的数据量变小，插入数据库需要重新建立的索引变少。</li></ul><h2 id="水平切割"><a href="#水平切割" class="headerlink" title="水平切割"></a>水平切割</h2><p>水平切分分为库内分表和分库分表，是根据表内数据内在的逻辑关系，将同一个表按不同的条件分散到多个数据库或多个表中，每个表中只包含一部分数据，从而使得单个表的数据量变小，达到分布式的效果。</p><p><img src="/images/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8%EF%BC%88%E5%85%AD%EF%BC%89_2020-03-31-14-07-56.png" alt="JAVA并发——高并发之数据库分库、切库、分表（六）_2020-03-31-14-07-56.png"></p><h3 id="水平分割优点"><a href="#水平分割优点" class="headerlink" title="水平分割优点"></a>水平分割优点</h3><ol><li><p>不存在单库数据量过大、高并发的性能瓶颈，提升系统稳定性和负载能力</p></li><li><p>应用端改造较小，不需要拆分业务模块</p></li></ol><h3 id="水平分割缺点"><a href="#水平分割缺点" class="headerlink" title="水平分割缺点"></a>水平分割缺点</h3><ol><li><p>跨分片的事务一致性难以保证</p></li><li><p>跨库的 join 关联查询性能较差</p></li><li><p>数据多次扩展难度和维护量极大</p></li></ol><h3 id="数据分片规则"><a href="#数据分片规则" class="headerlink" title="数据分片规则"></a>数据分片规则</h3><ol><li>根据数值范围</li></ol><p>按照时间区间或 ID 区间来切分。例如：按日期将不同月甚至是日的数据分散到不同的库中；将 userId 为 1<del>9999 的记录分到第一个库，10000</del>20000 的分到第二个库，以此类推。某种意义上，某些系统中使用的”冷热数据分离”，将一些使用较少的历史数据迁移到其他库中，业务功能上只提供热点数据的查询，也是类似的实践。</p><p>这样的优点在于：</p><ul><li>单表大小可控</li><li>天然便于水平扩展，后期如果想对整个分片集群扩容时，只需要添加节点即可，无需对其他分片的数据进行迁移</li><li>使用分片字段进行范围查找时，连续分片可快速定位分片进行快速查询，有效避免跨分片查询的问题。</li></ul><p>缺点：</p><ul><li>热点数据成为性能瓶颈。连续分片可能存在数据热点，例如按时间字段分片，有些分片存储最近时间段内的数据，可能会被频繁的读写，而有些分片存储的历史数据，则很少被查询</li></ul><ol start="2"><li>根据数值取模</li></ol><p>一般采用 hash 取模 mod 的切分方式，例如：将 Customer 表根据 cusno 字段切分到 4 个库中，余数为 0 的放到第一个库，余数为 1 的放到第二个库，以此类推。这样同一个用户的数据会分散到同一个库中，如果查询条件带有 cusno 字段，则可明确定位到相应库去查询。</p><p>优点：</p><ul><li>数据分片相对比较均匀，不容易出现热点和并发访问的瓶颈</li></ul><p>缺点：</p><ul><li>后期分片集群扩容时，需要迁移旧的数据（使用一致性 hash 算法能较好的避免这个问题）</li><li>容易面临跨分片查询的复杂问题。比如上例中，如果频繁用到的查询条件中不带 cusno 时，将会导致无法定位数据库，从而需要同时向 4 个库发起查询，再在内存中合并数据，取最小集返回给应用，分库反而成为拖累。</li></ul><h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><p><a href="https://www.cnblogs.com/shamo89/p/10033349.html" target="_blank" rel="noopener">spring+mybatis 的插件【shardbatis2.0】+mysql+java 自定义注解实现分表</a></p><h2 id="垂直切割"><a href="#垂直切割" class="headerlink" title="垂直切割"></a>垂直切割</h2><p>垂直分表是基于数据库中的”列”进行，某个表字段较多，可以新建一张扩展表，将不经常用或字段长度较大的字段拆分出去到扩展表中。在字段很多的情况下（例如一个大表有 100 多个字段），通过”大表拆小表”，更便于开发与维护，也能避免跨页问题</p><p><img src="/images/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8%EF%BC%88%E5%85%AD%EF%BC%89_2020-03-31-14-07-27.png" alt="JAVA并发——高并发之数据库分库、切库、分表（六）_2020-03-31-14-07-27.png"></p><h3 id="垂直切割优点"><a href="#垂直切割优点" class="headerlink" title="垂直切割优点"></a>垂直切割优点</h3><ol><li><p>解决业务系统层面的耦合，业务清晰</p></li><li><p>与微服务的治理类似，也能对不同业务的数据进行分级管理、维护、监控、扩展等</p></li><li><p>高并发场景下，垂直切分一定程度的提升 IO、数据库连接数、单机硬件资源的瓶颈</p></li></ol><h3 id="垂直切割缺点"><a href="#垂直切割缺点" class="headerlink" title="垂直切割缺点"></a>垂直切割缺点</h3><ol><li><p>部分表无法 join，只能通过接口聚合方式解决，提升了开发的复杂度</p></li><li><p>分布式事务处理复杂</p></li><li><p>依然存在单表数据量过大的问题（需要水平切分）</p></li></ol><h1 id="分库分表带来的问题"><a href="#分库分表带来的问题" class="headerlink" title="分库分表带来的问题"></a>分库分表带来的问题</h1><h2 id="事务一致性问题"><a href="#事务一致性问题" class="headerlink" title="事务一致性问题"></a>事务一致性问题</h2><h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><p>当更新内容同时分布在不同库中，不可避免会带来跨库事务问题。跨分片事务也是分布式事务，没有简单的方案，一般可使用”XA 协议”和”两阶段提交”处理。</p><p>分布式事务能最大限度保证了数据库操作的原子性。但在提交事务时需要协调多个节点，推后了提交事务的时间点，延长了事务的执行时间。导致事务在访问共享资源时发生冲突或死锁的概率增高。随着数据库节点的增多，这种趋势会越来越严重，从而成为系统在数据库层面上水平扩展的枷锁。</p><h3 id="最终一致性"><a href="#最终一致性" class="headerlink" title="最终一致性"></a>最终一致性</h3><p>对于那些性能要求很高，但对一致性要求不高的系统，往往不苛求系统的实时一致性，只要在允许的时间段内达到最终一致性即可，可采用事务补偿的方式。与事务在执行中发生错误后立即回滚的方式不同，事务补偿是一种事后检查补救的措施，一些常见的实现方法有：对数据进行对账检查，基于日志进行对比，定期同标准数据来源进行同步等等。事务补偿还要结合业务系统来考虑。</p><h2 id="跨节点关联查询-join-问题"><a href="#跨节点关联查询-join-问题" class="headerlink" title="跨节点关联查询 join 问题"></a>跨节点关联查询 join 问题</h2><p>切分之前，系统中很多列表和详情页所需的数据可以通过 sql join 来完成。而切分之后，数据可能分布在不同的节点上，此时 join 带来的问题就比较麻烦了，考虑到性能，尽量避免使用 join 查询。</p><p>解决这个问题的一些方法：</p><ol><li>全局表</li></ol><p>全局表，也可看做是”数据字典表”，就是系统中所有模块都可能依赖的一些表，为了避免跨库 join 查询，可以将这类表在每个数据库中都保存一份。这些数据通常很少会进行修改，所以也不担心一致性的问题。</p><ol start="2"><li>字段冗余</li></ol><p>一种典型的反范式设计，利用空间换时间，为了性能而避免 join 查询。例如：订单表保存 userId 时候，也将 userName 冗余保存一份，这样查询订单详情时就不需要再去查询”买家 user 表”了。</p><p>但这种方法适用场景也有限，比较适用于依赖字段比较少的情况。而冗余字段的数据一致性也较难保证，就像上面订单表的例子，买家修改了 userName 后，是否需要在历史订单中同步更新呢？这也要结合实际业务场景进行考虑。</p><ol start="3"><li>数据组装</li></ol><p>在系统层面，分两次查询，第一次查询的结果集中找出关联数据 id，然后根据 id 发起第二次请求得到关联数据。最后将获得到的数据进行字段拼装。</p><h2 id="跨节点分页、排序、函数问题"><a href="#跨节点分页、排序、函数问题" class="headerlink" title="跨节点分页、排序、函数问题"></a>跨节点分页、排序、函数问题</h2><p>跨节点多库进行查询时，会出现 limit 分页、order by 排序等问题。分页需要按照指定字段进行排序，当排序字段就是分片字段时，通过分片规则就比较容易定位到指定的分片；当排序字段非分片字段时，就变得比较复杂了。需要先在不同的分片节点中将数据进行排序并返回，然后将不同分片返回的结果集进行汇总和再次排序，最终返回给用户.</p><p>在分库分表环境中，由于表中数据同时存在不同数据库中，主键值平时使用的自增长将无用武之地，某个分区数据库自生成的 ID 无法保证全局唯一。因此需要单独设计全局主键，以避免跨库主键重复问题。有一些常见的主键生成策略：</p><h2 id="全局主键避重问题"><a href="#全局主键避重问题" class="headerlink" title="全局主键避重问题"></a>全局主键避重问题</h2><p>1）UUID</p><p>UUID 标准形式包含 32 个 16 进制数字，分为 5 段，形式为 8-4-4-4-12 的 36 个字符，例如：550e8400-e29b-41d4-a716-446655440000</p><p>UUID 是主键是最简单的方案，本地生成，性能高，没有网络耗时。但缺点也很明显，由于 UUID 非常长，会占用大量的存储空间；另外，作为主键建立索引和基于索引进行查询时都会存在性能问题，在 InnoDB 下，UUID 的无序性会引起数据位置频繁变动，导致分页</p><h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h1><p><a href="https://juejin.im/entry/5c258e02f265da617573d346" target="_blank" rel="noopener">数据库分库分表，怎么分？何时分？</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JAVA并发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 高并发 数据库分库、切库、分表 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>JAVA并发——高并发之服务降级和熔断（六）</title>
       <link href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD%EF%BC%88%E5%85%AD%EF%BC%89/"/>
       <url>/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD%EF%BC%88%E5%85%AD%EF%BC%89/</url>
