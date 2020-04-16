@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="南有乔木" />
+
+
+
+<meta name="description" content="注解方式启动spring源码解析">
+<meta name="keywords" content="spring 注解式源码解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring——IOC源码解析（注解示）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;04&#x2F;15&#x2F;Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89&#x2F;index.html">
+<meta property="og:site_name" content="南有乔木的技术博客专栏">
+<meta property="og:description" content="注解方式启动spring源码解析">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%E7%A4%BA%EF%BC%89_2020-04-16-15-20-31.png">
+<meta property="og:updated_time" content="2020-04-16T08:58:09.715Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%E7%A4%BA%EF%BC%89_2020-04-16-15-20-31.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="南有乔木的技术博客专栏" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Spring——IOC源码解析（注解示） | 南有乔木的技术博客专栏</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/sex.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">南有乔木</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">学习笔记</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">大狗哥</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/1150887961@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%92%8C/" rel="tag">$和#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/condig%E5%AE%9E%E6%88%98-%E6%9C%8D%E5%8A%A1%E5%8C%96%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">condig实战 服务化与高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/" rel="tag">config 配置中心</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%88%9D%E4%BD%93%E9%AA%8C/" rel="tag">config实战 初体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%8A%A8%E6%80%81%E5%88%B7%E6%96%B0/" rel="tag">config实战 动态刷新</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%8A%A8%E6%80%81%E5%88%B7%E6%96%B0%EF%BC%88Bus%EF%BC%89/" rel="tag">config实战 动态刷新（Bus）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpu/" rel="tag">cpu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker-kafka%E5%AE%89%E8%A3%85/" rel="tag">docker kafka安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/" rel="tag">eureka 服务发现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka%E5%AE%9E%E6%88%98/" rel="tag">eureka实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feign-%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%8F%A3%E5%8C%96/" rel="tag">feign 服务接口化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feign%E5%AE%9E%E6%88%98/" rel="tag">feign实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hystrix-%E7%86%94%E6%96%AD%E5%99%A8/" rel="tag">hystrix 熔断器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hystrix%E5%AE%9E%E6%88%98-%E5%8D%95%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7/" rel="tag">hystrix实战 单应用监控</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-ArrayList/" rel="tag">java容器 ArrayList</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-ConcurrentHashMap/" rel="tag">java容器 ConcurrentHashMap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-HashMap/" rel="tag">java容器 HashMap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-LinkedList/" rel="tag">java容器 LinkedList</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-%E6%A6%82%E8%BF%B0/" rel="tag">java容器 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80/" rel="tag">java并发 基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80-%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F/" rel="tag">java并发 基础 并发模拟</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80-%E8%AF%BE%E7%A8%8B%E5%AF%BC%E5%AD%A6/" rel="tag">java并发 基础 课程导学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/" rel="tag">java并发 线程安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-ReetrantLock/" rel="tag">java并发 线程安全 ReetrantLock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-synchronized/" rel="tag">java并发 线程安全 synchronized</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/" rel="tag">java并发 线程安全 不可变对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E4%B8%8D%E5%AE%89%E5%85%A8%E7%B1%BB%E5%92%8C%E5%86%99%E6%B3%95/" rel="tag">java并发 线程安全 不安全类和写法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%90%8C%E6%AD%A5%E5%AE%B9%E5%99%A8/" rel="tag">java并发 线程安全 同步容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/" rel="tag">java并发 线程安全 安全发布对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/" rel="tag">java并发 线程安全 并发容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E6%AD%BB%E9%94%81/" rel="tag">java并发 线程安全 死锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E7%BA%BF%E7%A8%8B%E5%B0%81%E9%97%AD/" rel="tag">java并发 线程安全 线程封闭</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E9%94%81/" rel="tag">java并发 线程安全 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-GC%E5%88%86%E6%9E%90/" rel="tag">jvm GC分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-java8/" rel="tag">jvm java8</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" rel="tag">jvm 内存结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/" rel="tag">jvm 命令调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="tag">jvm 垃圾回收</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/" rel="tag">jvm 学习导读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E7%B1%BB%E5%8A%A0%E8%BD%BD/" rel="tag">jvm 类加载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka%E5%8E%9F%E7%90%86/" rel="tag">kafka原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka%E5%AE%9E%E6%88%98/" rel="tag">kafka实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" rel="tag">ribbon 负载均衡</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon%E5%AE%9E%E6%88%98/" rel="tag">ribbon实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3/" rel="tag">ribbon服务网关</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-ApplicationContext/" rel="tag">spring ApplicationContext</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-IOC/" rel="tag">spring IOC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%A6%82%E8%BF%B0/" rel="tag">spring 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%B3%A8%E8%A7%A3%E5%BC%8F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" rel="tag">spring 注解式源码解析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zuul%E5%AE%9E%E6%88%98/" rel="tag">zuul实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%8B%E7%BB%8D-%E5%AE%89%E8%A3%85/" rel="tag">介绍 安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7-turbine/" rel="tag">多应用监控 turbine</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">定时任务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D/" rel="tag">微服务介绍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86%E3%80%81%E5%93%88%E5%B8%8C%E8%A1%A8%E3%80%81%E5%9B%BE/" rel="tag">数据结构 堆、哈希表、图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%95%B0%E7%BB%84/" rel="tag">数据结构 数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%88/" rel="tag">数据结构 栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91/" rel="tag">数据结构 树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%93%BE%E8%A1%A8/" rel="tag">数据结构 链表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%98%9F%E5%88%97/" rel="tag">数据结构 队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E7%AE%80%E4%BB%8B/" rel="tag">数据结构与算法 简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0-zookeeper-eureka/" rel="tag">服务发现 zookeeper eureka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/" rel="tag">算法 排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95-%E6%90%9C%E7%B4%A2/" rel="tag">算法 搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E5%BA%94%E7%94%A8%E6%8B%86%E5%88%86/" rel="tag">高并发 应用拆分</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E5%BA%94%E7%94%A8%E9%99%90%E6%B5%81/" rel="tag">高并发 应用限流</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%89%A9%E5%AE%B9/" rel="tag">高并发 扩容</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8/" rel="tag">高并发 数据库分库、切库、分表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD/" rel="tag">高并发 服务降级和熔断</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="tag">高并发 消息队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E7%BC%93%E5%AD%98/" rel="tag">高并发 缓存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" rel="tag">高并发 设计原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">高并发 高可用</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/" target="_blank" rel="noopener">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/" target="_blank" rel="noopener">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">南有乔木</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/sex.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">南有乔木</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">学习笔记</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">大狗哥</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/1150887961@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article
+  id="post-Spring——IOC源码解析（注解）"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+>
+  
+  <div class="article-meta">
+    <a href="/2020/04/15/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89/" class="article-date">
+      <time datetime="2020-04-15T05:42:37.000Z" itemprop="datePublished">2020-04-15</time>
+</a>
+
+
+  </div>
+  
+  <div class="article-inner">
+    
+    <input type="hidden" class="isFancy" />
+     
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      Spring——IOC源码解析（注解示）
+    </h1>
+  
+ 
+    </header>
+    
+    <div class="article-info article-info-post">
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Spring/">Spring</a>
+    </div>
+
+ 
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring-%E6%B3%A8%E8%A7%A3%E5%BC%8F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" rel="tag">spring 注解式源码解析</a></li></ul>
+    </div>
+
+      <div class="clearfix"></div>
+    </div>
+     
+    <div class="article-entry" itemprop="articleBody">
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>spring2x版本，提供了注解配置的方式，本文会基于注解的方向分析SpringIOC模块的整体流程。</p>
+<p>主要关注注解方式启动spring与xml配置方式有何变化？</p>
+<h1 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h1><p>结合上一篇文章 <a href="/2020/04/13/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A2%BC%E8%A7%A3%E6%9E%90/" title="Spring——IOC源碼解析">Spring——IOC源碼解析</a>，这里只贴启动类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AnnotationIOCDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span> <span class="params">(String args[])</span></span>&#123;</span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> AnnotationConfigApplicationContext(<span class="string">"cn.shiyujun.config"</span>);</span><br><span class="line">        IOCService iocService=context.getBean(IOCService<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        System.out.println(iocService.hollo());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="AnnotationConfigApplicationContext"><a href="#AnnotationConfigApplicationContext" class="headerlink" title="AnnotationConfigApplicationContext"></a>AnnotationConfigApplicationContext</h1><h2 id="继承关系"><a href="#继承关系" class="headerlink" title="继承关系"></a>继承关系</h2><p><img src="/images/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%E7%A4%BA%EF%BC%89_2020-04-16-15-20-31.png" alt="Spring——IOC源码解析（注解示）_2020-04-16-15-20-31.png"></p>
+<p>可以看到相较于 <code>ClassPathXmlApplicationContext</code> 和   <code>FileSystemXmlApplicationContext</code> 来说<code>AnnotationConfigApplicationContext</code> 这个类的辈分好像更高一些</p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AnnotationConfigApplicationContext</span><span class="params">(String... basePackages)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>();</span><br><span class="line">		scan(basePackages);</span><br><span class="line">		refresh();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里能看出与 <code>ClassPathXmlApplicationContext</code> 有很多不一样的地方了。</p>
+<h3 id="this"><a href="#this" class="headerlink" title="this()"></a>this()</h3><p>首先看this:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AnnotationConfigApplicationContext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//注解bean读取器</span></span><br><span class="line">		<span class="keyword">this</span>.reader = <span class="keyword">new</span> AnnotatedBeanDefinitionReader(<span class="keyword">this</span>);</span><br><span class="line">        <span class="comment">//注解bean扫描器</span></span><br><span class="line">		<span class="keyword">this</span>.scanner = <span class="keyword">new</span> ClassPathBeanDefinitionScanner(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同时子类的构造方法执行之前肯定会先执行父类的构造方法，所以还有父类 <code>GenericApplicationContext</code> 的构造方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AnnotationConfigApplicationContext</span> <span class="keyword">extends</span> <span class="title">GenericApplicationContext</span> <span class="keyword">implements</span> <span class="title">AnnotationConfigRegistry</span> </span>&#123;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">GenericApplicationContext</span><span class="params">()</span> </span>&#123;      </span><br><span class="line">    <span class="comment">//这个bean的相关知识请参考之前的文章</span></span><br><span class="line">    <span class="keyword">this</span>.beanFactory = <span class="keyword">new</span> DefaultListableBeanFactory();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个背景强大的类是不是很熟悉。。。</p>
+<h3 id="scan"><a href="#scan" class="headerlink" title="scan()"></a>scan()</h3><p>接着看 <code>scan</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scan</span><span class="params">(String... basePackages)</span> </span>&#123;</span><br><span class="line">		Assert.notEmpty(basePackages, <span class="string">"At least one base package must be specified"</span>);</span><br><span class="line">		<span class="keyword">this</span>.scanner.scan(basePackages);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到这里调用的是<code>this</code> 注解的bean扫描器 <code>ClassPathBeanDefinitionScanner</code> 的<code>scan</code> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">scan</span><span class="params">(String... basePackages)</span> </span>&#123;</span><br><span class="line">       <span class="comment">//获取当前注册bean的数量</span></span><br><span class="line">		<span class="keyword">int</span> beanCountAtScanStart = <span class="keyword">this</span>.registry.getBeanDefinitionCount();</span><br><span class="line">        <span class="comment">//往下看</span></span><br><span class="line">		doScan(basePackages);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.includeAnnotationConfig) &#123;</span><br><span class="line">           <span class="comment">//注册配置处理器</span></span><br><span class="line">			AnnotationConfigUtils.registerAnnotationConfigProcessors(<span class="keyword">this</span>.registry);</span><br><span class="line">		&#125;</span><br><span class="line">      <span class="comment">//返回此次注册的数量</span></span><br><span class="line">		<span class="keyword">return</span> (<span class="keyword">this</span>.registry.getBeanDefinitionCount() - beanCountAtScanStart);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着往下看 <code>doScan</code> 方法。</p>
+<h4 id="doScan"><a href="#doScan" class="headerlink" title="doScan()"></a>doScan()</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Set&lt;BeanDefinitionHolder&gt; <span class="title">doScan</span><span class="params">(String... basePackages)</span> </span>&#123;</span><br><span class="line">		Assert.notEmpty(basePackages, <span class="string">"At least one base package must be specified"</span>);</span><br><span class="line">		Set&lt;BeanDefinitionHolder&gt; beanDefinitions = <span class="keyword">new</span> LinkedHashSet&lt;&gt;();</span><br><span class="line">        <span class="comment">//遍历需要扫描的包路径</span></span><br><span class="line">		<span class="keyword">for</span> (String basePackage : basePackages) &#123;</span><br><span class="line">		    <span class="comment">//先跟进去看，下面的方法先忽略</span></span><br><span class="line">			Set&lt;BeanDefinition&gt; candidates = findCandidateComponents(basePackage);</span><br><span class="line">			<span class="keyword">for</span> (BeanDefinition candidate : candidates) &#123;</span><br><span class="line">				ScopeMetadata scopeMetadata = <span class="keyword">this</span>.scopeMetadataResolver.resolveScopeMetadata(candidate);</span><br><span class="line">				candidate.setScope(scopeMetadata.getScopeName());</span><br><span class="line">				String beanName = <span class="keyword">this</span>.beanNameGenerator.generateBeanName(candidate, <span class="keyword">this</span>.registry);</span><br><span class="line">				<span class="keyword">if</span> (candidate <span class="keyword">instanceof</span> AbstractBeanDefinition) &#123;</span><br><span class="line">					postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (candidate <span class="keyword">instanceof</span> AnnotatedBeanDefinition) &#123;</span><br><span class="line">					AnnotationConfigUtils.processCommonDefinitionAnnotations((AnnotatedBeanDefinition) candidate);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (checkCandidate(beanName, candidate)) &#123;</span><br><span class="line">					BeanDefinitionHolder definitionHolder = <span class="keyword">new</span> BeanDefinitionHolder(candidate, beanName);</span><br><span class="line">					definitionHolder =</span><br><span class="line">							AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, <span class="keyword">this</span>.registry);</span><br><span class="line">					beanDefinitions.add(definitionHolder);</span><br><span class="line">					registerBeanDefinition(definitionHolder, <span class="keyword">this</span>.registry);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> beanDefinitions;</span><br></pre></td></tr></table></figure>
+
+<p>再来看它扫描包的方法 <code>findCandidateComponents</code></p>
+<h4 id="扫描包"><a href="#扫描包" class="headerlink" title="扫描包"></a>扫描包</h4><h5 id="findCandidateComponents"><a href="#findCandidateComponents" class="headerlink" title="findCandidateComponents()"></a>findCandidateComponents()</h5><p>这个方法判断忽略了Filter指定包不扫描</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Set&lt;BeanDefinition&gt; <span class="title">findCandidateComponents</span><span class="params">(String basePackage)</span> </span>&#123;</span><br><span class="line">       <span class="comment">//判断是否使用Filter指定忽略包不扫描</span></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.componentsIndex != <span class="keyword">null</span> &amp;&amp; indexSupportsIncludeFilters()) &#123;</span><br><span class="line">			<span class="keyword">return</span> addCandidateComponentsFromIndex(<span class="keyword">this</span>.componentsIndex, basePackage);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">		    <span class="comment">//扫描包</span></span><br><span class="line">			<span class="keyword">return</span> scanCandidateComponents(basePackage);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以还要进入 <code>scanCandidateComponents</code> 方法看一下,不过之前我们有必要先认识一个接口 MetadataReader</p>
+<h5 id="MetadataReader"><a href="#MetadataReader" class="headerlink" title="MetadataReader"></a>MetadataReader</h5><p>根据扫描包反射生成的元数据接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MetadataReader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function">Resource <span class="title">getResource</span><span class="params">()</span></span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function">ClassMetadata <span class="title">getClassMetadata</span><span class="params">()</span></span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function">AnnotationMetadata <span class="title">getAnnotationMetadata</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一个返回Resource就不必多说了，就是配置类的资源对象。第二个第三个根据名字我们可以猜到是类的元数据和注解的元数据 可以看一下它们两个的方法。</p>
+<h5 id="scanCandidateComponents"><a href="#scanCandidateComponents" class="headerlink" title="scanCandidateComponents()"></a>scanCandidateComponents()</h5><p>这个方法就很清晰了：</p>
+<ol>
+<li>组装扫描路径</li>
+<li>遍历根据路径获取资源对象数组</li>
+<li>根据反射生成的元数据是否有@Conditional一系列的注解，然后是否满足注册Bean的条件</li>
+<li>满足Bean的条件，用 <code>ScannedGenericBeanDefinition</code> 类去组装他，存入 BeanDefinition 的Set集合。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Set&lt;BeanDefinition&gt; <span class="title">scanCandidateComponents</span><span class="params">(String basePackage)</span> </span>&#123;</span><br><span class="line">		Set&lt;BeanDefinition&gt; candidates = <span class="keyword">new</span> LinkedHashSet&lt;&gt;();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">		    <span class="comment">//组装扫描路径（组装完成后是这种格式：classpath*:cn/shiyujun/config/**/*.class）</span></span><br><span class="line">			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +</span><br><span class="line">					resolveBasePackage(basePackage) + <span class="string">'/'</span> + <span class="keyword">this</span>.resourcePattern;</span><br><span class="line">		   <span class="comment">//根据路径获取资源对象</span></span><br><span class="line">			Resource[] resources = getResourcePatternResolver().getResources(packageSearchPath);</span><br><span class="line">			<span class="keyword">boolean</span> traceEnabled = logger.isTraceEnabled();</span><br><span class="line">			<span class="keyword">boolean</span> debugEnabled = logger.isDebugEnabled();</span><br><span class="line">			<span class="keyword">for</span> (Resource resource : resources) &#123;</span><br><span class="line">				<span class="keyword">if</span> (traceEnabled) &#123;</span><br><span class="line">					logger.trace(<span class="string">"Scanning "</span> + resource);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (resource.isReadable()) &#123;</span><br><span class="line">					<span class="keyword">try</span> &#123;</span><br><span class="line">						 <span class="comment">//根据资源对象通过反射获取资源对象的MetadataReader，具体就不展开说了</span></span><br><span class="line">						MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);</span><br><span class="line">					   <span class="comment">//查看配置类是否有@Conditional一系列的注解，然后是否满足注册Bean的条件，关于这个知识点可以参考我之前的文章：https://mp.weixin.qq.com/s/RXYIh_g5iU1e3liK-8n5zA</span></span><br><span class="line">						<span class="keyword">if</span> (isCandidateComponent(metadataReader)) &#123;</span><br><span class="line">							ScannedGenericBeanDefinition sbd = <span class="keyword">new</span> ScannedGenericBeanDefinition(metadataReader);</span><br><span class="line">							sbd.setResource(resource);</span><br><span class="line">							sbd.setSource(resource);</span><br><span class="line">							<span class="keyword">if</span> (isCandidateComponent(sbd)) &#123;</span><br><span class="line">								<span class="keyword">if</span> (debugEnabled) &#123;</span><br><span class="line">									logger.debug(<span class="string">"Identified candidate component class: "</span> + resource);</span><br><span class="line">								&#125;</span><br><span class="line">								candidates.add(sbd);</span><br><span class="line">							&#125;</span><br><span class="line">							<span class="keyword">else</span> &#123;</span><br><span class="line">								<span class="keyword">if</span> (debugEnabled) &#123;</span><br><span class="line">									logger.debug(<span class="string">"Ignored because not a concrete top-level class: "</span> + resource);</span><br><span class="line">								&#125;</span><br><span class="line">							&#125;</span><br><span class="line">						&#125;</span><br><span class="line">						<span class="keyword">else</span> &#123;</span><br><span class="line">							<span class="keyword">if</span> (traceEnabled) &#123;</span><br><span class="line">								logger.trace(<span class="string">"Ignored because not matching any filter: "</span> + resource);</span><br><span class="line">							&#125;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">						<span class="keyword">throw</span> <span class="keyword">new</span> BeanDefinitionStoreException(</span><br><span class="line">								<span class="string">"Failed to read candidate component class: "</span> + resource, ex);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					<span class="keyword">if</span> (traceEnabled) &#123;</span><br><span class="line">						logger.trace(<span class="string">"Ignored because not readable: "</span> + resource);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> BeanDefinitionStoreException(<span class="string">"I/O failure during classpath scanning"</span>, ex);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> candidates;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们发现这里就已经出现了 BeanDifinition，上文xml配置启动我们是在refresh()方法。。。 </p>
+<h4 id="创建-BeanDefinition"><a href="#创建-BeanDefinition" class="headerlink" title="创建 BeanDefinition"></a>创建 BeanDefinition</h4><p>让我们回到 <code>doScan()</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Set&lt;BeanDefinitionHolder&gt; <span class="title">doScan</span><span class="params">(String... basePackages)</span> </span>&#123;</span><br><span class="line">		Assert.notEmpty(basePackages, <span class="string">"At least one base package must be specified"</span>);</span><br><span class="line">		Set&lt;BeanDefinitionHolder&gt; beanDefinitions = <span class="keyword">new</span> LinkedHashSet&lt;&gt;();</span><br><span class="line">        <span class="comment">//遍历需要扫描的包路径</span></span><br><span class="line">		<span class="keyword">for</span> (String basePackage : basePackages) &#123;</span><br><span class="line">		    <span class="comment">//获取所有符合条件的BeanDefinition</span></span><br><span class="line">			Set&lt;BeanDefinition&gt; candidates = findCandidateComponents(basePackage);</span><br><span class="line">			<span class="keyword">for</span> (BeanDefinition candidate : candidates) &#123;</span><br><span class="line">             <span class="comment">//绑定BeanDefinition与Scope</span></span><br><span class="line">				ScopeMetadata scopeMetadata = <span class="keyword">this</span>.scopeMetadataResolver.resolveScopeMetadata(candidate);</span><br><span class="line">				candidate.setScope(scopeMetadata.getScopeName());</span><br><span class="line">                <span class="comment">//查看是否配置类是否指定bean的名称，如没指定则使用类名首字母小写</span></span><br><span class="line">				String beanName = <span class="keyword">this</span>.beanNameGenerator.generateBeanName(candidate, <span class="keyword">this</span>.registry);</span><br><span class="line">                <span class="comment">//下面两个if是处理lazy、Autowire、DependencyOn、initMethod、enforceInitMethod、destroyMethod、enforceDestroyMethod、Primary、Role、Description这些逻辑的</span></span><br><span class="line">				<span class="keyword">if</span> (candidate <span class="keyword">instanceof</span> AbstractBeanDefinition) &#123;</span><br><span class="line">					postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (candidate <span class="keyword">instanceof</span> AnnotatedBeanDefinition) &#123;</span><br><span class="line">					AnnotationConfigUtils.processCommonDefinitionAnnotations((AnnotatedBeanDefinition) candidate);</span><br><span class="line">				&#125;</span><br><span class="line">                <span class="comment">//检查bean是否存在</span></span><br><span class="line">				<span class="keyword">if</span> (checkCandidate(beanName, candidate)) &#123;</span><br><span class="line">                 <span class="comment">//又包装了一层</span></span><br><span class="line">					BeanDefinitionHolder definitionHolder = <span class="keyword">new</span> BeanDefinitionHolder(candidate, beanName);</span><br><span class="line">                    <span class="comment">//检查scope是否创建，如未创建则进行创建</span></span><br><span class="line">					definitionHolder =</span><br><span class="line">							AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, <span class="keyword">this</span>.registry);</span><br><span class="line">					beanDefinitions.add(definitionHolder);</span><br><span class="line">                   <span class="comment">//重点来了，往下看</span></span><br><span class="line">					registerBeanDefinition(definitionHolder, <span class="keyword">this</span>.registry);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> beanDefinitions;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们又把 <code>Set&lt;BeanDefinition&gt;</code> 里的数据进行一番处理后又存入 <code>Set&lt;BeanDefinitionHolder&gt;</code>。 接下来我们来看一下 <code>registerBeanDefinition</code> 方法</p>
+<h4 id="注册-Bean"><a href="#注册-Bean" class="headerlink" title="注册 Bean"></a>注册 Bean</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">registerBeanDefinition</span><span class="params">(BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)</span> </span>&#123;</span><br><span class="line">	BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, registry);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">registerBeanDefinition</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">	BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)</span></span></span><br><span class="line"><span class="function"><span class="keyword">throws</span> BeanDefinitionStoreException </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	String beanName = definitionHolder.getBeanName();</span><br><span class="line">	<span class="comment">// 注册bean，往下看</span></span><br><span class="line">	registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());</span><br><span class="line"></span><br><span class="line">	<span class="comment">//如果存在别名则循环注册别名，逻辑跟上方差不多，就不展开了</span></span><br><span class="line">	String[] aliases = definitionHolder.getAliases();</span><br><span class="line">	<span class="keyword">if</span> (aliases != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">for</span> (String alias: aliases) &#123;</span><br><span class="line">			registry.registerAlias(beanName, alias);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实这个注册bean的方法是DefaultListableBeanFactory的方法，之前的文章已经解析过了,最终会将注册了的 BeanDefinition 存入 beanDefinitionMap这里就很明白了：</p>
+<p><strong>相对与xml配置的方式，注解式将创建bean，注解bean的过程放在 <code>scan()</code> 里执行</strong></p>
+<p>那我们再看看 <code>rehash</code> 方法。。。</p>
+<h3 id="refresh"><a href="#refresh" class="headerlink" title="refresh()"></a>refresh()</h3><p>首先整个方法进来以后跟使用XML的时候是一样的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</span><br><span class="line"> </span><br><span class="line">   <span class="keyword">synchronized</span> (<span class="keyword">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 记录容器的启动时间、标记“已启动”状态、检查环境变量</span></span><br><span class="line">      prepareRefresh();</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 初始化BeanFactory容器、注册BeanDefinition</span></span><br><span class="line">      ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 设置 BeanFactory 的类加载器，添加几个 BeanPostProcessor，手动注册几个特殊的 bean</span></span><br><span class="line">      prepareBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">         <span class="comment">// 扩展点</span></span><br><span class="line">         postProcessBeanFactory(beanFactory);</span><br><span class="line">         <span class="comment">// 调用 BeanFactoryPostProcessor 各个实现类的 postProcessBeanFactory(factory) 方法</span></span><br><span class="line">         invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">         <span class="comment">// 注册 BeanPostProcessor 的实现类</span></span><br><span class="line">         registerBeanPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">         <span class="comment">// 初始化MessageSource</span></span><br><span class="line">         initMessageSource();</span><br><span class="line"></span><br><span class="line">         <span class="comment">// 初始化事件广播器</span></span><br><span class="line">         initApplicationEventMulticaster();</span><br><span class="line"></span><br><span class="line">         <span class="comment">// 扩展点</span></span><br><span class="line">         onRefresh();</span><br><span class="line"></span><br><span class="line">         <span class="comment">// 注册事件监听器</span></span><br><span class="line">         registerListeners();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">         <span class="comment">// 初始化所有的 singleton beans</span></span><br><span class="line">         finishBeanFactoryInitialization(beanFactory);</span><br><span class="line"></span><br><span class="line">         <span class="comment">// 广播事件</span></span><br><span class="line">         finishRefresh();</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">         <span class="keyword">if</span> (logger.isWarnEnabled()) &#123;</span><br><span class="line">            logger.warn(<span class="string">"Exception encountered during context initialization - "</span> +</span><br><span class="line">                  <span class="string">"cancelling refresh attempt: "</span> + ex);</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         <span class="comment">// 销毁已经初始化的的Bean</span></span><br><span class="line">         destroyBeans();</span><br><span class="line"></span><br><span class="line">         <span class="comment">// 设置 'active' 状态</span></span><br><span class="line">         cancelRefresh(ex);</span><br><span class="line"></span><br><span class="line">         <span class="keyword">throw</span> ex;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">finally</span> &#123;</span><br><span class="line">         <span class="comment">// 清除缓存</span></span><br><span class="line">         resetCommonCaches();</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="与xml不同"><a href="#与xml不同" class="headerlink" title="与xml不同"></a>与xml不同</h4><p>其实之前的解析xml、创建Bean、注册Bean都是在 <code>obtainFreshBeanFactory</code> 方法进行，我们花了好长的时间去解析，现在再看注解式它的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> ConfigurableListableBeanFactory <span class="title">obtainFreshBeanFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		refreshBeanFactory();</span><br><span class="line">		ConfigurableListableBeanFactory beanFactory = getBeanFactory();</span><br><span class="line">		<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">			logger.debug(<span class="string">"Bean factory for "</span> + getDisplayName() + <span class="string">": "</span> + beanFactory);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> beanFactory;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">refreshBeanFactory</span><span class="params">()</span> <span class="keyword">throws</span> IllegalStateException </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (!<span class="keyword">this</span>.refreshed.compareAndSet(<span class="keyword">false</span>, <span class="keyword">true</span>)) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(</span><br><span class="line">					<span class="string">"GenericApplicationContext does not support multiple refresh attempts: just call 'refresh' once"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">this</span>.beanFactory.setSerializationId(getId());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它的核心方法 <code>refreshBeanFactory</code> 只有这么点了，它来自 <code>GenericApplicationContext</code> 类，是我们的 <code>AnnotationConfigApplicationContext</code>的父类，在对比下 <code>ClassPathXmlApplicationContext</code> 。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassPathXmlApplicationContext</span> <span class="keyword">extends</span> <span class="title">AbstractXmlApplicationContext</span> </span>&#123;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AnnotationConfigApplicationContext</span> <span class="keyword">extends</span> <span class="title">GenericApplicationContext</span> <span class="keyword">implements</span> <span class="title">AnnotationConfigRegistry</span> </span>&#123;</span><br></pre></td></tr></table></figure>
+
+<p><code>refreshBeanFactory</code> 是 <code>AbstractApplicationContext</code> 类的抽象方法，</p>
+<p><code>GenericApplicationContext</code> 与 <code>AbstractRefreshableApplicationContext</code> 分别重写了这个方法，而这两个类分别是 <code>AnnotationConfigApplicationContext</code> 和 <code>ClassPathXmlApplicationContext</code> 的父类和超父类</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>初始化就和xml配置一样了，就不赘述了。</p>
+<h1 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h1><p>我们在日常开发中有时候xml配置和注解是通用的，比如我们在xml里配置扫描：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;context:component-scan base-<span class="keyword">package</span>=<span class="string">"com.qn"</span>/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我们还记得在上篇文章中的一个类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">parseBeanDefinitions</span><span class="params">(Element root, BeanDefinitionParserDelegate delegate)</span> </span>&#123;</span><br><span class="line"><span class="comment">// default namespace 涉及到的就四个标签 &lt;import /&gt;、&lt;alias /&gt;、&lt;bean /&gt; 和 &lt;beans /&gt;</span></span><br><span class="line">   <span class="keyword">if</span> (delegate.isDefaultNamespace(root)) &#123;</span><br><span class="line">      NodeList nl = root.getChildNodes();</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nl.getLength(); i++) &#123;</span><br><span class="line">         Node node = nl.item(i);</span><br><span class="line">         <span class="keyword">if</span> (node <span class="keyword">instanceof</span> Element) &#123;</span><br><span class="line">            Element ele = (Element) node;</span><br><span class="line">            <span class="keyword">if</span> (delegate.isDefaultNamespace(ele)) &#123;</span><br><span class="line">               <span class="comment">// 解析 default namespace 下面的几个元素</span></span><br><span class="line">               parseDefaultElement(ele, delegate);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">               <span class="comment">// 解析其他 namespace 的元素</span></span><br><span class="line">               delegate.parseCustomElement(ele);</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">else</span> &#123;</span><br><span class="line">   <span class="comment">// 解析其他 namespace 的元素</span></span><br><span class="line">      delegate.parseCustomElement(root);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>context</code> 标签会走进 <code>parseCustomElement</code> 方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Nullable</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> BeanDefinition <span class="title">parseCustomElement</span><span class="params">(Element ele, @Nullable BeanDefinition containingBd)</span> </span>&#123;</span><br><span class="line">        String namespaceUri = <span class="keyword">this</span>.getNamespaceURI(ele);</span><br><span class="line">        <span class="keyword">if</span> (namespaceUri == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            NamespaceHandler handler = <span class="keyword">this</span>.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);</span><br><span class="line">            <span class="keyword">if</span> (handler == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">this</span>.error(<span class="string">"Unable to locate Spring NamespaceHandler for XML schema namespace ["</span> + namespaceUri + <span class="string">"]"</span>, ele);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> handler.parse(ele, <span class="keyword">new</span> ParserContext(<span class="keyword">this</span>.readerContext, <span class="keyword">this</span>, containingBd));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>它最终会走进parse方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Nullable</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> BeanDefinition <span class="title">parse</span><span class="params">(Element element, ParserContext parserContext)</span> </span>&#123;</span><br><span class="line">        BeanDefinitionParser parser = <span class="keyword">this</span>.findParserForElement(element, parserContext);</span><br><span class="line">        <span class="keyword">return</span> parser != <span class="keyword">null</span> ? parser.parse(element, parserContext) : <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着走：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Nullable</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> BeanDefinition <span class="title">parse</span><span class="params">(Element element, ParserContext parserContext)</span> </span>&#123;</span><br><span class="line">        String basePackage = element.getAttribute(<span class="string">"base-package"</span>);</span><br><span class="line">        basePackage = parserContext.getReaderContext().getEnvironment().resolvePlaceholders(basePackage);</span><br><span class="line">        String[] basePackages = StringUtils.tokenizeToStringArray(basePackage, <span class="string">",; \t\n"</span>);</span><br><span class="line">        ClassPathBeanDefinitionScanner scanner = <span class="keyword">this</span>.configureScanner(parserContext, element);</span><br><span class="line">        Set&lt;BeanDefinitionHolder&gt; beanDefinitions = scanner.doScan(basePackages);</span><br><span class="line">        <span class="keyword">this</span>.registerComponents(parserContext.getReaderContext(), beanDefinitions, element);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Set&lt;BeanDefinitionHolder&gt;</code> 是不是很熟悉， <code>scanner.doScan(basePackages)</code> 是不是很熟悉。。。</p>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p><a href="http://shiyujun.cn/posts/SpringIOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E5%9F%BA%E4%BA%8E%E6%B3%A8%E8%A7%A3%EF%BC%89.html" target="_blank" rel="noopener">SpringIOC源码解析（基于注解）</a></p>
+ 
+    </div>
+    
+  </div>
+   
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2020/04/15/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89/">Spring——IOC源码解析（注解示）</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
+        <p><span>发布时间:</span>2020-04-15, 13:42:37</p>
+        <p><span>最后更新:</span>2020-04-16, 16:58:09</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2020/04/15/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89/" title="Spring——IOC源码解析（注解示）">http://yoursite.com/2020/04/15/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/04/15/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2020/04/15/Spring%E2%80%94%E2%80%94ApplicationContext/">
+                    Spring——ApplicationContext
+                </a>
+            </div>
+        
+    </nav>
+ 
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#demo"><span class="toc-number">2.</span> <span class="toc-text">demo</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AnnotationConfigApplicationContext"><span class="toc-number">3.</span> <span class="toc-text">AnnotationConfigApplicationContext</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#继承关系"><span class="toc-number">3.1.</span> <span class="toc-text">继承关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析"><span class="toc-number">3.2.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#this"><span class="toc-number">3.2.1.</span> <span class="toc-text">this()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scan"><span class="toc-number">3.2.2.</span> <span class="toc-text">scan()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#doScan"><span class="toc-number">3.2.2.1.</span> <span class="toc-text">doScan()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#扫描包"><span class="toc-number">3.2.2.2.</span> <span class="toc-text">扫描包</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#findCandidateComponents"><span class="toc-number">3.2.2.2.1.</span> <span class="toc-text">findCandidateComponents()</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MetadataReader"><span class="toc-number">3.2.2.2.2.</span> <span class="toc-text">MetadataReader</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#scanCandidateComponents"><span class="toc-number">3.2.2.2.3.</span> <span class="toc-text">scanCandidateComponents()</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建-BeanDefinition"><span class="toc-number">3.2.2.3.</span> <span class="toc-text">创建 BeanDefinition</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#注册-Bean"><span class="toc-number">3.2.2.4.</span> <span class="toc-text">注册 Bean</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#refresh"><span class="toc-number">3.2.3.</span> <span class="toc-text">refresh()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#与xml不同"><span class="toc-number">3.2.3.1.</span> <span class="toc-text">与xml不同</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化"><span class="toc-number">3.2.4.</span> <span class="toc-text">初始化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#思考"><span class="toc-number">4.</span> <span class="toc-text">思考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考文档"><span class="toc-number">5.</span> <span class="toc-text">参考文档</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"true"];
+    </script>
+  
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Spring——IOC源码解析（注解示）　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+    <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'http://yoursite.com/2020/04/15/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89/';
+            this.page.identifier = '2020/04/15/Spring——IOC源码解析（注解）/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//qnsite.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+   
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2020/04/15/Spring%E2%80%94%E2%80%94ApplicationContext/" title="下一篇: Spring——ApplicationContext">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/04/15/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89/">Spring——IOC源码解析（注解示）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/15/Spring%E2%80%94%E2%80%94ApplicationContext/">Spring——ApplicationContext</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/13/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A2%BC%E8%A7%A3%E6%9E%90/">Spring——IOC源碼解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/13/Spring%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/">Spring——概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/08/JVM%E2%80%94%E2%80%94java8%E6%B0%B8%E4%B9%85%E4%BB%A3%E5%88%B0%E5%85%83%E7%A9%BA%E9%96%93/">JVM——java8永久代到元空間</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/07/JVM%E2%80%94%E2%80%94GC%E5%88%86%E6%9E%90/">JVM——GC分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/">JVM——命令调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">JVM——垃圾回收</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">JVM——类的加载机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/">JVM——内存结构</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/">JVM——学习导读</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%8D%81%EF%BC%89%E2%80%94%E2%80%94%E6%80%BB%E7%BB%93/">数据结构与算法（十）——总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E9%AB%98%E5%8F%AF%E7%94%A8%E6%89%8B%E6%AE%B5%EF%BC%88%E4%B8%83%EF%BC%89/">JAVA并发——高并发之高可用手段（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8%EF%BC%88%E5%85%AD%EF%BC%89/">JAVA并发——高并发之数据库分库、切库、分表（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD%EF%BC%88%E5%85%AD%EF%BC%89/">JAVA并发——高并发之服务降级和熔断（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E5%BA%94%E7%94%A8%E9%99%90%E6%B5%81%EF%BC%88%E4%BA%94%EF%BC%89/">JAVA并发——高并发之应用限流（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E5%BA%94%E7%94%A8%E6%8B%86%E5%88%86%EF%BC%88%E5%9B%9B%EF%BC%89/">JAVA并发——高并发之应用拆分（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E4%BF%A1%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88%E4%B8%89%EF%BC%89/">JAVA并发——高并发之信息队列（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E7%BC%93%E5%AD%98%EF%BC%88%E4%BA%8C%EF%BC%89/">JAVA并发——高并发之缓存（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%89%A9%E5%AE%B9%EF%BC%88%E4%B8%80%EF%BC%89/">JAVA并发——高并发之扩容（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/">JAVA并发——高并发与高可用的设计原则</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/27/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E6%B1%A0/">JAVA并发——线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/19/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B/">JAVA并发——线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/19/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E6%AD%BB%E9%94%81/">JAVA并发——死锁</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94ReetrantLock/">JAVA并发——ReetrantLock</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94synchronized/">JAVA并发——synchronized</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%94%81/">JAVA并发——锁</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/">JAVA并发——并发容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%90%8C%E6%AD%A5%E5%AE%B9%E5%99%A8/">JAVA并发——同步容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%AE%89%E5%85%A8%E7%B1%BB%E5%92%8C%E5%86%99%E6%B3%95/">JAVA并发——不安全类和写法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E5%B0%81%E9%97%AD/">JAVA并发——线程封闭</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/">JAVA并发——不可变对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/">JAVA并发——安全发布对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">JAVA并发——线程安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F/">JAVA并发——并发模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/11/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80/">JAVA并发——基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/11/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E8%AF%BE%E7%A8%8B%E5%AF%BC%E5%AD%A6/">JAVA并发——课程导学</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/04/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ConcurrentHashMap/">JAVA容器——ConcurrentHashMap</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap/">JAVA容器——HashMap</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/">JAVA容器——LinkedList</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/">JAVA容器——ArrayList</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/">JAVA容器——概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B9%9D%EF%BC%89%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A0/">数据结构与算法（九）——搜素</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%85%AB%EF%BC%89%E2%80%94%E2%80%94%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">数据结构与算法（八）——排序算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%83%EF%BC%89%E2%80%94%E2%80%94%E5%A0%86%E3%80%81%E5%93%88%E5%B8%8C%E8%A1%A8%E3%80%81%E5%9B%BE/">数据结构与算法（七）——堆、哈希表、图</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%85%AD%EF%BC%89%E2%80%94%E2%80%94%E6%A0%91/">数据结构与算法（六）——树</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%BA%94%EF%BC%89%E2%80%94%E2%80%94%E9%98%9F%E5%88%97/">数据结构与算法（五）——队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/17/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%9B%9B%EF%BC%89%E2%80%94%E2%80%94%E6%A0%88/">数据结构与算法（四）——栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89%E2%80%94%E2%80%94%E9%93%BE%E8%A1%A8/">数据结构与算法（三）——链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%E6%95%B0%E7%BB%84/">数据结构与算法（二）——数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B/">数据结构和算法（一）——简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/08/CPU%E9%A3%99%E5%8D%87%E5%88%B0100-%E7%9A%84%E5%8E%9F%E5%9B%A0/">CPU飙升到100%的原因</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/16/linux%E4%B9%8Bshell%E8%84%9A%E6%9C%AC%E5%AD%A6%E4%B9%A0/">linux之shell脚本学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/16/linux%E8%84%9A%E6%9C%AC%E4%B9%8Bcrontab-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/">linux脚本之crontab(定时任务)</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/05/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E7%9A%84%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">消息中间件——Kafka的原理解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/05/springboot%E5%AE%9E%E6%88%98%E4%B9%8Bkafka/">springboot实战之kafka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/04/docker%E4%BD%BF%E7%94%A8%E4%B9%8BKafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/">docker使用之Kafka的安装使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89/">springcloud实战之Config（4）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%883%EF%BC%89/">springcloud实战之Config（3）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/Mybatis%E4%B8%AD%E2%80%9C-%E2%80%9D%E5%92%8C%E2%80%9C-%E7%9A%84%E5%8C%BA%E5%88%AB/">Mybatis中“#”和“$的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/29/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89/">springcloud实战之Config（2）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/28/docker%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%89%E8%A3%85%EF%BC%88win10%EF%BC%89/">docker简单介绍与安装（win10）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/28/Eureka%E4%B8%8EZookeeper%E7%9A%84%E5%8C%BA%E5%88%AB/">Eureka与Zookeeper的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%881%EF%BC%89/">springcloud实战之Config（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BConfig/">springcloud解析之Config</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BZuul/">springcloud实战之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BZuul/">springcloud解析之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%882%EF%BC%89/">springcloud实战之Hystrix（2）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%881%EF%BC%89/">springcloud实战之Hystrix（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/">springcloud解析之Hystrix</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BEuraka/">springcloud实战之Euraka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BEureka/">springcloud解析之Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/">springcloud实战之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/">springcloud解析之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BRibbon/">springcloud实战之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BRibbon/">springcloud解析之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/">微服务之初见</a></li></ul>
+
+   
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2019-2020 南有乔木
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+            
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
