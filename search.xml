@@ -99,6 +99,18 @@
         <content type="html"><![CDATA[<h1 id="java6-gt-java7-gt-java8的内存結構的演變"><a href="#java6-gt-java7-gt-java8的内存結構的演變" class="headerlink" title="java6-&gt;java7-&gt;java8的内存結構的演變"></a>java6-&gt;java7-&gt;java8的内存結構的演變</h1><p><img src="/images/JVM%E2%80%94%E2%80%94java8%E6%B0%B8%E4%B9%85%E4%BB%A3%E5%88%B0%E5%85%83%E7%A9%BA%E9%96%93_2020-04-08-14-58-49.png" alt="JVM——java8永久代到元空間_2020-04-08-14-58-49.png"></p><p><img src="/images/JVM%E2%80%94%E2%80%94java8%E6%B0%B8%E4%B9%85%E4%BB%A3%E5%88%B0%E5%85%83%E7%A9%BA%E9%96%93_2020-04-08-14-59-13.png" alt="JVM——java8永久代到元空間_2020-04-08-14-59-13.png"></p><p><img src="/images/JVM%E2%80%94%E2%80%94java8%E6%B0%B8%E4%B9%85%E4%BB%A3%E5%88%B0%E5%85%83%E7%A9%BA%E9%96%93_2020-04-08-14-59-26.png" alt="JVM——java8永久代到元空間_2020-04-08-14-59-26.png"></p><p>在java7及以前，物理上来说，它们是连续的一块内存，逻辑上依旧是分开的。对于习惯了在HotSpot虚拟机上开发、部署的程序员来说，很多都愿意将方法区称作永久代。</p><p>Java7中永久代中存储的部分数据已经开始转移到堆或本地方法區中了。比如，符号引用转移到了本地方法區；字符串常量池转移到了堆；类的静态变量转移到了堆。</p><p>java8中Hotspot取消了永久代，永久代的参数 <code>-XX:PermSize</code> 和<code>-XX：MaxPermSize</code> 也随之失效。在Java8中，元空间登上舞台，方法区存在于元空间。同时，元空间不再与堆连续，而且是存在于本地内存。</p><h1 id="元空间"><a href="#元空间" class="headerlink" title="元空间"></a>元空间</h1><p>元空间存在于本地内存，意味着只要本地内存足够，它不会出现像永久代中“java.lang.OutOfMemoryError: PermGen space”这种错误。看上图中的方法区，是不是“膨胀”了。</p><p><img src="/images/JVM%E2%80%94%E2%80%94java8%E6%B0%B8%E4%B9%85%E4%BB%A3%E5%88%B0%E5%85%83%E7%A9%BA%E9%96%93_2020-04-08-15-08-44.png" alt="JVM——java8永久代到元空間_2020-04-08-15-08-44.png"></p><p>本地内存，也称为 C-Heap，是供JVM自身进程使用的。当Java Heap空间不足时会触发GC，但Native memory空间不够却不会触发GC。</p><p>默认情况下元空间是可以无限使用本地内存的，但为了不让它如此膨胀，JVM同样提供了参数来限制它使用的使用。</p><ul><li><code>-XX:MetaspaceSize</code>，class metadata的初始空间配额，以bytes为单位，达到该值就会触发垃圾收集进行类型卸载，同时GC会对该值进行调整：如果释放了大量的空间，就适当的降低该值；如果释放了很少的空间，那么在不超过MaxMetaspaceSize（如果设置了的话），适当的提高该值。</li><li><code>-XX：MaxMetaspaceSize</code>，可以为class metadata分配的最大空间。默认是没有限制的。</li><li><code>-XX：MinMetaspaceFreeRatio</code>,在GC之后，最小的Metaspace剩余空间容量的百分比，减少为class metadata分配空间导致的垃圾收集。</li><li><code>-XX:MaxMetaspaceFreeRatio</code>,在GC之后，最大的Metaspace剩余空间容量的百分比，减少为class metadata释放空间导致的垃圾收集。</li></ul><h1 id="永久代为什么被替换了"><a href="#永久代为什么被替换了" class="headerlink" title="永久代为什么被替换了"></a>永久代为什么被替换了</h1><ul><li>字符串存在永久代中，容易出现性能问题和内存溢出</li><li>类及方法的信息等比较难确定其大小，因此对于永久代的大小指定比较困难，太小容易出现永久代溢出，太大则容易导致老年代溢出</li><li>永久代会为 GC 带来不必要的复杂度，并且回收效率偏低</li><li>将 HotSpot 与 JRockit 合二为一</li></ul>]]></content>
       
       
+      <categories>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> jvm java8 </tag>
+            
+        </tags>
       
     </entry>
     
