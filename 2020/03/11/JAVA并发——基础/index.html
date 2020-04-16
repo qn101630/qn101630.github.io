@@ -418,6 +418,29 @@
     </nav>
  
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#并发"><span class="toc-number">1.</span> <span class="toc-text">并发</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#高并发"><span class="toc-number">2.</span> <span class="toc-text">高并发</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#我们在讨论并发时主要考虑以下几点"><span class="toc-number">3.</span> <span class="toc-text">我们在讨论并发时主要考虑以下几点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#我们在讨论高并发时主要考虑以下几点"><span class="toc-number">4.</span> <span class="toc-text">我们在讨论高并发时主要考虑以下几点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#请介绍下计算机系统层面上的并发"><span class="toc-number">5.</span> <span class="toc-text">请介绍下计算机系统层面上的并发?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CPU-cache"><span class="toc-number">5.1.</span> <span class="toc-text">CPU cache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存一致性"><span class="toc-number">5.2.</span> <span class="toc-text">缓存一致性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#共享内存"><span class="toc-number">5.3.</span> <span class="toc-text">共享内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#指令集重排"><span class="toc-number">5.4.</span> <span class="toc-text">指令集重排</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#java-内存模型"><span class="toc-number">6.</span> <span class="toc-text">java 内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#工作内存"><span class="toc-number">6.1.</span> <span class="toc-text">工作内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模拟场景"><span class="toc-number">6.2.</span> <span class="toc-text">模拟场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步操作与规则"><span class="toc-number">6.3.</span> <span class="toc-text">同步操作与规则</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#并发的优势和风险"><span class="toc-number">7.</span> <span class="toc-text">并发的优势和风险</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
   
 <div class="share">
     

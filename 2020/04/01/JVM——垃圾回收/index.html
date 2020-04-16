@@ -526,6 +526,29 @@
     </nav>
  
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#对象存活判断"><span class="toc-number">2.</span> <span class="toc-text">对象存活判断</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#引用计数"><span class="toc-number">2.1.</span> <span class="toc-text">引用计数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可达性分析"><span class="toc-number">2.2.</span> <span class="toc-text">可达性分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#根对象-GC-Roots"><span class="toc-number">2.3.</span> <span class="toc-text">根对象(GC Roots)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#finalize-二次标记"><span class="toc-number">2.4.</span> <span class="toc-text">finalize()二次标记</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#对象引用分类"><span class="toc-number">3.</span> <span class="toc-text">对象引用分类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#强引用"><span class="toc-number">3.1.</span> <span class="toc-text">强引用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#软引用"><span class="toc-number">3.2.</span> <span class="toc-text">软引用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#弱引用"><span class="toc-number">3.3.</span> <span class="toc-text">弱引用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#虚引用"><span class="toc-number">3.4.</span> <span class="toc-text">虚引用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#垃圾回收算法"><span class="toc-number">4.</span> <span class="toc-text">垃圾回收算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#标记清楚算法"><span class="toc-number">4.1.</span> <span class="toc-text">标记清楚算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复制算法"><span class="toc-number">4.2.</span> <span class="toc-text">复制算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#标记-整理算法"><span class="toc-number">4.3.</span> <span class="toc-text">标记-整理算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分代收集算法"><span class="toc-number">4.4.</span> <span class="toc-text">分代收集算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#年轻代"><span class="toc-number">4.4.1.</span> <span class="toc-text">年轻代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#老年代"><span class="toc-number">4.4.2.</span> <span class="toc-text">老年代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#永久代"><span class="toc-number">4.4.3.</span> <span class="toc-text">永久代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象分配规则"><span class="toc-number">4.4.4.</span> <span class="toc-text">对象分配规则</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#垃圾回收器"><span class="toc-number">5.</span> <span class="toc-text">垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Serial收集器"><span class="toc-number">5.1.</span> <span class="toc-text">Serial收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ParNew收集器"><span class="toc-number">5.2.</span> <span class="toc-text">ParNew收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Parallel收集器"><span class="toc-number">5.3.</span> <span class="toc-text">Parallel收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Parallel-Old-收集器"><span class="toc-number">5.4.</span> <span class="toc-text">Parallel Old 收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CMS-收集器"><span class="toc-number">5.5.</span> <span class="toc-text">CMS 收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#G1-收集器"><span class="toc-number">5.6.</span> <span class="toc-text">G1 收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#特点："><span class="toc-number">5.6.1.</span> <span class="toc-text">特点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Region"><span class="toc-number">5.6.2.</span> <span class="toc-text">Region</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#建立可预测的时间模型"><span class="toc-number">5.6.3.</span> <span class="toc-text">建立可预测的时间模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#避免全堆扫描——Remembered-Set"><span class="toc-number">5.6.4.</span> <span class="toc-text">避免全堆扫描——Remembered Set</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#收集过程"><span class="toc-number">5.6.5.</span> <span class="toc-text">收集过程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
   
 <div class="share">
     

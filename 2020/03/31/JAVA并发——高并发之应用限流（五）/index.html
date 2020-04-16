@@ -396,6 +396,29 @@
     </nav>
  
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#限流方式"><span class="toc-number">2.</span> <span class="toc-text">限流方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#限流算法"><span class="toc-number">3.</span> <span class="toc-text">限流算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#计数器法"><span class="toc-number">3.1.</span> <span class="toc-text">计数器法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#滑动窗口"><span class="toc-number">3.2.</span> <span class="toc-text">滑动窗口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#漏桶算法"><span class="toc-number">3.3.</span> <span class="toc-text">漏桶算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#令牌桶算法"><span class="toc-number">3.4.</span> <span class="toc-text">令牌桶算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#令牌桶算法与漏桶算法的比较"><span class="toc-number">3.5.</span> <span class="toc-text">令牌桶算法与漏桶算法的比较</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#推荐阅读"><span class="toc-number">4.</span> <span class="toc-text">推荐阅读</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
   
 <div class="share">
     

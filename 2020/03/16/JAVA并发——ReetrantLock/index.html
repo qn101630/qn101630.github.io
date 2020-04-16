@@ -470,6 +470,29 @@
     </nav>
  
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Lock-接口"><span class="toc-number">1.</span> <span class="toc-text">Lock 接口</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#显示锁"><span class="toc-number">1.1.</span> <span class="toc-text">显示锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁方法"><span class="toc-number">1.2.</span> <span class="toc-text">锁方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ReetrantLook"><span class="toc-number">2.</span> <span class="toc-text">ReetrantLook</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#可重入锁、公平锁和非公平锁"><span class="toc-number">2.1.</span> <span class="toc-text">可重入锁、公平锁和非公平锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#案例"><span class="toc-number">2.2.</span> <span class="toc-text">案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法"><span class="toc-number">2.3.</span> <span class="toc-text">方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">2.4.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发基础组件-AQS"><span class="toc-number">2.5.</span> <span class="toc-text">并发基础组件 AQS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#队列同步器"><span class="toc-number">2.5.1.</span> <span class="toc-text">队列同步器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-节点"><span class="toc-number">2.5.2.</span> <span class="toc-text">Node 节点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基于-ReetrantLock-分析-AQS-独占模式实现过程"><span class="toc-number">2.6.</span> <span class="toc-text">基于 ReetrantLock 分析 AQS 独占模式实现过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ReetrantLock-中非公平锁"><span class="toc-number">2.6.1.</span> <span class="toc-text">ReetrantLock 中非公平锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自旋"><span class="toc-number">2.6.2.</span> <span class="toc-text">自旋</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReetrantLock-中的公平锁"><span class="toc-number">2.7.</span> <span class="toc-text">ReetrantLock 中的公平锁</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
   
 <div class="share">
     

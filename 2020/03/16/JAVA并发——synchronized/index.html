@@ -429,6 +429,29 @@
     </nav>
  
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#应用"><span class="toc-number">2.</span> <span class="toc-text">应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#修饰示例方法"><span class="toc-number">2.1.</span> <span class="toc-text">修饰示例方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修饰静态方法"><span class="toc-number">2.2.</span> <span class="toc-text">修饰静态方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修饰代码块"><span class="toc-number">2.3.</span> <span class="toc-text">修饰代码块</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#特性"><span class="toc-number">3.</span> <span class="toc-text">特性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原子性"><span class="toc-number">3.1.</span> <span class="toc-text">原子性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可见性"><span class="toc-number">3.2.</span> <span class="toc-text">可见性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有序性"><span class="toc-number">3.3.</span> <span class="toc-text">有序性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可重入性"><span class="toc-number">3.4.</span> <span class="toc-text">可重入性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#底层实现"><span class="toc-number">4.</span> <span class="toc-text">底层实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#java-对象头"><span class="toc-number">4.1.</span> <span class="toc-text">java 对象头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁状态"><span class="toc-number">4.2.</span> <span class="toc-text">锁状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Monitor"><span class="toc-number">4.3.</span> <span class="toc-text">Monitor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectMonitor-结构"><span class="toc-number">4.3.1.</span> <span class="toc-text">ObjectMonitor 结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#上锁"><span class="toc-number">4.3.2.</span> <span class="toc-text">上锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#释放锁"><span class="toc-number">4.3.3.</span> <span class="toc-text">释放锁</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM-对-synchronized-的优化"><span class="toc-number">5.</span> <span class="toc-text">JVM 对 synchronized 的优化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#锁膨胀"><span class="toc-number">5.1.</span> <span class="toc-text">锁膨胀</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#偏向锁"><span class="toc-number">5.2.</span> <span class="toc-text">偏向锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#轻量级锁"><span class="toc-number">5.3.</span> <span class="toc-text">轻量级锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重量级锁"><span class="toc-number">5.4.</span> <span class="toc-text">重量级锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁消除"><span class="toc-number">5.5.</span> <span class="toc-text">锁消除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁粗化"><span class="toc-number">5.6.</span> <span class="toc-text">锁粗化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自旋锁与自适应自旋锁"><span class="toc-number">5.7.</span> <span class="toc-text">自旋锁与自适应自旋锁</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
   
 <div class="share">
     

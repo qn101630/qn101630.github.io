@@ -372,6 +372,29 @@
     </nav>
  
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#为啥需要缓存？"><span class="toc-number">1.</span> <span class="toc-text">为啥需要缓存？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在哪里去用缓存"><span class="toc-number">2.</span> <span class="toc-text">在哪里去用缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#浏览器缓存"><span class="toc-number">2.1.</span> <span class="toc-text">浏览器缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CDN-缓存"><span class="toc-number">2.2.</span> <span class="toc-text">CDN 缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库缓存"><span class="toc-number">2.3.</span> <span class="toc-text">数据库缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式-缓存"><span class="toc-number">2.4.</span> <span class="toc-text">分布式 缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地缓存"><span class="toc-number">2.5.</span> <span class="toc-text">本地缓存</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#高并发下缓存的常见问题"><span class="toc-number">3.</span> <span class="toc-text">高并发下缓存的常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存一致性"><span class="toc-number">3.1.</span> <span class="toc-text">缓存一致性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存穿透"><span class="toc-number">3.2.</span> <span class="toc-text">缓存穿透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存击穿"><span class="toc-number">3.3.</span> <span class="toc-text">缓存击穿</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存雪崩"><span class="toc-number">3.4.</span> <span class="toc-text">缓存雪崩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存无底洞"><span class="toc-number">3.5.</span> <span class="toc-text">缓存无底洞</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
   
 <div class="share">
     

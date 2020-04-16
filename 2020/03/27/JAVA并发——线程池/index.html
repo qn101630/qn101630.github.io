@@ -504,6 +504,29 @@
     </nav>
  
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#作用"><span class="toc-number">2.</span> <span class="toc-text">作用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#原理"><span class="toc-number">3.</span> <span class="toc-text">原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#线程池的创建"><span class="toc-number">3.1.</span> <span class="toc-text">线程池的创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ThreadPoolExecutor"><span class="toc-number">3.2.</span> <span class="toc-text">ThreadPoolExecutor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参数"><span class="toc-number">3.2.1.</span> <span class="toc-text">参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行过程"><span class="toc-number">3.2.2.</span> <span class="toc-text">执行过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析"><span class="toc-number">3.2.3.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#成员变量-clt"><span class="toc-number">3.2.3.1.</span> <span class="toc-text">成员变量 clt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#线程池状态"><span class="toc-number">3.2.3.2.</span> <span class="toc-text">线程池状态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#execute"><span class="toc-number">3.2.3.3.</span> <span class="toc-text">execute</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#addWorker"><span class="toc-number">3.2.3.4.</span> <span class="toc-text">addWorker</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Worker"><span class="toc-number">3.2.3.5.</span> <span class="toc-text">Worker</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#运行原理"><span class="toc-number">3.2.3.6.</span> <span class="toc-text">运行原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#execute-运行原理："><span class="toc-number">3.2.3.6.1.</span> <span class="toc-text">execute 运行原理：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#addWorker-运行原理："><span class="toc-number">3.2.3.6.2.</span> <span class="toc-text">addWorker 运行原理：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Worker-的设计："><span class="toc-number">3.2.3.6.3.</span> <span class="toc-text">Worker 的设计：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#runWorker-的实现："><span class="toc-number">3.2.3.6.4.</span> <span class="toc-text">runWorker 的实现：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#getTask-实现"><span class="toc-number">3.2.3.6.5.</span> <span class="toc-text">getTask 实现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#饱和策略"><span class="toc-number">3.2.4.</span> <span class="toc-text">饱和策略</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
   
 <div class="share">
     

@@ -508,6 +508,29 @@
     </nav>
  
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#您能给我说说-HashMap-吗？"><span class="toc-number">1.</span> <span class="toc-text">您能给我说说 HashMap 吗？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HashMap-的一些组成部分"><span class="toc-number">2.</span> <span class="toc-text">HashMap 的一些组成部分</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#核心组成部分"><span class="toc-number">2.1.</span> <span class="toc-text">核心组成部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#哈希表存储的核心元素"><span class="toc-number">2.2.</span> <span class="toc-text">哈希表存储的核心元素</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#您能说说-HashMap-常用操作的底层实现原理吗？如存储-put-K-key-V-value-，查找-get-Object-key-，删除-remove-Object-key-，修改-replace-K-key-V-value-等操作。"><span class="toc-number">3.</span> <span class="toc-text">您能说说 HashMap 常用操作的底层实现原理吗？如存储 put(K key, V value)，查找 get(Object key)，删除 remove(Object key)，修改 replace(K key, V value)等操作。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#put-添加"><span class="toc-number">3.1.</span> <span class="toc-text">put 添加</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#取值-get"><span class="toc-number">3.2.</span> <span class="toc-text">取值 get</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除-remove"><span class="toc-number">3.3.</span> <span class="toc-text">删除 remove</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#替换-replace"><span class="toc-number">3.4.</span> <span class="toc-text">替换 replace</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hash-冲突（或者叫-hash-碰撞）是什么？为什么会出现这种现象，如何解决-hash-冲突？"><span class="toc-number">4.</span> <span class="toc-text">hash 冲突（或者叫 hash 碰撞）是什么？为什么会出现这种现象，如何解决 hash 冲突？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#hash-冲突"><span class="toc-number">4.1.</span> <span class="toc-text">hash 冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hash-冲突的避免"><span class="toc-number">4.2.</span> <span class="toc-text">hash 冲突的避免</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hash-冲突解决："><span class="toc-number">4.3.</span> <span class="toc-text">hash 冲突解决：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HashMap-的容量为什么一定要是-2-的-n-次方？"><span class="toc-number">5.</span> <span class="toc-text">HashMap 的容量为什么一定要是 2 的 n 次方？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#运算效率高"><span class="toc-number">5.1.</span> <span class="toc-text">运算效率高</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布均匀"><span class="toc-number">5.2.</span> <span class="toc-text">分布均匀</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HashMap-的负载因子是什么，有什么作用？"><span class="toc-number">6.</span> <span class="toc-text">HashMap 的负载因子是什么，有什么作用？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#扩容？它是怎么扩容的呢？"><span class="toc-number">7.</span> <span class="toc-text">扩容？它是怎么扩容的呢？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#拉链法插入链表-为啥-java7-之前用头插法，java8-之后改成尾插了呢？"><span class="toc-number">8.</span> <span class="toc-text">拉链法插入链表 为啥 java7 之前用头插法，java8 之后改成尾插了呢？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#您能说说-HashMap-和-HashTable-的区别吗？"><span class="toc-number">9.</span> <span class="toc-text">您能说说 HashMap 和 HashTable 的区别吗？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现方式"><span class="toc-number">9.1.</span> <span class="toc-text">实现方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容器整体结构"><span class="toc-number">9.2.</span> <span class="toc-text">容器整体结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化容量和扩容机制"><span class="toc-number">9.3.</span> <span class="toc-text">初始化容量和扩容机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#迭代方式不同"><span class="toc-number">9.4.</span> <span class="toc-text">迭代方式不同</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程安全（最重要）"><span class="toc-number">9.5.</span> <span class="toc-text">线程安全（最重要）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#谈谈-HashMap-线程不安全的体现"><span class="toc-number">10.</span> <span class="toc-text">谈谈 HashMap 线程不安全的体现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#resize-死循环-JDK7"><span class="toc-number">10.1.</span> <span class="toc-text">resize 死循环(JDK7)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fail-fast"><span class="toc-number">10.2.</span> <span class="toc-text">fail-fast</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
   
 <div class="share">
     

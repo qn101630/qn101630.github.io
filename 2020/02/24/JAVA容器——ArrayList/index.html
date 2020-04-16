@@ -389,6 +389,29 @@
     </nav>
  
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ArrayList-有用过吗？它是一个什么东西？可以用来干嘛？"><span class="toc-number">1.</span> <span class="toc-text">ArrayList 有用过吗？它是一个什么东西？可以用来干嘛？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#底层"><span class="toc-number">1.1.</span> <span class="toc-text">底层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特点"><span class="toc-number">1.2.</span> <span class="toc-text">特点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#为啥线程不安全还使用他呢？"><span class="toc-number">2.</span> <span class="toc-text">为啥线程不安全还使用他呢？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#用于查询较多"><span class="toc-number">2.1.</span> <span class="toc-text">用于查询较多</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#综合考虑安全和性能"><span class="toc-number">2.2.</span> <span class="toc-text">综合考虑安全和性能</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？"><span class="toc-number">3.</span> <span class="toc-text">您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#能具体说下-1-7-和-1-8-版本初始化的时候的区别么？"><span class="toc-number">4.</span> <span class="toc-text">能具体说下 1.7 和 1.8 版本初始化的时候的区别么？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#我记得你说到了，他增删很慢，你能说一下-ArrayList-在增删的时候是怎么做的么？主要说一下他为啥慢。"><span class="toc-number">5.</span> <span class="toc-text">我记得你说到了，他增删很慢，你能说一下 ArrayList 在增删的时候是怎么做的么？主要说一下他为啥慢。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#扩容"><span class="toc-number">5.1.</span> <span class="toc-text">扩容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#copy"><span class="toc-number">5.2.</span> <span class="toc-text">copy</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ArrayList-插入删除一定慢么？"><span class="toc-number">6.</span> <span class="toc-text">ArrayList 插入删除一定慢么？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#那他的删除是怎么实现的那？"><span class="toc-number">7.</span> <span class="toc-text">那他的删除是怎么实现的那？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ArrayList-的遍历和-LinkedList-遍历性能比较如何？"><span class="toc-number">8.</span> <span class="toc-text">ArrayList 的遍历和 LinkedList 遍历性能比较如何？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">9.</span> <span class="toc-text">总结</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
   
 <div class="share">
     

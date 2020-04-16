@@ -373,6 +373,29 @@
     </nav>
  
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#生态"><span class="toc-number">1.</span> <span class="toc-text">生态</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CAP-定理"><span class="toc-number">2.</span> <span class="toc-text">CAP 定理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">2.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三个指标"><span class="toc-number">2.2.</span> <span class="toc-text">三个指标</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Zookeeper-保证-CP"><span class="toc-number">3.</span> <span class="toc-text">Zookeeper 保证 CP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Eureka-保证-AP"><span class="toc-number">4.</span> <span class="toc-text">Eureka 保证 AP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">6.</span> <span class="toc-text">参考资料</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
   
 <div class="share">
     

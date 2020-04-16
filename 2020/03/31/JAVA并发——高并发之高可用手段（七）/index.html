@@ -383,6 +383,29 @@
     </nav>
  
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#什么是高可用？"><span class="toc-number">1.</span> <span class="toc-text">什么是高可用？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#高可用的评价维度"><span class="toc-number">2.</span> <span class="toc-text">高可用的评价维度</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#影响高可用"><span class="toc-number">3.</span> <span class="toc-text">影响高可用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#高可用手段"><span class="toc-number">4.</span> <span class="toc-text">高可用手段</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#服务冗余"><span class="toc-number">4.1.</span> <span class="toc-text">服务冗余</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#负载均衡"><span class="toc-number">4.2.</span> <span class="toc-text">负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#超时机制"><span class="toc-number">4.3.</span> <span class="toc-text">超时机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务限流熔断降级"><span class="toc-number">4.4.</span> <span class="toc-text">服务限流熔断降级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据复制-缓存-sharding"><span class="toc-number">4.5.</span> <span class="toc-text">数据复制/缓存/sharding</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务拆分"><span class="toc-number">4.6.</span> <span class="toc-text">服务拆分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务实时监控"><span class="toc-number">4.7.</span> <span class="toc-text">服务实时监控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开关控制"><span class="toc-number">4.8.</span> <span class="toc-text">开关控制</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
   
 <div class="share">
     
