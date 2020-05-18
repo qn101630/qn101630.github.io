@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="南有乔木" />
+
+
+
+<meta name="description" content="logj日志用法及配置以及slf4j标准">
+<meta name="keywords" content="日志 Log4j">
+<meta property="og:type" content="article">
+<meta property="og:title" content="日志——Log4j">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;05&#x2F;18&#x2F;%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j&#x2F;index.html">
+<meta property="og:site_name" content="南有乔木的技术博客专栏">
+<meta property="og:description" content="logj日志用法及配置以及slf4j标准">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j_2020-05-18-13-39-06.png">
+<meta property="og:updated_time" content="2020-05-18T06:44:47.962Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j_2020-05-18-13-39-06.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="南有乔木的技术博客专栏" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>日志——Log4j | 南有乔木的技术博客专栏</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/sex.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">南有乔木</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">学习笔记</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">大狗哥</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/1150887961@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%92%8C/" rel="tag">$和#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/condig%E5%AE%9E%E6%88%98-%E6%9C%8D%E5%8A%A1%E5%8C%96%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">condig实战 服务化与高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/" rel="tag">config 配置中心</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%88%9D%E4%BD%93%E9%AA%8C/" rel="tag">config实战 初体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%8A%A8%E6%80%81%E5%88%B7%E6%96%B0/" rel="tag">config实战 动态刷新</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%8A%A8%E6%80%81%E5%88%B7%E6%96%B0%EF%BC%88Bus%EF%BC%89/" rel="tag">config实战 动态刷新（Bus）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpu/" rel="tag">cpu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker-kafka%E5%AE%89%E8%A3%85/" rel="tag">docker kafka安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/" rel="tag">eureka 服务发现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka%E5%AE%9E%E6%88%98/" rel="tag">eureka实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feign-%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%8F%A3%E5%8C%96/" rel="tag">feign 服务接口化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feign%E5%AE%9E%E6%88%98/" rel="tag">feign实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hystrix-%E7%86%94%E6%96%AD%E5%99%A8/" rel="tag">hystrix 熔断器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hystrix%E5%AE%9E%E6%88%98-%E5%8D%95%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7/" rel="tag">hystrix实战 单应用监控</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-ArrayList/" rel="tag">java容器 ArrayList</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-ConcurrentHashMap/" rel="tag">java容器 ConcurrentHashMap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-HashMap/" rel="tag">java容器 HashMap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-LinkedList/" rel="tag">java容器 LinkedList</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-%E6%A6%82%E8%BF%B0/" rel="tag">java容器 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80/" rel="tag">java并发 基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80-%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F/" rel="tag">java并发 基础 并发模拟</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80-%E8%AF%BE%E7%A8%8B%E5%AF%BC%E5%AD%A6/" rel="tag">java并发 基础 课程导学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/" rel="tag">java并发 线程安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-ReetrantLock/" rel="tag">java并发 线程安全 ReetrantLock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-synchronized/" rel="tag">java并发 线程安全 synchronized</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/" rel="tag">java并发 线程安全 不可变对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E4%B8%8D%E5%AE%89%E5%85%A8%E7%B1%BB%E5%92%8C%E5%86%99%E6%B3%95/" rel="tag">java并发 线程安全 不安全类和写法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%90%8C%E6%AD%A5%E5%AE%B9%E5%99%A8/" rel="tag">java并发 线程安全 同步容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/" rel="tag">java并发 线程安全 安全发布对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/" rel="tag">java并发 线程安全 并发容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E6%AD%BB%E9%94%81/" rel="tag">java并发 线程安全 死锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E7%BA%BF%E7%A8%8B%E5%B0%81%E9%97%AD/" rel="tag">java并发 线程安全 线程封闭</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E9%94%81/" rel="tag">java并发 线程安全 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-GC%E5%88%86%E6%9E%90/" rel="tag">jvm GC分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-java8/" rel="tag">jvm java8</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" rel="tag">jvm 内存结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/" rel="tag">jvm 命令调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="tag">jvm 垃圾回收</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/" rel="tag">jvm 学习导读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E7%B1%BB%E5%8A%A0%E8%BD%BD/" rel="tag">jvm 类加载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka%E5%8E%9F%E7%90%86/" rel="tag">kafka原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka%E5%AE%9E%E6%88%98/" rel="tag">kafka实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" rel="tag">ribbon 负载均衡</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon%E5%AE%9E%E6%88%98/" rel="tag">ribbon实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3/" rel="tag">ribbon服务网关</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-AOP/" rel="tag">spring AOP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-ApplicationContext/" rel="tag">spring ApplicationContext</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" rel="tag">spring Bean的生命周期</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-IOC/" rel="tag">spring IOC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-MVC/" rel="tag">spring MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E4%BA%8B%E5%8A%A1/" rel="tag">spring 事务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%A6%82%E8%BF%B0/" rel="tag">spring 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%B3%A8%E8%A7%A3/" rel="tag">spring 注解</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%B3%A8%E8%A7%A3%E5%BC%8F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" rel="tag">spring 注解式源码解析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot-%E5%AE%9E%E6%88%98/" rel="tag">springboot 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E5%8E%9F%E7%90%86/" rel="tag">springboot 自动装配原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zuul%E5%AE%9E%E6%88%98/" rel="tag">zuul实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%8B%E7%BB%8D-%E5%AE%89%E8%A3%85/" rel="tag">介绍 安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7-turbine/" rel="tag">多应用监控 turbine</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">定时任务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9E%E6%88%98/" rel="tag">实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D/" rel="tag">微服务介绍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86%E3%80%81%E5%93%88%E5%B8%8C%E8%A1%A8%E3%80%81%E5%9B%BE/" rel="tag">数据结构 堆、哈希表、图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%95%B0%E7%BB%84/" rel="tag">数据结构 数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%88/" rel="tag">数据结构 栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91/" rel="tag">数据结构 树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%93%BE%E8%A1%A8/" rel="tag">数据结构 链表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%98%9F%E5%88%97/" rel="tag">数据结构 队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E7%AE%80%E4%BB%8B/" rel="tag">数据结构与算法 简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%97%A5%E5%BF%97-Log4j/" rel="tag">日志 Log4j</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0-zookeeper-eureka/" rel="tag">服务发现 zookeeper eureka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/" rel="tag">算法 排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95-%E6%90%9C%E7%B4%A2/" rel="tag">算法 搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E5%BA%94%E7%94%A8%E6%8B%86%E5%88%86/" rel="tag">高并发 应用拆分</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E5%BA%94%E7%94%A8%E9%99%90%E6%B5%81/" rel="tag">高并发 应用限流</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%89%A9%E5%AE%B9/" rel="tag">高并发 扩容</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8/" rel="tag">高并发 数据库分库、切库、分表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD/" rel="tag">高并发 服务降级和熔断</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="tag">高并发 消息队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E7%BC%93%E5%AD%98/" rel="tag">高并发 缓存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" rel="tag">高并发 设计原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">高并发 高可用</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/" target="_blank" rel="noopener">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/" target="_blank" rel="noopener">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">南有乔木</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/sex.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">南有乔木</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">学习笔记</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">大狗哥</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/1150887961@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article
+  id="post-日志——Log4j"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+>
+  
+  <div class="article-meta">
+    <a href="/2020/05/18/%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j/" class="article-date">
+      <time datetime="2020-05-18T02:36:06.000Z" itemprop="datePublished">2020-05-18</time>
+</a>
+
+
+  </div>
+  
+  <div class="article-inner">
+    
+    <input type="hidden" class="isFancy" />
+     
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      日志——Log4j
+    </h1>
+  
+ 
+    </header>
+    
+    <div class="article-info article-info-post">
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E6%97%A5%E5%BF%97/">日志</a>
+    </div>
+
+ 
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%97%A5%E5%BF%97-Log4j/" rel="tag">日志 Log4j</a></li></ul>
+    </div>
+
+      <div class="clearfix"></div>
+    </div>
+     
+    <div class="article-entry" itemprop="articleBody">
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>在java中，记录日志有很多种方式：</p>
+<ol>
+<li><p>自己实现：自己写类，将日志数据，以io操作方式，写数据到文本文件、数据库中。</p>
+</li>
+<li><p>使用log4j：log4j可以将日志输出到console窗口、文本文件、数据库等，功能强大！</p>
+</li>
+<li><p>使用slfj：slfj也是一个很强大的功能，slfj旨在一统天下，提供了logging.jar 和 log4j的接口，可以通过slfj来调用log4j，也可以调用jdk的logging。</p>
+</li>
+<li><p>使用jdk自带的logging.jar中的方法</p>
+</li>
+<li><p>使用logback</p>
+</li>
+</ol>
+<h1 id="log4j组件"><a href="#log4j组件" class="headerlink" title="log4j组件"></a>log4j组件</h1><p>Log4j有三个主要的组件：Loggers(记录器)、Appenders(输出源)和Layouts(布局)。</p>
+<h2 id="Loggers"><a href="#Loggers" class="headerlink" title="Loggers"></a>Loggers</h2><p>Loggers组件在此系统中被分为五个级别：DEBUG、INFO、WARN、ERROR和FATAL。这五个级别是有顺序的，DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL，分别用来指定这条日志信息的重要程度，明白这一点很重要。</p>
+<p>Log4j有一个规则：只输出级别不低于设定级别的日志信息，假设Loggers级别设定为INFO，则INFO、WARN、ERROR和FATAL级别的日志信息都会输出，而级别比INFO低的DEBUG则不会输出。</p>
+<h2 id="Appenders"><a href="#Appenders" class="headerlink" title="Appenders"></a>Appenders</h2><p>禁用和使用日志请求只是Log4j的基本功能，Log4j日志系统还提供许多强大的功能，比如允许把日志输出到不同的地方，如控制台（Console）、文件（Files）等，可以根据天数或者文件大小产生新的文件，可以以流的形式发送到其它地方等等。</p>
+<p>常使用的类如下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">org.apache.log4j.ConsoleAppender（控制台）</span></span><br><span class="line"><span class="attr">org.apache.log4j.FileAppender（文件）</span></span><br><span class="line"><span class="attr">org.apache.log4j.DailyRollingFileAppender（每天产生一个日志文件）</span></span><br><span class="line"><span class="attr">org.apache.log4j.RollingFileAppender（文件大小到达指定尺寸的时候产生一个新的文件）</span></span><br><span class="line"><span class="attr">org.apache.log4j.WriterAppender（将日志信息以流格式发送到任意指定的地方）</span></span><br></pre></td></tr></table></figure>
+
+<p>配置模式</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.appender.appenderName</span> = <span class="string">className</span></span><br><span class="line"><span class="meta">log4j.appender.appenderName.Option1</span> = <span class="string">value1</span></span><br><span class="line"><span class="attr">…</span></span><br><span class="line"><span class="meta">log4j.appender.appenderName.OptionN</span> = <span class="string">valueN</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Layouts"><a href="#Layouts" class="headerlink" title="Layouts"></a>Layouts</h2><p>有时用户希望根据自己的喜好格式化自己的日志输出，Log4j可以在Appenders的后面附加Layouts来完成这个功能。Layouts提供四种日志输出样式，如根据HTML样式、自由指定样式、包含日志级别与信息的样式和包含日志时间、线程、类别等信息的样式。</p>
+<p>常使用的类如下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">org.apache.log4j.HTMLLayout（以HTML表格形式布局）</span></span><br><span class="line"><span class="attr">org.apache.log4j.PatternLayout（可以灵活地指定布局模式）</span></span><br><span class="line"><span class="attr">org.apache.log4j.SimpleLayout（包含日志信息的级别和信息字符串）</span></span><br><span class="line"><span class="attr">org.apache.log4j.TTCCLayout（包含日志产生的时间、线程、类别等信息）</span></span><br></pre></td></tr></table></figure>
+
+<p>配置模式：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.appender.appenderName.layout</span> =<span class="string">className</span></span><br><span class="line"><span class="meta">log4j.appender.appenderName.layout.Option1</span> = <span class="string">value1</span></span><br><span class="line"><span class="attr">…</span></span><br><span class="line"><span class="meta">log4j.appender.appenderName.layout.OptionN</span> = <span class="string">valueN</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="配置详解"><a href="#配置详解" class="headerlink" title="配置详解"></a>配置详解</h1><p>Log4j支持两种配置文件格式：一种是XML格式的文件，一种是properties属性文件。</p>
+<p>下面以properties属性文件为例介绍log4j.properties的配置。</p>
+<h2 id="配置根Logger"><a href="#配置根Logger" class="headerlink" title="配置根Logger"></a>配置根Logger</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.rootLogger</span> = <span class="string">[ level ] , appenderName1, appenderName2, …</span></span><br></pre></td></tr></table></figure>
+
+<p><code>level</code>：设定日志记录的最低级别，可设的值有OFF、FATAL、ERROR、WARN、INFO、DEBUG、ALL或者自定义的级别，Log4j建议只使用中间四个级别。</p>
+<p><code>appenderName</code>：就是指定日志信息要输出到哪里。可以同时指定多个输出目的地，用逗号隔开。</p>
+<p>例：log4j.rootLogger＝INFO,A1,B2,C3</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.additivity.org.apache</span>=<span class="string">false</span></span><br></pre></td></tr></table></figure>
+
+<p>表示Logger不会在父Logger的appender里输出，默认为true。</p>
+<h2 id="配置日志信息输出目的地（appender）"><a href="#配置日志信息输出目的地（appender）" class="headerlink" title="配置日志信息输出目的地（appender）"></a>配置日志信息输出目的地（appender）</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.appender.appenderName</span> = <span class="string">className</span></span><br></pre></td></tr></table></figure>
+
+<p><code>appenderName</code>：自定义appderName，在log4j.rootLogger设置中使用；</p>
+<p><code>className</code>：可设值如下：</p>
+<p>org.apache.log4j.ConsoleAppender//控制台</p>
+<p>org.apache.log4j.FileAppender//文件</p>
+<p>org.apache.log4j.DailyRollingFileAppender//每天产生一个日志文件</p>
+<p>org.apache.log4j.RollingFileAppender//文件大小到达指定尺寸的时候产生一个新的文件</p>
+<p>org.apache.log4j.WriterAppender//将日志信息以流格式发送到任意指定的地方</p>
+<ol>
+<li>ConsoleAppender选项</li>
+</ol>
+<p><code>Threshold=WARN</code>：指定日志信息的最低输出级别，默认为DEBUG。</p>
+<p><code>ImmediateFlush=true</code>：表示所有消息都会被立即输出，设为false则不输出，默认值是true。</p>
+<p><code>Target=System.err</code>：默认值是System.out。</p>
+<ol start="2">
+<li>FileAppender选项</li>
+</ol>
+<p><code>Threshold=WARN</code>：指定日志信息的最低输出级别，默认为DEBUG。</p>
+<p><code>ImmediateFlush=true</code>：表示所有消息都会被立即输出，设为false则不输出，默认值是true。</p>
+<p><code>Append=false</code>：true表示消息增加到指定文件中，false则将消息覆盖指定的文件内容，默认值是true。</p>
+<p><code>File=D:/logs/logging.log4j</code>：指定消息输出到logging.log4j文件中。</p>
+<ol start="3">
+<li>DailyRollingFileAppender选项</li>
+</ol>
+<p><code>Threshold=WARN</code>：指定日志信息的最低输出级别，默认为DEBUG。</p>
+<p><code>ImmediateFlush=true</code>：表示所有消息都会被立即输出，设为false则不输出，默认值是true。</p>
+<p><code>Append=false</code>：true表示消息增加到指定文件中，false则将消息覆盖指定的文件内容，默认值是true。</p>
+<p><code>File=D:/logs/logging.log4j</code>：指定当前消息输出到logging.log4j文件中。</p>
+<p><code>DatePattern=&#39;.&#39;yyyy-MM</code>：每月滚动一次日志文件，即每月产生一个新的日志文件。当前月的日志文件名为logging.log4j，前一个月的日志文件名为logging.log4j.yyyy-MM。<br>另外，也可以指定按周、天、时、分等来滚动日志文件，对应的格式如下：</p>
+<p>1) ‘.’yyyy-MM：每月<br>2) ‘.’yyyy-ww：每周<br>3) ‘.’yyyy-MM-dd：每天<br>4) ‘.’yyyy-MM-dd-a：每天两次<br>5) ‘.’yyyy-MM-dd-HH：每小时<br>6) ‘.’yyyy-MM-dd-HH-mm：每分钟</p>
+<ol start="4">
+<li>RollingFileAppender选项</li>
+</ol>
+<p><code>Threshold=WARN</code>：指定日志信息的最低输出级别，默认为DEBUG。</p>
+<p><code>ImmediateFlush=true</code>：表示所有消息都会被立即输出，设为false则不输出，默认值是true。</p>
+<p><code>Append=false</code>：true表示消息增加到指定文件中，false则将消息覆盖指定的文件内容，默认值是true。</p>
+<p><code>File=D:/logs/logging.log4j</code>：指定消息输出到logging.log4j文件中。</p>
+<p><code>MaxFileSize=100KB</code>：后缀可以是KB, MB 或者GB。在日志文件到达该大小时，将会自动滚动，即将原来的内容移到logging.log4j.1文件中。</p>
+<p><code>MaxBackupIndex=2</code>：指定可以产生的滚动文件的最大数，例如，设为2则可以产生logging.log4j.1，logging.log4j.2两个滚动文件和一个logging.log4j文件。</p>
+<h2 id="配置日志信息的输出格式（Layout）"><a href="#配置日志信息的输出格式（Layout）" class="headerlink" title="配置日志信息的输出格式（Layout）"></a>配置日志信息的输出格式（Layout）</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.appender.appenderName.layout</span>=<span class="string">className</span></span><br></pre></td></tr></table></figure>
+
+<p><code>className</code>：可设值如下：</p>
+<p>org.apache.log4j.HTMLLayout//以HTML表格形式布局</p>
+<p>org.apache.log4j.PatternLayout//可以灵活地指定布局模式</p>
+<p>org.apache.log4j.SimpleLayout//包含日志信息的级别和信息字符串</p>
+<p>org.apache.log4j.TTCCLayout//包含日志产生的时间、线程、类别等等信息</p>
+<ol>
+<li>HTMLLayout选项</li>
+</ol>
+<p><code>LocationInfo=true</code>：输出java文件名称和行号，默认值是false。</p>
+<p><code>Title=My Logging</code>： 默认值是Log4J Log Messages。</p>
+<ol start="2">
+<li>PatternLayout选项</li>
+</ol>
+<p><code>ConversionPattern=%m%n</code>：设定以怎样的格式显示消息。</p>
+<h1 id="格式化符号说明"><a href="#格式化符号说明" class="headerlink" title="格式化符号说明"></a>格式化符号说明</h1><p>%p：输出日志信息的优先级，即DEBUG，INFO，WARN，ERROR，FATAL。</p>
+<p>%d：输出日志时间点的日期或时间，默认格式为ISO8601，也可以在其后指定格式</p>
+<p>%r：输出自应用程序启动到输出该log信息耗费的毫秒数。</p>
+<p>%t：输出产生该日志事件的线程名。</p>
+<p>%l：输出日志事件的发生位置，相当于%c.%M(%F:%L)的组合，包括类全名、方法、文件名以及在代码中的行数。</p>
+<p>%c：输出日志信息所属的类目，通常就是所在类的全名。</p>
+<p>%M：输出产生日志信息的方法名。</p>
+<p>%F：输出日志消息产生时所在的文件名称。</p>
+<p>%L:：输出代码中的行号。</p>
+<p>%m:：输出代码中指定的具体日志信息。</p>
+<p>%n：输出一个回车换行符，Windows平台为”rn”，Unix平台为”n”。</p>
+<p>%x：输出和当前线程相关联的NDC(嵌套诊断环境)，尤其用到像java servlets这样的多客户多线程的应用中。</p>
+<p>%%：输出一个”%”字符。</p>
+<p>另外，还可以在%与格式字符之间加上修饰符来控制其最小长度、最大长度、和文本的对齐方式。如：</p>
+<p>1) c：指定输出category的名称，最小的长度是20，如果category的名称长度小于20的话，默认的情况下右对齐。</p>
+<p>2) %-20c：”-“号表示左对齐。</p>
+<p>3) %.30c：指定输出category的名称，最大的长度是30，如果category的名称长度大于30的话，就会将左边多出的字符截掉，但小于30的话也不会补空格。</p>
+<h1 id="配置样例"><a href="#配置样例" class="headerlink" title="配置样例"></a>配置样例</h1><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.rootLogger</span>=<span class="string">DEBUG,console,dailyFile,im</span></span><br><span class="line"><span class="meta">log4j.additivity.org.apache</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 控制台(console)</span></span><br><span class="line"><span class="meta">log4j.appender.console</span>=<span class="string">org.apache.log4j.ConsoleAppender</span></span><br><span class="line"><span class="meta">log4j.appender.console.Threshold</span>=<span class="string">DEBUG</span></span><br><span class="line"><span class="meta">log4j.appender.console.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.console.Target</span>=<span class="string">System.err</span></span><br><span class="line"><span class="meta">log4j.appender.console.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.console.layout.ConversionPattern</span>=<span class="string">[%-5p] %d(%r) --&gt; [%t] %l: %m %x %n</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志文件(logFile)</span></span><br><span class="line"><span class="meta">log4j.appender.logFile</span>=<span class="string">org.apache.log4j.FileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.logFile.Threshold</span>=<span class="string">DEBUG</span></span><br><span class="line"><span class="meta">log4j.appender.logFile.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.logFile.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.logFile.File</span>=<span class="string">D:/logs/log.log4j</span></span><br><span class="line"><span class="meta">log4j.appender.logFile.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.logFile.layout.ConversionPattern</span>=<span class="string">[%-5p] %d(%r) --&gt; [%t] %l: %m %x %n</span></span><br><span class="line"><span class="comment"># 回滚文件(rollingFile)</span></span><br><span class="line"><span class="meta">log4j.appender.rollingFile</span>=<span class="string">org.apache.log4j.RollingFileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.rollingFile.Threshold</span>=<span class="string">DEBUG</span></span><br><span class="line"><span class="meta">log4j.appender.rollingFile.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.rollingFile.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.rollingFile.File</span>=<span class="string">D:/logs/log.log4j</span></span><br><span class="line"><span class="meta">log4j.appender.rollingFile.MaxFileSize</span>=<span class="string">200KB</span></span><br><span class="line"><span class="meta">log4j.appender.rollingFile.MaxBackupIndex</span>=<span class="string">50</span></span><br><span class="line"><span class="meta">log4j.appender.rollingFile.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.rollingFile.layout.ConversionPattern</span>=<span class="string">[%-5p] %d(%r) --&gt; [%t] %l: %m %x %n</span></span><br><span class="line"><span class="comment"># 定期回滚日志文件(dailyFile)</span></span><br><span class="line"><span class="meta">log4j.appender.dailyFile</span>=<span class="string">org.apache.log4j.DailyRollingFileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.dailyFile.Threshold</span>=<span class="string">DEBUG</span></span><br><span class="line"><span class="meta">log4j.appender.dailyFile.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.dailyFile.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.dailyFile.File</span>=<span class="string">D:/logs/log.log4j</span></span><br><span class="line"><span class="meta">log4j.appender.dailyFile.DatePattern</span>=<span class="string">'.'yyyy-MM-dd</span></span><br><span class="line"><span class="meta">log4j.appender.dailyFile.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.dailyFile.layout.ConversionPattern</span>=<span class="string">[%-5p] %d(%r) --&gt; [%t] %l: %m %x %n</span></span><br><span class="line"><span class="comment"># 应用于socket</span></span><br><span class="line"><span class="meta">log4j.appender.socket</span>=<span class="string">org.apache.log4j.RollingFileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.socket.RemoteHost</span>=<span class="string">localhost</span></span><br><span class="line"><span class="meta">log4j.appender.socket.Port</span>=<span class="string">5001</span></span><br><span class="line"><span class="meta">log4j.appender.socket.LocationInfo</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># Set up for Log Factor 5</span></span><br><span class="line"><span class="meta">log4j.appender.socket.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.socket.layout.ConversionPattern</span>=<span class="string">[%-5p] %d(%r) --&gt; [%t] %l: %m %x %n</span></span><br><span class="line"><span class="comment"># Log Factor 5 Appender</span></span><br><span class="line"><span class="meta">log4j.appender.LF5_APPENDER</span>=<span class="string">org.apache.log4j.lf5.LF5Appender</span></span><br><span class="line"><span class="meta">log4j.appender.LF5_APPENDER.MaxNumberOfRecords</span>=<span class="string">2000</span></span><br><span class="line"><span class="comment"># 发送日志到指定邮件</span></span><br><span class="line"><span class="meta">log4j.appender.mail</span>=<span class="string">org.apache.log4j.net.SMTPAppender</span></span><br><span class="line"><span class="meta">log4j.appender.mail.Threshold</span>=<span class="string">FATAL</span></span><br><span class="line"><span class="meta">log4j.appender.mail.BufferSize</span>=<span class="string">10</span></span><br><span class="line"><span class="meta">log4j.appender.mail.From</span> = <span class="string">xxx@mail.com</span></span><br><span class="line"><span class="meta">log4j.appender.mail.SMTPHost</span>=<span class="string">mail.com</span></span><br><span class="line"><span class="meta">log4j.appender.mail.Subject</span>=<span class="string">Log4J Message</span></span><br><span class="line"><span class="meta">log4j.appender.mail.To</span>= <span class="string">xxx@mail.com</span></span><br><span class="line"><span class="meta">log4j.appender.mail.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.mail.layout.ConversionPattern</span>=<span class="string">[%-5p] %d(%r) --&gt; [%t] %l: %m %x %n</span></span><br><span class="line"><span class="comment"># 应用于数据库</span></span><br><span class="line"><span class="meta">log4j.appender.database</span>=<span class="string">org.apache.log4j.jdbc.JDBCAppender</span></span><br><span class="line"><span class="meta">log4j.appender.database.URL</span>=<span class="string">jdbc:mysql://localhost:3306/test</span></span><br><span class="line"><span class="meta">log4j.appender.database.driver</span>=<span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line"><span class="meta">log4j.appender.database.user</span>=<span class="string">root</span></span><br><span class="line"><span class="meta">log4j.appender.database.password</span>=<span class="string"></span></span><br><span class="line"><span class="meta">log4j.appender.database.sql</span>=<span class="string">INSERT INTO LOG4J (Message) VALUES('=[%-5p] %d(%r) --&gt; [%t] %l: %m %x %n')</span></span><br><span class="line"><span class="meta">log4j.appender.database.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.database.layout.ConversionPattern</span>=<span class="string">[%-5p] %d(%r) --&gt; [%t] %l: %m %x %n</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 自定义Appender</span></span><br><span class="line"><span class="meta">log4j.appender.im</span> = <span class="string">net.cybercorlin.util.logger.appender.IMAppender</span></span><br><span class="line"><span class="meta">log4j.appender.im.host</span> = <span class="string">mail.cybercorlin.net</span></span><br><span class="line"><span class="meta">log4j.appender.im.username</span> = <span class="string">username</span></span><br><span class="line"><span class="meta">log4j.appender.im.password</span> = <span class="string">password</span></span><br><span class="line"><span class="meta">log4j.appender.im.recipient</span> = <span class="string">corlin@cybercorlin.net</span></span><br><span class="line"><span class="meta">log4j.appender.im.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.im.layout.ConversionPattern</span>=<span class="string">[%-5p] %d(%r) --&gt; [%t] %l: %m %x %n</span></span><br></pre></td></tr></table></figure>
+
+<p>Log4j的强大功能无可置疑，但实际应用中免不了遇到某个功能需要输出独立的日志文件的情况，怎样才能把所需的内容从原有日志中分离，形成单独的日志文件呢？其实只要在现有的Log4j基础上稍加配置即可轻松实现这一功能。</p>
+<p>如果想对不同的类输出不同的文件(以cn.com.Test为例)，先要在Test.java中定义:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> Log logger = LogFactory.getLog(Test<span class="class">.<span class="keyword">class</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>然后在log4j.properties中加入:</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.logger.cn.com.Test</span>= <span class="string">DEBUG, test</span></span><br><span class="line"></span><br><span class="line"><span class="meta">log4j.appender.test</span>=<span class="string">org.apache.log4j.FileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.test.File</span>=<span class="string">$&#123;myweb.root&#125;/WEB-INF/log/test.log</span></span><br><span class="line"><span class="meta">log4j.appender.test.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.test.layout.ConversionPattern</span>=<span class="string">%d %p [%c] - %m%n</span></span><br></pre></td></tr></table></figure>
+
+<p>还有一个问题，就是这些自定义的日志默认是同时输出到log4j.rootLogger所配置的日志中的，如何能只让它们输出到自己指定的日志中呢？别急，这里有个开关：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.additivity.myTest1</span> = <span class="string">false</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h1><ol>
+<li><p>log4j需要导入的包，一般使用log4j需要与logging配合使用：</p>
+<p> commons-logging-1.0.4.jar</p>
+<p> log4j-1.2.15.jar</p>
+</li>
+<li><p>在src下，把log4j的配置文件添加进去log4j.properties。</p>
+</li>
+<li><p>main主函数调用：</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.log4j.Logger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Log4jTest</span> </span>&#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> Logger logger1 = Logger.getLogger(Log4jTest<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">       <span class="comment">//logger1</span></span><br><span class="line">       logger1.trace(<span class="string">"我是logger1，trace"</span>);</span><br><span class="line">       logger1.debug(<span class="string">"我是logger1，debug"</span>);</span><br><span class="line">       logger1.info(<span class="string">"我是logger1，info"</span>);</span><br><span class="line">       logger1.warn(<span class="string">"我是logger1，warn"</span>);</span><br><span class="line">       logger1.error(<span class="string">"我是logger1，error"</span>);</span><br><span class="line">       logger1.fatal(<span class="string">"我是logger1，fatal"</span>);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="slf4j"><a href="#slf4j" class="headerlink" title="slf4j"></a>slf4j</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>SLF4J 不是一个真正的日志实现，而是一个抽象层，它允许你在后台使用任意一个日志类库。</p>
+<p>如果一个项目已经使用了log4j，而你加载了一个类库，比方说 Apache Active MQ——它依赖于于另外一个日志类库logback，那么你就需要把它也加载进去。但如果Apache Active MQ使用了SLF4J，你可以继续使用你的日志类库而无需忍受加载和维护一个新的日志框架的痛苦。</p>
+<p>除此之外，还有一个SLF4J API的特性是使得我坚持使用SLF4J而抛弃我长期间钟爱的Log4j的理由，是被称为占位符(place holder)，在代码中表示为“{}”的特性。</p>
+<h2 id="实战-1"><a href="#实战-1" class="headerlink" title="实战"></a>实战</h2><p>需要导入的jar包：</p>
+<p><img src="/images/%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j_2020-05-18-13-39-06.png" alt="日志——Log4j_2020-05-18-13-39-06.png"></p>
+<p>配置文件(log4j.properties)：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.rootLogger</span>=<span class="string">debug, C</span></span><br><span class="line"></span><br><span class="line"><span class="meta">log4j.appender.A</span>=<span class="string">org.apache.log4j.ConsoleAppender</span></span><br><span class="line"><span class="meta">log4j.appender.A.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.A.layout.ConversionPattern</span>=<span class="string">%d&#123;yyyy-MM-dd HH:mm:ss&#125; [%c]-[%p] %m%n</span></span><br><span class="line"></span><br><span class="line"><span class="meta">log4j.appender.B</span>=<span class="string">org.apache.log4j.FileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.B.File</span>=<span class="string">E:\\log.log</span></span><br><span class="line"><span class="meta">log4j.appender.B.layout</span>=<span class="string">org.apache.log4j.SimpleLayout</span></span><br><span class="line"></span><br><span class="line"><span class="meta">log4j.appender.C</span>=<span class="string">org.apache.log4j.RollingFileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.C.File</span>=<span class="string">E:\\log.html</span></span><br><span class="line"><span class="meta">log4j.appender.C.MaxFileSize</span>=<span class="string">1000KB</span></span><br><span class="line"><span class="meta">log4j.appender.C.MaxBackupIndex</span>=<span class="string">10</span></span><br><span class="line"><span class="meta">log4j.appender.C.layout</span>=<span class="string">org.apache.log4j.HTMLLayout</span></span><br><span class="line"><span class="meta">log4j.appender.C.encoding</span>=<span class="string">gbk</span></span><br><span class="line"></span><br><span class="line"><span class="meta">log4j.appender.D</span>=<span class="string">org.apache.log4j.DailyRollingFileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.D.File</span>=<span class="string">E:\\log.log</span></span><br><span class="line"><span class="meta">log4j.appender.D.layout</span>=<span class="string">org.apache.log4j.TTCCLayout</span></span><br></pre></td></tr></table></figure>
+
+<p>main方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.xm.exam.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Slf4jTest</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Logger logger = LoggerFactory.getLogger(Slf4jTest<span class="class">.<span class="keyword">class</span>)</span>;<span class="comment">// slf4j日志记录器</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 普通的日志记录</span></span><br><span class="line">        logger.debug(<span class="string">"普通的日志记录"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// &#123;&#125;占位符记录日志</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">            logger.debug(<span class="string">"这是第&#123;&#125;条记录"</span>, i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 用\转义&#123;&#125;</span></span><br><span class="line">        logger.debug(<span class="string">"Set \\&#123;&#125; differs from &#123;&#125;"</span>, <span class="string">"3"</span>); <span class="comment">// output:Set &#123;&#125; differs</span></span><br><span class="line">                                                        <span class="comment">// from 3</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 两个参数</span></span><br><span class="line">        logger.debug(<span class="string">"两个占位符，可以传两个参数&#123;&#125;----&#123;&#125;"</span>, <span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 多个参数(可变参数)</span></span><br><span class="line">        logger.debug(<span class="string">"debug:多个占位符，&#123;&#125;,&#123;&#125;,&#123;&#125;,&#123;&#125;"</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 多个参数(可变参数)</span></span><br><span class="line">        logger.info(<span class="string">"info:多个占位符，&#123;&#125;,&#123;&#125;,&#123;&#125;,&#123;&#125;"</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 多个参数(可变参数)</span></span><br><span class="line">        logger.error(<span class="string">"error:多个占位符，&#123;&#125;,&#123;&#125;,&#123;&#125;,&#123;&#125;"</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+ 
+    </div>
+    
+  </div>
+   
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2020/05/18/%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j/">日志——Log4j</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
+        <p><span>发布时间:</span>2020-05-18, 10:36:06</p>
+        <p><span>最后更新:</span>2020-05-18, 14:44:47</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2020/05/18/%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j/" title="日志——Log4j">http://yoursite.com/2020/05/18/%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/05/18/%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2020/05/18/SpringBoot%E2%80%94%E2%80%94%E6%8B%A6%E6%88%AA%E5%99%A8%EF%BC%88%E5%85%AB%EF%BC%89/">
+                    SpringBoot——拦截器（八）
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2020/05/14/SpringBoot%E2%80%94%E2%80%94%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E%EF%BC%88%E4%B8%83%EF%BC%89/">
+                    SpringBoot——模板引擎（七）
+                </a>
+            </div>
+        
+    </nav>
+ 
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#log4j组件"><span class="toc-number">2.</span> <span class="toc-text">log4j组件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Loggers"><span class="toc-number">2.1.</span> <span class="toc-text">Loggers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Appenders"><span class="toc-number">2.2.</span> <span class="toc-text">Appenders</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Layouts"><span class="toc-number">2.3.</span> <span class="toc-text">Layouts</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置详解"><span class="toc-number">3.</span> <span class="toc-text">配置详解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#配置根Logger"><span class="toc-number">3.1.</span> <span class="toc-text">配置根Logger</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置日志信息输出目的地（appender）"><span class="toc-number">3.2.</span> <span class="toc-text">配置日志信息输出目的地（appender）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置日志信息的输出格式（Layout）"><span class="toc-number">3.3.</span> <span class="toc-text">配置日志信息的输出格式（Layout）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#格式化符号说明"><span class="toc-number">4.</span> <span class="toc-text">格式化符号说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置样例"><span class="toc-number">5.</span> <span class="toc-text">配置样例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实战"><span class="toc-number">6.</span> <span class="toc-text">实战</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#slf4j"><span class="toc-number">7.</span> <span class="toc-text">slf4j</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">7.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实战-1"><span class="toc-number">7.2.</span> <span class="toc-text">实战</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"true"];
+    </script>
+  
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"日志——Log4j　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+    <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'http://yoursite.com/2020/05/18/%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j/';
+            this.page.identifier = '2020/05/18/日志——Log4j/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//qnsite.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+   
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2020/05/18/SpringBoot%E2%80%94%E2%80%94%E6%8B%A6%E6%88%AA%E5%99%A8%EF%BC%88%E5%85%AB%EF%BC%89/" title="上一篇: SpringBoot——拦截器（八）">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2020/05/14/SpringBoot%E2%80%94%E2%80%94%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E%EF%BC%88%E4%B8%83%EF%BC%89/" title="下一篇: SpringBoot——模板引擎（七）">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/05/18/SpringBoot%E2%80%94%E2%80%94%E6%8B%A6%E6%88%AA%E5%99%A8%EF%BC%88%E5%85%AB%EF%BC%89/">SpringBoot——拦截器（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/18/%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j/">日志——Log4j</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/14/SpringBoot%E2%80%94%E2%80%94%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E%EF%BC%88%E4%B8%83%EF%BC%89/">SpringBoot——模板引擎（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/14/SpringBoot%E2%80%94%E2%80%94%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%EF%BC%88%E5%85%AD%EF%BC%89/">SpringBoot——静态资源（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/13/SpringBoot%E2%80%94%E2%80%94%E6%97%A5%E5%BF%97%EF%BC%88%E4%BA%94%EF%BC%89/">SpringBoot——日志（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/13/SpringBoot%E2%80%94%E2%80%94%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%EF%BC%88%E5%9B%9B%EF%BC%89/">SpringBoot——多环境配置（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%88%E4%B8%89%EF%BC%89/">SpringBoot——配置文件（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%EF%BC%88%E4%BA%8C%EF%BC%89/">SpringBoot——单元测试（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94Hello%E5%85%A5%E9%97%A8%EF%BC%88%E4%B8%80%EF%BC%89/">SpringBoot——Hello入门（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/30/SpringBoot%E2%80%94%E2%80%94%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E5%8E%9F%E7%90%86/">SpringBoot——自动装配原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/27/Spring%E2%80%94%E2%80%94%E4%BA%8B%E5%8A%A1%E7%90%86%E8%AE%BA/">Spring——事务理论</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/27/Spring%E2%80%94%E2%80%94Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Spring——Bean的生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/26/Spring%E6%B3%A8%E8%A7%A3%E5%A4%A7%E5%85%A8/">Spring注解大全</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/26/Spring%E2%80%94%E2%80%94MVC%E7%90%86%E8%AE%BA%E4%B8%8B/">Spring——MVC理论下</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/24/Spring%E2%80%94%E2%80%94MVC%E7%90%86%E8%AE%BA%E4%B8%8A/">Spring——MVC理论上</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/21/java%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">java代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/20/Spring%E2%80%94%E2%80%94ApplicationContxt%E8%A7%A3%E8%AF%BB/">Spring——ApplicationContxt解读</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/20/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B8%8B/">Spring——IOC源码解析下</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/16/Spring%E2%80%94%E2%80%94AOP%E7%90%86%E8%AE%BA/">Spring——AOP理论</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/15/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89/">Spring——IOC源码解析（注解示）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/13/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B8%8A/">Spring——IOC源码解析上</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/13/Spring%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/">Spring——概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/08/JVM%E2%80%94%E2%80%94java8%E6%B0%B8%E4%B9%85%E4%BB%A3%E5%88%B0%E5%85%83%E7%A9%BA%E9%96%93/">JVM——java8永久代到元空間</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/07/JVM%E2%80%94%E2%80%94GC%E5%88%86%E6%9E%90/">JVM——GC分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/">JVM——命令调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">JVM——垃圾回收</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">JVM——类的加载机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/">JVM——内存结构</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/">JVM——学习导读</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%8D%81%EF%BC%89%E2%80%94%E2%80%94%E6%80%BB%E7%BB%93/">数据结构与算法（十）——总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E9%AB%98%E5%8F%AF%E7%94%A8%E6%89%8B%E6%AE%B5%EF%BC%88%E4%B8%83%EF%BC%89/">JAVA并发——高并发之高可用手段（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8%EF%BC%88%E5%85%AD%EF%BC%89/">JAVA并发——高并发之数据库分库、切库、分表（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD%EF%BC%88%E5%85%AD%EF%BC%89/">JAVA并发——高并发之服务降级和熔断（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E5%BA%94%E7%94%A8%E9%99%90%E6%B5%81%EF%BC%88%E4%BA%94%EF%BC%89/">JAVA并发——高并发之应用限流（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E5%BA%94%E7%94%A8%E6%8B%86%E5%88%86%EF%BC%88%E5%9B%9B%EF%BC%89/">JAVA并发——高并发之应用拆分（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E4%BF%A1%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88%E4%B8%89%EF%BC%89/">JAVA并发——高并发之信息队列（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E7%BC%93%E5%AD%98%EF%BC%88%E4%BA%8C%EF%BC%89/">JAVA并发——高并发之缓存（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%89%A9%E5%AE%B9%EF%BC%88%E4%B8%80%EF%BC%89/">JAVA并发——高并发之扩容（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/">JAVA并发——高并发与高可用的设计原则</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/27/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E6%B1%A0/">JAVA并发——线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/19/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B/">JAVA并发——线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/19/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E6%AD%BB%E9%94%81/">JAVA并发——死锁</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94ReetrantLock/">JAVA并发——ReetrantLock</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94synchronized/">JAVA并发——synchronized</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%94%81/">JAVA并发——锁</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/">JAVA并发——并发容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%90%8C%E6%AD%A5%E5%AE%B9%E5%99%A8/">JAVA并发——同步容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%AE%89%E5%85%A8%E7%B1%BB%E5%92%8C%E5%86%99%E6%B3%95/">JAVA并发——不安全类和写法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E5%B0%81%E9%97%AD/">JAVA并发——线程封闭</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/">JAVA并发——不可变对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/">JAVA并发——安全发布对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">JAVA并发——线程安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F/">JAVA并发——并发模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/11/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80/">JAVA并发——基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/11/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E8%AF%BE%E7%A8%8B%E5%AF%BC%E5%AD%A6/">JAVA并发——课程导学</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/04/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ConcurrentHashMap/">JAVA容器——ConcurrentHashMap</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap/">JAVA容器——HashMap</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/">JAVA容器——LinkedList</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/">JAVA容器——ArrayList</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/">JAVA容器——概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B9%9D%EF%BC%89%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A0/">数据结构与算法（九）——搜素</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%85%AB%EF%BC%89%E2%80%94%E2%80%94%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">数据结构与算法（八）——排序算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%83%EF%BC%89%E2%80%94%E2%80%94%E5%A0%86%E3%80%81%E5%93%88%E5%B8%8C%E8%A1%A8%E3%80%81%E5%9B%BE/">数据结构与算法（七）——堆、哈希表、图</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%85%AD%EF%BC%89%E2%80%94%E2%80%94%E6%A0%91/">数据结构与算法（六）——树</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%BA%94%EF%BC%89%E2%80%94%E2%80%94%E9%98%9F%E5%88%97/">数据结构与算法（五）——队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/17/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%9B%9B%EF%BC%89%E2%80%94%E2%80%94%E6%A0%88/">数据结构与算法（四）——栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89%E2%80%94%E2%80%94%E9%93%BE%E8%A1%A8/">数据结构与算法（三）——链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%E6%95%B0%E7%BB%84/">数据结构与算法（二）——数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B/">数据结构和算法（一）——简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/08/CPU%E9%A3%99%E5%8D%87%E5%88%B0100-%E7%9A%84%E5%8E%9F%E5%9B%A0/">CPU飙升到100%的原因</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/16/linux%E4%B9%8Bshell%E8%84%9A%E6%9C%AC%E5%AD%A6%E4%B9%A0/">linux之shell脚本学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/16/linux%E8%84%9A%E6%9C%AC%E4%B9%8Bcrontab-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/">linux脚本之crontab(定时任务)</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/05/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E7%9A%84%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">消息中间件——Kafka的原理解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/05/springboot%E5%AE%9E%E6%88%98%E4%B9%8Bkafka/">springboot实战之kafka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/04/docker%E4%BD%BF%E7%94%A8%E4%B9%8BKafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/">docker使用之Kafka的安装使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89/">springcloud实战之Config（4）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%883%EF%BC%89/">springcloud实战之Config（3）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/Mybatis%E4%B8%AD%E2%80%9C-%E2%80%9D%E5%92%8C%E2%80%9C-%E7%9A%84%E5%8C%BA%E5%88%AB/">Mybatis中“#”和“$的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/29/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89/">springcloud实战之Config（2）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/28/docker%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%89%E8%A3%85%EF%BC%88win10%EF%BC%89/">docker简单介绍与安装（win10）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/28/Eureka%E4%B8%8EZookeeper%E7%9A%84%E5%8C%BA%E5%88%AB/">Eureka与Zookeeper的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%881%EF%BC%89/">springcloud实战之Config（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BConfig/">springcloud解析之Config</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BZuul/">springcloud实战之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BZuul/">springcloud解析之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%882%EF%BC%89/">springcloud实战之Hystrix（2）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%881%EF%BC%89/">springcloud实战之Hystrix（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/">springcloud解析之Hystrix</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BEuraka/">springcloud实战之Euraka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BEureka/">springcloud解析之Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/">springcloud实战之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/">springcloud解析之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BRibbon/">springcloud实战之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BRibbon/">springcloud解析之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/">微服务之初见</a></li></ul>
+
+   
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2019-2020 南有乔木
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+            
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
