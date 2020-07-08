@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="南有乔木" />
+
+
+
+<meta name="description" content="内存淘汰机制、淘汰策略">
+<meta name="keywords" content="redis 淘汰策略">
+<meta property="og:type" content="article">
+<meta property="og:title" content="消息中间件——Redis—内存淘汰策略（十五）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;06&#x2F;19&#x2F;%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89&#x2F;index.html">
+<meta property="og:site_name" content="南有乔木的技术博客专栏">
+<meta property="og:description" content="内存淘汰机制、淘汰策略">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-06-22T06:47:35.972Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="南有乔木的技术博客专栏" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>消息中间件——Redis—内存淘汰策略（十五） | 南有乔木的技术博客专栏</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/sex.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">南有乔木</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">学习笔记</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">大狗哥</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/1150887961@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%92%8C/" rel="tag">$和#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/condig%E5%AE%9E%E6%88%98-%E6%9C%8D%E5%8A%A1%E5%8C%96%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">condig实战 服务化与高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/" rel="tag">config 配置中心</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%88%9D%E4%BD%93%E9%AA%8C/" rel="tag">config实战 初体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%8A%A8%E6%80%81%E5%88%B7%E6%96%B0/" rel="tag">config实战 动态刷新</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%8A%A8%E6%80%81%E5%88%B7%E6%96%B0%EF%BC%88Bus%EF%BC%89/" rel="tag">config实战 动态刷新（Bus）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpu/" rel="tag">cpu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker-kafka%E5%AE%89%E8%A3%85/" rel="tag">docker kafka安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker-%E5%AE%9E%E6%88%98/" rel="tag">docker 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/" rel="tag">eureka 服务发现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka%E5%AE%9E%E6%88%98/" rel="tag">eureka实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feign-%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%8F%A3%E5%8C%96/" rel="tag">feign 服务接口化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feign%E5%AE%9E%E6%88%98/" rel="tag">feign实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hystrix-%E7%86%94%E6%96%AD%E5%99%A8/" rel="tag">hystrix 熔断器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hystrix%E5%AE%9E%E6%88%98-%E5%8D%95%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7/" rel="tag">hystrix实战 单应用监控</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java-%E4%BB%A3%E7%90%86/" rel="tag">java 代理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-ArrayList/" rel="tag">java容器 ArrayList</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-ConcurrentHashMap/" rel="tag">java容器 ConcurrentHashMap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-HashMap/" rel="tag">java容器 HashMap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-LinkedList/" rel="tag">java容器 LinkedList</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-%E6%A6%82%E8%BF%B0/" rel="tag">java容器 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80/" rel="tag">java并发 基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80-%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F/" rel="tag">java并发 基础 并发模拟</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80-%E8%AF%BE%E7%A8%8B%E5%AF%BC%E5%AD%A6/" rel="tag">java并发 基础 课程导学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/" rel="tag">java并发 线程安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-ReetrantLock/" rel="tag">java并发 线程安全 ReetrantLock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-synchronized/" rel="tag">java并发 线程安全 synchronized</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/" rel="tag">java并发 线程安全 不可变对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E4%B8%8D%E5%AE%89%E5%85%A8%E7%B1%BB%E5%92%8C%E5%86%99%E6%B3%95/" rel="tag">java并发 线程安全 不安全类和写法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%90%8C%E6%AD%A5%E5%AE%B9%E5%99%A8/" rel="tag">java并发 线程安全 同步容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/" rel="tag">java并发 线程安全 安全发布对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/" rel="tag">java并发 线程安全 并发容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E6%AD%BB%E9%94%81/" rel="tag">java并发 线程安全 死锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E7%BA%BF%E7%A8%8B%E5%B0%81%E9%97%AD/" rel="tag">java并发 线程安全 线程封闭</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E9%94%81/" rel="tag">java并发 线程安全 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-GC%E5%88%86%E6%9E%90/" rel="tag">jvm GC分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-java8/" rel="tag">jvm java8</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" rel="tag">jvm 内存结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/" rel="tag">jvm 命令调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="tag">jvm 垃圾回收</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/" rel="tag">jvm 学习导读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E7%B1%BB%E5%8A%A0%E8%BD%BD/" rel="tag">jvm 类加载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-zookeeper/" rel="tag">kafka zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E5%81%8F%E7%A7%BB%E9%87%8F/" rel="tag">kafka 偏移量</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E6%B6%88%E6%81%AF%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">kafka 消息高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84/" rel="tag">kafka 消费者组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E7%94%9F%E4%BA%A7%E8%80%85/" rel="tag">kafka 生产者</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E9%AB%98%E5%90%9E%E5%90%90%E9%87%8F%E5%8F%8A%E6%8C%81%E4%B9%85%E5%8C%96%E6%B6%88%E6%81%AF/" rel="tag">kafka 高吞吐量及持久化消息</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka%E5%85%A5%E9%97%A8/" rel="tag">kafka入门</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka%E5%AE%9E%E6%88%98/" rel="tag">kafka实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka%E6%B6%88%E8%B4%B9%E8%80%85/" rel="tag">kafka消费者</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E4%BA%8B%E5%8A%A1/" rel="tag">redis 事务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%85%A5%E9%97%A8/" rel="tag">redis 入门</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" rel="tag">redis 分布式锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E9%97%AE%E9%A2%98/" rel="tag">redis 分布式锁问题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">redis 基础数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%89%E8%A3%85/" rel="tag">redis 安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%9E%E6%88%98/" rel="tag">redis 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%A2%E6%88%B7%E7%AB%AF/" rel="tag">redis 客户端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%E9%80%9A%E4%BF%A1/" rel="tag">redis 客户端与服务端的通信</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%8C%81%E4%B9%85%E5%8C%96/" rel="tag">redis 持久化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E3%80%81%E6%81%A2%E5%A4%8D%E4%B8%8E%E8%BF%81%E7%A7%BB/" rel="tag">redis 数据备份、恢复与迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%B6%88%E6%81%AF%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/" rel="tag">redis 消息发布和订阅</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="tag">redis 消息队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" rel="tag">redis 淘汰策略</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E7%BA%BF%E7%A8%8B%E6%B1%A0/" rel="tag">redis 线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E7%BC%93%E5%AD%98%E4%BA%94%E5%A4%A7%E9%97%AE%E9%A2%98/" rel="tag">redis 缓存五大问题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2%E5%8C%BA/" rel="tag">redis 输入输出缓冲区</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E9%98%BB%E5%A1%9E%E5%88%86%E6%9E%90/" rel="tag">redis 阻塞分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E9%9B%86%E7%BE%A4%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87/" rel="tag">redis 集群及数据分片</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reids-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" rel="tag">reids 主从复制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" rel="tag">ribbon 负载均衡</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon%E5%AE%9E%E6%88%98/" rel="tag">ribbon实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3/" rel="tag">ribbon服务网关</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sprinboot-%E5%AE%9E%E6%88%98/" rel="tag">sprinboot 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-AOP/" rel="tag">spring AOP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-ApplicationContext/" rel="tag">spring ApplicationContext</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" rel="tag">spring Bean的生命周期</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-IOC/" rel="tag">spring IOC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-MVC/" rel="tag">spring MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E4%BA%8B%E5%8A%A1/" rel="tag">spring 事务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%A6%82%E8%BF%B0/" rel="tag">spring 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%B3%A8%E8%A7%A3/" rel="tag">spring 注解</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%B3%A8%E8%A7%A3%E5%BC%8F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" rel="tag">spring 注解式源码解析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot-%E5%AE%9E%E6%88%98/" rel="tag">springboot 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E5%8E%9F%E7%90%86/" rel="tag">springboot 自动装配原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zuul%E5%AE%9E%E6%88%98/" rel="tag">zuul实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%8B%E7%BB%8D-%E5%AE%89%E8%A3%85/" rel="tag">介绍 安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7-turbine/" rel="tag">多应用监控 turbine</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">定时任务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9E%E6%88%98/" rel="tag">实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D/" rel="tag">微服务介绍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86%E3%80%81%E5%93%88%E5%B8%8C%E8%A1%A8%E3%80%81%E5%9B%BE/" rel="tag">数据结构 堆、哈希表、图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%95%B0%E7%BB%84/" rel="tag">数据结构 数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%88/" rel="tag">数据结构 栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91/" rel="tag">数据结构 树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%93%BE%E8%A1%A8/" rel="tag">数据结构 链表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%98%9F%E5%88%97/" rel="tag">数据结构 队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E7%AE%80%E4%BB%8B/" rel="tag">数据结构与算法 简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%97%A5%E5%BF%97-Log4j/" rel="tag">日志 Log4j</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0-zookeeper-eureka/" rel="tag">服务发现 zookeeper eureka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/" rel="tag">算法 排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95-%E6%90%9C%E7%B4%A2/" rel="tag">算法 搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E5%BA%94%E7%94%A8%E6%8B%86%E5%88%86/" rel="tag">高并发 应用拆分</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E5%BA%94%E7%94%A8%E9%99%90%E6%B5%81/" rel="tag">高并发 应用限流</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%89%A9%E5%AE%B9/" rel="tag">高并发 扩容</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8/" rel="tag">高并发 数据库分库、切库、分表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD/" rel="tag">高并发 服务降级和熔断</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="tag">高并发 消息队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E7%BC%93%E5%AD%98/" rel="tag">高并发 缓存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" rel="tag">高并发 设计原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">高并发 高可用</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/" target="_blank" rel="noopener">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/" target="_blank" rel="noopener">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">南有乔木</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/sex.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">南有乔木</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">学习笔记</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">大狗哥</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/1150887961@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article
+  id="post-消息中间件——Redis—内存淘汰策略（十五）"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+>
+  
+  <div class="article-meta">
+    <a href="/2020/06/19/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/" class="article-date">
+      <time datetime="2020-06-19T08:13:48.000Z" itemprop="datePublished">2020-06-19</time>
+</a>
+
+
+  </div>
+  
+  <div class="article-inner">
+    
+    <input type="hidden" class="isFancy" />
+     
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      消息中间件——Redis—内存淘汰策略（十五）
+    </h1>
+  
+ 
+    </header>
+    
+    <div class="article-info article-info-post">
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Redis/">Redis</a>
+    </div>
+
+ 
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis-%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" rel="tag">redis 淘汰策略</a></li></ul>
+    </div>
+
+      <div class="clearfix"></div>
+    </div>
+     
+    <div class="article-entry" itemprop="articleBody">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>长期将Redis作为缓存使用，难免会遇到内存空间存储瓶颈，当Redis内存超出物理内存限制时，内存数据就会与磁盘产生频繁交换，使Redis性能急剧下降。此时如何淘汰无用数据释放空间，存储新数据就变得尤为重要了。</p>
+<p>Redis在生产环境中，采用配置参数maxmemory 的方式来限制内存大小。当实际存储内存超出maxmemory 参数值时，开发者们可以通过这几种方法——Redis内存淘汰策略，来决定如何腾出新空间继续支持读写工作。</p>
+<p>有个问题？</p>
+<p>Redis的数据已经设置了TTL，不是过期就已经删除了吗？为什么还存在所谓的淘汰策略呢？这个原因我们需要从redis的过期策略聊起。</p>
+<h1 id="过期策略"><a href="#过期策略" class="headerlink" title="过期策略"></a>过期策略</h1><h2 id="定期删除"><a href="#定期删除" class="headerlink" title="定期删除"></a>定期删除</h2><p>redis 会将每个设置了过期时间的 key 放入到一个独立的字典中，以后会定期遍历这个字典来删除到期的 key。</p>
+<p>Redis 默认会每秒进行十次过期扫描（100ms一次），过期扫描不会遍历过期字典中所有的 key，而是采用了一种简单的贪心策略。</p>
+<ol>
+<li>从过期字典中随机 20 个 key；</li>
+<li>删除这 20 个 key 中已经过期的 key；</li>
+<li>如果过期的 key 比率超过 1/4，那就重复步骤 1；</li>
+</ol>
+<p>redis默认是每隔 100ms就随机抽取一些设置了过期时间的key，检查其是否过期，如果过期就删除。注意这里是随机抽取的。为什么要随机呢？你想一想假如 redis 存了几十万个 key ，每隔100ms就遍历所有的设置过期时间的 key 的话，就会给 CPU 带来很大的负载。</p>
+<h2 id="惰性删除"><a href="#惰性删除" class="headerlink" title="惰性删除"></a>惰性删除</h2><p>所谓惰性策略就是在客户端访问这个key的时候，redis对key的过期时间进行检查，如果过期了就立即删除，不会给你返回任何东西。</p>
+<p>定期删除可能会导致很多过期key到了时间并没有被删除掉。所以就有了惰性删除。假如你的过期 key，靠定期删除没有被删除掉，还停留在内存里，除非你的系统去查一下那个 key，才会被redis给删除掉。这就是所谓的惰性删除，即当你主动去查过期的key时,如果发现key过期了,就立即进行删除,不返回任何东西.</p>
+<p>总结：定期删除是集中处理，惰性删除是零散处理。</p>
+<h1 id="为什么需要淘汰策略"><a href="#为什么需要淘汰策略" class="headerlink" title="为什么需要淘汰策略"></a>为什么需要淘汰策略</h1><p>有了以上过期策略的说明后，就很容易理解为什么需要淘汰策略了，因为不管是定期采样删除还是惰性删除都不是一种完全精准的删除，就还是会存在key没有被删除掉的场景，所以就需要内存淘汰策略进行补充。</p>
+<h1 id="淘汰机制"><a href="#淘汰机制" class="headerlink" title="淘汰机制"></a>淘汰机制</h1><p>区分不同的淘汰策略选择不同的key，Redis淘汰策略主要分为LRU淘汰、TTL淘汰、随机淘汰三种机制。</p>
+<h2 id="LRU淘汰"><a href="#LRU淘汰" class="headerlink" title="LRU淘汰"></a>LRU淘汰</h2><p>LRU（Least recently used，最近最少使用）算法根据数据的历史访问记录来进行淘汰数据，其核心思想是“如果数据最近被访问过，那么将来被访问的几率也更高”。</p>
+<p>在服务器配置中保存了 lru 计数器 server.lrulock，会定时（redis 定时程序 serverCorn()）更新，server.lrulock 的值是根据 server.unixtime 计算出来进行排序的，然后选择最近使用时间最久的数据进行删除。另外，从 struct redisObject 中可以发现，每一个 redis 对象都会设置相应的 lru。每一次访问数据，会更新对应redisObject.lru。</p>
+<p>在Redis中，LRU算法是一个近似算法，默认情况下，Redis会随机挑选5个键，并从中选择一个最久未使用的key进行淘汰。在配置文件中，按maxmemory-samples选项进行配置，选项配置越大，消耗时间就越长，但结构也就越精准。</p>
+<h2 id="TTL淘汰"><a href="#TTL淘汰" class="headerlink" title="TTL淘汰"></a>TTL淘汰</h2><p>Redis 数据集数据结构中保存了键值对过期时间的表，即 redisDb.expires。与 LRU 数据淘汰机制类似，TTL 数据淘汰机制中会先从过期时间的表中随机挑选几个键值对，取出其中 ttl 最大的键值对淘汰。同样，TTL淘汰策略并不是面向所有过期时间的表中最快过期的键值对，而只是随机挑选的几个键值对。</p>
+<h2 id="随机淘汰"><a href="#随机淘汰" class="headerlink" title="随机淘汰"></a>随机淘汰</h2><p>在随机淘汰的场景下获取待删除的键值对，随机找hash桶再次hash指定位置的dictEntry即可。</p>
+<p>Redis中的淘汰机制都是几近于算法实现的，主要从性能和可靠性上做平衡，所以并不是完全可靠，所以开发者们在充分了解Redis淘汰策略之后还应在平时多主动设置或更新key的expire时间，主动删除没有价值的数据，提升Redis整体性能和空间。</p>
+<h1 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h1><p>根据以上三种淘汰机制，以及是否专注于淘汰过期数据时间集，又分为六种淘汰策略。</p>
+<ol>
+<li>volatile-lru：从设置过期时间的数据集（server.db[i].expires）中挑选出最近最少使用的数据淘汰。没有设置过期时间的key不会被淘汰，这样就可以在增加内存空间的同时保证需要持久化的数据不会丢失。</li>
+<li>volatile-ttl：除了淘汰机制采用LRU，策略基本上与volatile-lru相似，从设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰，ttl值越大越优先被淘汰。</li>
+<li>volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰。当内存达到限制无法写入非过期时间的数据集时，可以通过该淘汰策略在主键空间中随机移除某个key。</li>
+<li>allkeys-lru：从数据集（server.db[i].dict）中挑选最近最少使用的数据淘汰，该策略要淘汰的key面向的是全体key集合，而非过期的key集合。</li>
+<li>allkeys-random：从数据集(server.db[i].dict）中选择任意数据淘汰。</li>
+<li>no-enviction：禁止驱逐数据，也就是当内存不足以容纳新入数据时，新写入操作就会报错，请求可以继续进行，线上任务也不能持续进行，采用no-enviction策略可以保证数据不被丢失，这也是系统默认的一种淘汰策略。</li>
+</ol>
+<h1 id="淘汰策略的选择"><a href="#淘汰策略的选择" class="headerlink" title="淘汰策略的选择"></a>淘汰策略的选择</h1><ol>
+<li>在Redis中，数据有一部分访问频率较高，其余部分访问频率较低，或者无法预测数据的使用频率时，设置allkeys-lru是比较合适的。</li>
+<li>如果所有数据访问概率大致相等时，可以选择allkeys-random。</li>
+<li>如果研发者需要通过设置不同的ttl来判断数据过期的先后顺序，此时可以选择volatile-ttl策略。</li>
+<li>如果希望一些数据能长期被保存，而一些数据可以被淘汰掉时，选择volatile-lru或volatile-random都是比较不错的。</li>
+<li>由于设置expire会消耗额外的内存，如果计划避免Redis内存在此项上的浪费，可以选用allkeys-lru 策略，这样就可以不再设置过期时间，高效利用内存了。</li>
+</ol>
+<p>Redis缓存功能，是由edis.c文件中的freeMemoryIfNeeded函数实现的。如果maxmemory被设置，那么每次在执行命令钱，该函数都会被调用来判断内存是否够用、释放内存、返回错误。如果没有足够的内存程序主逻辑将会阻止设置了REDIS_COM_DENYOOM flag的命令执行，对其返回command not allowed when used memory &gt; ‘maxmemory’的错误消息。</p>
+ 
+    </div>
+    
+  </div>
+   
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2020/06/19/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/">消息中间件——Redis—内存淘汰策略（十五）</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
+        <p><span>发布时间:</span>2020-06-19, 16:13:48</p>
+        <p><span>最后更新:</span>2020-06-22, 14:47:35</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2020/06/19/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/" title="消息中间件——Redis—内存淘汰策略（十五）">http://yoursite.com/2020/06/19/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/06/19/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2020/06/22/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E3%80%81%E6%81%A2%E5%A4%8D%E4%B8%8E%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%EF%BC%88%E5%8D%81%E5%85%AD%EF%BC%89/">
+                    消息中间件——Redis—数据备份、恢复与数据迁移（十六）
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2020/06/15/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%EF%BC%88%E5%8D%81%E5%9B%9B%EF%BC%89/">
+                    消息中间件——Redis—哨兵机制（十四）
+                </a>
+            </div>
+        
+    </nav>
+ 
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#过期策略"><span class="toc-number">2.</span> <span class="toc-text">过期策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#定期删除"><span class="toc-number">2.1.</span> <span class="toc-text">定期删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#惰性删除"><span class="toc-number">2.2.</span> <span class="toc-text">惰性删除</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#为什么需要淘汰策略"><span class="toc-number">3.</span> <span class="toc-text">为什么需要淘汰策略</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#淘汰机制"><span class="toc-number">4.</span> <span class="toc-text">淘汰机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#LRU淘汰"><span class="toc-number">4.1.</span> <span class="toc-text">LRU淘汰</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TTL淘汰"><span class="toc-number">4.2.</span> <span class="toc-text">TTL淘汰</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随机淘汰"><span class="toc-number">4.3.</span> <span class="toc-text">随机淘汰</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#淘汰策略"><span class="toc-number">5.</span> <span class="toc-text">淘汰策略</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#淘汰策略的选择"><span class="toc-number">6.</span> <span class="toc-text">淘汰策略的选择</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"true"];
+    </script>
+  
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"消息中间件——Redis—内存淘汰策略（十五）　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+    <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'http://yoursite.com/2020/06/19/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/';
+            this.page.identifier = '2020/06/19/消息中间件——Redis—内存淘汰策略（十五）/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//qnsite.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+   
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2020/06/22/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E3%80%81%E6%81%A2%E5%A4%8D%E4%B8%8E%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%EF%BC%88%E5%8D%81%E5%85%AD%EF%BC%89/" title="上一篇: 消息中间件——Redis—数据备份、恢复与数据迁移（十六）">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2020/06/15/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%EF%BC%88%E5%8D%81%E5%9B%9B%EF%BC%89/" title="下一篇: 消息中间件——Redis—哨兵机制（十四）">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E7%BC%93%E5%AD%98%E4%BA%94%E5%A4%A7%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%88%E4%BA%8C%E5%8D%81%E5%9B%9B%EF%BC%89/">消息中间件——Redis—缓存五大问题的解决方案（二十四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%88%86%E5%B8%83%E5%BC%8FSession%E5%85%B1%E4%BA%AB%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%89%EF%BC%89/">消息中间件——Redis—分布式Session共享（二十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%AE%9E%E6%88%98%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%E5%8D%81%E4%BA%8C%EF%BC%89/">消息中间件——Redis—实战学习（二十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/SpringBoot%E2%80%94%E2%80%94redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%AE%9E%E7%8E%B0%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%89%EF%BC%89/">SpringBoot——redis分布式锁实现（二十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%BD%9C%E4%B8%BA%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E8%A6%81%E9%9D%A2%E4%B8%B4%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%80%EF%BC%89/">消息中间件——Redis—作为分布式锁要面临的问题（二十一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%EF%BC%88%E4%BA%8C%E5%8D%81%EF%BC%89/">消息中间件——Redis—分布式锁（二十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/SpringBoot%E2%80%94%E2%80%94redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97list%EF%BC%88%E4%BA%8C%E5%8D%81%E4%BA%8C%EF%BC%89/">SpringBoot——redis消息队列list（二十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88%E5%8D%81%E4%B9%9D%EF%BC%89/">消息中间件——Redis—消息队列（十九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/SpringBoot%E2%80%94%E2%80%94redis%E5%8F%91%E5%B8%83%E4%B8%8E%E8%AE%A2%E9%98%85%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%80%EF%BC%89/">SpringBoot——redis发布与订阅（二十一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/23/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%B6%88%E6%81%AF%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85%EF%BC%88%E5%8D%81%E5%85%AB%EF%BC%89/">消息中间件——Redis—消息发布和订阅（十八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/22/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E9%98%BB%E5%A1%9E%E5%88%86%E6%9E%90%EF%BC%88%E5%8D%81%E4%B8%83%EF%BC%89/">消息中间件——Redis—阻塞分析（十七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/22/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E3%80%81%E6%81%A2%E5%A4%8D%E4%B8%8E%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%EF%BC%88%E5%8D%81%E5%85%AD%EF%BC%89/">消息中间件——Redis—数据备份、恢复与数据迁移（十六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/19/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/">消息中间件——Redis—内存淘汰策略（十五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/15/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%EF%BC%88%E5%8D%81%E5%9B%9B%EF%BC%89/">消息中间件——Redis—哨兵机制（十四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/15/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%EF%BC%88%E5%8D%81%E4%B8%89%EF%BC%89/">消息中间件——Redis—主从复制（十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/15/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E9%9B%86%E7%BE%A4%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87%EF%BC%88%E5%8D%81%E4%BA%8C%EF%BC%89/">消息中间件——Redis—集群及数据分片（十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%BA%8B%E5%8A%A1%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89/">消息中间件——Redis—事务（十一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%88%E5%8D%81%EF%BC%89/">消息中间件——Redis—持久化（十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E8%BE%93%E5%85%A5%E7%BC%93%E5%86%B2%E5%8C%BA%E3%80%81%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%88%E4%B9%9D%EF%BC%89/">消息中间件——Redis—输入缓冲区、输出缓冲区（九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E7%BA%BF%E7%A8%8B%E6%B1%A0%EF%BC%88%E5%85%AB%EF%BC%89/">消息中间件——Redis—线程池（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%B8%B8%E7%94%A8%E7%9A%84%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%88%E4%B8%83%EF%BC%89/">消息中间件——Redis—常用的客户端（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%E9%80%9A%E4%BF%A1%EF%BC%88%E5%85%AD%EF%BC%89/">消息中间件——Redis—客户端与服务端的通信（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%88%E4%BA%94%EF%BC%89/">消息中间件——Redis—常用命令（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E5%9B%9B%EF%BC%89/">消息中间件——Redis—基础数据结构（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%BB%A3%E7%A0%81%E4%BD%BF%E7%94%A8%EF%BC%88%E4%B8%89%EF%BC%89/">消息中间件——Redis—代码使用（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/09/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%85%A5%E9%97%A8%EF%BC%88%E4%BA%8C%EF%BC%89/">消息中间件——Redis—入门（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/09/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E6%B6%88%E6%81%AF%E9%AB%98%E5%8F%AF%E7%94%A8%EF%BC%88%E5%85%AB%EF%BC%89/">消息中间件——Kafka—消息高可用（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E9%AB%98%E5%90%9E%E5%90%90%E9%87%8F%E4%B8%8E%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%88%E4%B8%83%EF%BC%89/">消息中间件——Kafka—高吞吐量与持久化（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94offsite%E9%87%8F%E7%9A%84%E7%BB%B4%E6%8A%A4%EF%BC%88%E5%85%AD%EF%BC%89/">消息中间件——Kafka—offsite量的维护（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94Consumer%20Group%E8%A7%A3%E6%9E%90%EF%BC%88%E4%BA%94%EF%BC%89/">消息中间件——Kafka—Consumer Group解析（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E6%B6%88%E8%B4%B9%E8%80%85%EF%BC%88%E5%9B%9B%EF%BC%89/">消息中间件——Kafka—消费者（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E7%94%9F%E4%BA%A7%E8%80%85%EF%BC%88%E4%B8%89%EF%BC%89/">消息中间件——Kafka—生产者（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E5%85%B3%E8%81%94Zookeeper%EF%BC%88%E4%BA%8C%EF%BC%89/">消息中间件——Kafka—关联Zookeeper（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/04/SpringBoot%E2%80%94%E2%80%94redis%E3%80%81SpringCache%EF%BC%88%E4%BA%8C%E5%8D%81%EF%BC%89/">SpringBoot——redis、SpringCache（二十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/SpringBoot%E2%80%94%E2%80%94redis%EF%BC%88%E5%8D%81%E4%B9%9D%EF%BC%89/">SpringBoot——redis（十九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%AE%89%E8%A3%85%EF%BC%88%E4%B8%80%EF%BC%89/">消息中间件——Redis——安装（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/27/docker%E2%80%94%E2%80%94centos%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/">docker——centos容器安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/27/docker%E2%80%94%E2%80%94springboot%E3%80%81centos%E3%80%81mysql%E9%83%A8%E7%BD%B2/">docker——springboot、centos、mysql部署</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/22/SpringBoot%E2%80%94%E2%80%94spring%20cache%EF%BC%88%E5%8D%81%E5%85%AB%EF%BC%89/">SpringBoot——spring cache（十八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/21/SpringBoot%E2%80%94%E2%80%94%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90-mybatis%EF%BC%88%E5%8D%81%E4%B8%83%EF%BC%89/">SpringBoot——多数据源-mybatis（十七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/21/SpringBoot%E2%80%94%E2%80%94%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90-JPA%EF%BC%88%E5%8D%81%E5%85%AD%EF%BC%89/">SpringBoot——多数据源-JPA（十六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94Mybatis-%E6%B3%A8%E8%A7%A3%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/">SpringBoot——Mybatis-注解（十五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94Mybatis-xml%EF%BC%88%E5%8D%81%E5%9B%9B%EF%BC%89/">SpringBoot——Mybatis-xml（十四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94JPA%EF%BC%88%E5%8D%81%E4%B8%89%EF%BC%89/">SpringBoot——JPA（十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/docker%E2%80%94%E2%80%94Mysql%E7%9A%84%E5%AE%89%E8%A3%85/">docker——Mysql的安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94JDBC%EF%BC%88%E5%8D%81%E4%BA%8C%EF%BC%89/">SpringBoot——JDBC（十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/19/SpringBoot%E2%80%94%E2%80%94%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89/">SpringBoot——异常处理（）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/19/SpringBoot%E2%80%94%E2%80%94%E8%BF%87%E6%BB%A4%E5%99%A8%E3%80%81%E7%9B%91%E5%90%AC%E5%99%A8%EF%BC%88%E5%8D%81%EF%BC%89/">SpringBoot——过滤器、监听器（十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/19/SpringBoot%E2%80%94%E2%80%94%E5%88%87%E9%9D%A2%EF%BC%88%E4%B9%9D%EF%BC%89/">SpringBoot——切面（九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/18/SpringBoot%E2%80%94%E2%80%94%E6%8B%A6%E6%88%AA%E5%99%A8%EF%BC%88%E5%85%AB%EF%BC%89/">SpringBoot——拦截器（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/18/%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j/">日志——Log4j</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/14/SpringBoot%E2%80%94%E2%80%94%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E%EF%BC%88%E4%B8%83%EF%BC%89/">SpringBoot——模板引擎（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/14/SpringBoot%E2%80%94%E2%80%94%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%EF%BC%88%E5%85%AD%EF%BC%89/">SpringBoot——静态资源（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/13/SpringBoot%E2%80%94%E2%80%94%E6%97%A5%E5%BF%97%EF%BC%88%E4%BA%94%EF%BC%89/">SpringBoot——日志（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/13/SpringBoot%E2%80%94%E2%80%94%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%EF%BC%88%E5%9B%9B%EF%BC%89/">SpringBoot——多环境配置（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%88%E4%B8%89%EF%BC%89/">SpringBoot——配置文件（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%EF%BC%88%E4%BA%8C%EF%BC%89/">SpringBoot——单元测试（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94Hello%E5%85%A5%E9%97%A8%EF%BC%88%E4%B8%80%EF%BC%89/">SpringBoot——Hello入门（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/30/SpringBoot%E2%80%94%E2%80%94%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E5%8E%9F%E7%90%86/">SpringBoot——自动装配原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/27/Spring%E2%80%94%E2%80%94%E4%BA%8B%E5%8A%A1%E7%90%86%E8%AE%BA/">Spring——事务理论</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/27/Spring%E2%80%94%E2%80%94Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Spring——Bean的生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/26/Spring%E6%B3%A8%E8%A7%A3%E5%A4%A7%E5%85%A8/">Spring注解大全</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/26/Spring%E2%80%94%E2%80%94MVC%E7%90%86%E8%AE%BA%E4%B8%8B/">Spring——MVC理论下</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/24/Spring%E2%80%94%E2%80%94MVC%E7%90%86%E8%AE%BA%E4%B8%8A/">Spring——MVC理论上</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/21/java%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">java代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/20/Spring%E2%80%94%E2%80%94ApplicationContxt%E8%A7%A3%E8%AF%BB/">Spring——ApplicationContxt解读</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/20/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B8%8B/">Spring——IOC源码解析下</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/16/Spring%E2%80%94%E2%80%94AOP%E7%90%86%E8%AE%BA/">Spring——AOP理论</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/15/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89/">Spring——IOC源码解析（注解示）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/13/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B8%8A/">Spring——IOC源码解析上</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/13/Spring%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/">Spring——概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/08/JVM%E2%80%94%E2%80%94java8%E6%B0%B8%E4%B9%85%E4%BB%A3%E5%88%B0%E5%85%83%E7%A9%BA%E9%96%93/">JVM——java8永久代到元空間</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/07/JVM%E2%80%94%E2%80%94GC%E5%88%86%E6%9E%90/">JVM——GC分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/">JVM——命令调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">JVM——垃圾回收</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">JVM——类的加载机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/">JVM——内存结构</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/">JVM——学习导读</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%8D%81%EF%BC%89%E2%80%94%E2%80%94%E6%80%BB%E7%BB%93/">数据结构与算法（十）——总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E9%AB%98%E5%8F%AF%E7%94%A8%E6%89%8B%E6%AE%B5%EF%BC%88%E4%B8%83%EF%BC%89/">JAVA并发——高并发之高可用手段（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8%EF%BC%88%E5%85%AD%EF%BC%89/">JAVA并发——高并发之数据库分库、切库、分表（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD%EF%BC%88%E5%85%AD%EF%BC%89/">JAVA并发——高并发之服务降级和熔断（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E5%BA%94%E7%94%A8%E9%99%90%E6%B5%81%EF%BC%88%E4%BA%94%EF%BC%89/">JAVA并发——高并发之应用限流（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E5%BA%94%E7%94%A8%E6%8B%86%E5%88%86%EF%BC%88%E5%9B%9B%EF%BC%89/">JAVA并发——高并发之应用拆分（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E4%BF%A1%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88%E4%B8%89%EF%BC%89/">JAVA并发——高并发之信息队列（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E7%BC%93%E5%AD%98%EF%BC%88%E4%BA%8C%EF%BC%89/">JAVA并发——高并发之缓存（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%89%A9%E5%AE%B9%EF%BC%88%E4%B8%80%EF%BC%89/">JAVA并发——高并发之扩容（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/">JAVA并发——高并发与高可用的设计原则</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/27/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E6%B1%A0/">JAVA并发——线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/19/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B/">JAVA并发——线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/19/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E6%AD%BB%E9%94%81/">JAVA并发——死锁</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94ReetrantLock/">JAVA并发——ReetrantLock</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94synchronized/">JAVA并发——synchronized</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%94%81/">JAVA并发——锁</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/">JAVA并发——并发容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%90%8C%E6%AD%A5%E5%AE%B9%E5%99%A8/">JAVA并发——同步容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%AE%89%E5%85%A8%E7%B1%BB%E5%92%8C%E5%86%99%E6%B3%95/">JAVA并发——不安全类和写法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E5%B0%81%E9%97%AD/">JAVA并发——线程封闭</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/">JAVA并发——不可变对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/">JAVA并发——安全发布对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">JAVA并发——线程安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F/">JAVA并发——并发模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/11/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80/">JAVA并发——基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/11/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E8%AF%BE%E7%A8%8B%E5%AF%BC%E5%AD%A6/">JAVA并发——课程导学</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/04/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ConcurrentHashMap/">JAVA容器——ConcurrentHashMap</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap/">JAVA容器——HashMap</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/25/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/">JAVA容器——LinkedList</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/">JAVA容器——ArrayList</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/">JAVA容器——概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B9%9D%EF%BC%89%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A0/">数据结构与算法（九）——搜素</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%85%AB%EF%BC%89%E2%80%94%E2%80%94%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">数据结构与算法（八）——排序算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%83%EF%BC%89%E2%80%94%E2%80%94%E5%A0%86%E3%80%81%E5%93%88%E5%B8%8C%E8%A1%A8%E3%80%81%E5%9B%BE/">数据结构与算法（七）——堆、哈希表、图</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%85%AD%EF%BC%89%E2%80%94%E2%80%94%E6%A0%91/">数据结构与算法（六）——树</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%BA%94%EF%BC%89%E2%80%94%E2%80%94%E9%98%9F%E5%88%97/">数据结构与算法（五）——队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/17/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%9B%9B%EF%BC%89%E2%80%94%E2%80%94%E6%A0%88/">数据结构与算法（四）——栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89%E2%80%94%E2%80%94%E9%93%BE%E8%A1%A8/">数据结构与算法（三）——链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%E6%95%B0%E7%BB%84/">数据结构与算法（二）——数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B/">数据结构和算法（一）——简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/08/CPU%E9%A3%99%E5%8D%87%E5%88%B0100-%E7%9A%84%E5%8E%9F%E5%9B%A0/">CPU飙升到100%的原因</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/16/linux%E4%B9%8Bshell%E8%84%9A%E6%9C%AC%E5%AD%A6%E4%B9%A0/">linux之shell脚本学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/16/linux%E8%84%9A%E6%9C%AC%E4%B9%8Bcrontab-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/">linux脚本之crontab(定时任务)</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/05/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E5%85%A5%E9%97%A8%EF%BC%88%E4%B8%80%EF%BC%89/">消息中间件——Kafka——入门（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/05/springboot%E5%AE%9E%E6%88%98%E4%B9%8Bkafka/">springboot实战之kafka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/04/docker%E2%80%94%E2%80%94Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/">docker——Kafka的安装使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89/">springcloud实战之Config（4）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%883%EF%BC%89/">springcloud实战之Config（3）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/Mybatis%E4%B8%AD%E2%80%9C-%E2%80%9D%E5%92%8C%E2%80%9C-%E7%9A%84%E5%8C%BA%E5%88%AB/">Mybatis中“#”和“$的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/29/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89/">springcloud实战之Config（2）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/28/docker%E2%80%94%E2%80%94%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%89%E8%A3%85%EF%BC%88win10%EF%BC%89/">docker——简单介绍与安装（win10）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/28/Eureka%E4%B8%8EZookeeper%E7%9A%84%E5%8C%BA%E5%88%AB/">Eureka与Zookeeper的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%881%EF%BC%89/">springcloud实战之Config（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BConfig/">springcloud解析之Config</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BZuul/">springcloud实战之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BZuul/">springcloud解析之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%882%EF%BC%89/">springcloud实战之Hystrix（2）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%881%EF%BC%89/">springcloud实战之Hystrix（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/">springcloud解析之Hystrix</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BEuraka/">springcloud实战之Euraka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BEureka/">springcloud解析之Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/">springcloud实战之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/">springcloud解析之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BRibbon/">springcloud实战之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BRibbon/">springcloud解析之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E5%88%9D%E8%A7%81/">微服务之初见</a></li></ul>
+
+   
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2019-2020 南有乔木
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+            
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
