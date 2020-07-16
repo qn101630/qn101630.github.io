@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="南有乔木" />
+
+
+
+<meta name="description" content="HashMap的原理分析-JDK7,JDK8">
+<meta name="keywords" content="容器 HashMap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器——HashMap">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;25&#x2F;%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap&#x2F;index.html">
+<meta property="og:site_name" content="南有乔木的技术博客专栏">
+<meta property="og:description" content="HashMap的原理分析-JDK7,JDK8">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap_2020-02-28-18-54-23.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap_2020-02-28-19-50-28.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap_2020-02-28-20-03-28.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap_2020-02-28-20-04-09.png">
+<meta property="og:updated_time" content="2020-07-16T01:29:53.326Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap_2020-02-28-18-54-23.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="南有乔木的技术博客专栏" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>容器——HashMap | 南有乔木的技术博客专栏</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/sex.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">南有乔木</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">学习笔记</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">大狗哥</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/1150887961@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%92%8C/" rel="tag">$和#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-Dao/" rel="tag">Mybatis Dao</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-Encache/" rel="tag">Mybatis Encache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-mapper/" rel="tag">Mybatis mapper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E5%8A%A8%E6%80%81sql/" rel="tag">Mybatis 动态sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD/" rel="tag">Mybatis 延迟加载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B/" rel="tag">Mybatis 数据模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E6%98%A0%E5%B0%84/" rel="tag">Mybatis 映射</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E6%A6%82%E8%BF%B0/" rel="tag">Mybatis 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E7%BC%93%E5%AD%98/" rel="tag">Mybatis 缓存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E9%85%8D%E7%BD%AE/" rel="tag">Mybatis 配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis-%E5%88%86%E5%B8%83%E5%BC%8Fsession/" rel="tag">Redis 分布式session</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/condig%E5%AE%9E%E6%88%98-%E6%9C%8D%E5%8A%A1%E5%8C%96%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">condig实战 服务化与高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/" rel="tag">config 配置中心</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%88%9D%E4%BD%93%E9%AA%8C/" rel="tag">config实战 初体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%8A%A8%E6%80%81%E5%88%B7%E6%96%B0/" rel="tag">config实战 动态刷新</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%8A%A8%E6%80%81%E5%88%B7%E6%96%B0%EF%BC%88Bus%EF%BC%89/" rel="tag">config实战 动态刷新（Bus）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpu/" rel="tag">cpu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker-kafka%E5%AE%89%E8%A3%85/" rel="tag">docker kafka安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker-%E5%AE%9E%E6%88%98/" rel="tag">docker 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/" rel="tag">eureka 服务发现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka%E5%AE%9E%E6%88%98/" rel="tag">eureka实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feign-%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%8F%A3%E5%8C%96/" rel="tag">feign 服务接口化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feign%E5%AE%9E%E6%88%98/" rel="tag">feign实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hystrix-%E7%86%94%E6%96%AD%E5%99%A8/" rel="tag">hystrix 熔断器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hystrix%E5%AE%9E%E6%88%98-%E5%8D%95%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7/" rel="tag">hystrix实战 单应用监控</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java-%E4%BB%A3%E7%90%86/" rel="tag">java 代理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%AE%B9%E5%99%A8-LinkedList/" rel="tag">java容器 LinkedList</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80/" rel="tag">java并发 基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80-%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F/" rel="tag">java并发 基础 并发模拟</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80-%E8%AF%BE%E7%A8%8B%E5%AF%BC%E5%AD%A6/" rel="tag">java并发 基础 课程导学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/" rel="tag">java并发 线程安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-ReetrantLock/" rel="tag">java并发 线程安全 ReetrantLock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-synchronized/" rel="tag">java并发 线程安全 synchronized</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/" rel="tag">java并发 线程安全 不可变对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E4%B8%8D%E5%AE%89%E5%85%A8%E7%B1%BB%E5%92%8C%E5%86%99%E6%B3%95/" rel="tag">java并发 线程安全 不安全类和写法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%90%8C%E6%AD%A5%E5%AE%B9%E5%99%A8/" rel="tag">java并发 线程安全 同步容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/" rel="tag">java并发 线程安全 安全发布对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/" rel="tag">java并发 线程安全 并发容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E6%AD%BB%E9%94%81/" rel="tag">java并发 线程安全 死锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E7%BA%BF%E7%A8%8B%E5%B0%81%E9%97%AD/" rel="tag">java并发 线程安全 线程封闭</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E9%94%81/" rel="tag">java并发 线程安全 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-GC%E5%88%86%E6%9E%90/" rel="tag">jvm GC分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-java8/" rel="tag">jvm java8</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" rel="tag">jvm 内存结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/" rel="tag">jvm 命令调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="tag">jvm 垃圾回收</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/" rel="tag">jvm 学习导读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E7%B1%BB%E5%8A%A0%E8%BD%BD/" rel="tag">jvm 类加载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-zookeeper/" rel="tag">kafka zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E5%81%8F%E7%A7%BB%E9%87%8F/" rel="tag">kafka 偏移量</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E6%B6%88%E6%81%AF%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">kafka 消息高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84/" rel="tag">kafka 消费者组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E7%94%9F%E4%BA%A7%E8%80%85/" rel="tag">kafka 生产者</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E9%AB%98%E5%90%9E%E5%90%90%E9%87%8F%E5%8F%8A%E6%8C%81%E4%B9%85%E5%8C%96%E6%B6%88%E6%81%AF/" rel="tag">kafka 高吞吐量及持久化消息</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka%E5%85%A5%E9%97%A8/" rel="tag">kafka入门</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka%E6%B6%88%E8%B4%B9%E8%80%85/" rel="tag">kafka消费者</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-shell/" rel="tag">linux shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">linux 定时任务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E4%BA%8B%E5%8A%A1/" rel="tag">redis 事务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%85%A5%E9%97%A8/" rel="tag">redis 入门</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" rel="tag">redis 分布式锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E9%97%AE%E9%A2%98/" rel="tag">redis 分布式锁问题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">redis 基础数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%89%E8%A3%85/" rel="tag">redis 安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%9E%E6%88%98/" rel="tag">redis 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%A2%E6%88%B7%E7%AB%AF/" rel="tag">redis 客户端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%E9%80%9A%E4%BF%A1/" rel="tag">redis 客户端与服务端的通信</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%8C%81%E4%B9%85%E5%8C%96/" rel="tag">redis 持久化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E3%80%81%E6%81%A2%E5%A4%8D%E4%B8%8E%E8%BF%81%E7%A7%BB/" rel="tag">redis 数据备份、恢复与迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%B6%88%E6%81%AF%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/" rel="tag">redis 消息发布和订阅</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="tag">redis 消息队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" rel="tag">redis 淘汰策略</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E7%BA%BF%E7%A8%8B%E6%B1%A0/" rel="tag">redis 线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E7%BC%93%E5%AD%98%E4%BA%94%E5%A4%A7%E9%97%AE%E9%A2%98/" rel="tag">redis 缓存五大问题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2%E5%8C%BA/" rel="tag">redis 输入输出缓冲区</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E9%98%BB%E5%A1%9E%E5%88%86%E6%9E%90/" rel="tag">redis 阻塞分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E9%9B%86%E7%BE%A4%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87/" rel="tag">redis 集群及数据分片</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reids-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" rel="tag">reids 主从复制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" rel="tag">ribbon 负载均衡</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon%E5%AE%9E%E6%88%98/" rel="tag">ribbon实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3/" rel="tag">ribbon服务网关</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sprinboot-%E5%AE%9E%E6%88%98/" rel="tag">sprinboot 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-AOP/" rel="tag">spring AOP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-ApplicationContext/" rel="tag">spring ApplicationContext</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" rel="tag">spring Bean的生命周期</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-IOC/" rel="tag">spring IOC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-MVC/" rel="tag">spring MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E4%BA%8B%E5%8A%A1/" rel="tag">spring 事务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%A6%82%E8%BF%B0/" rel="tag">spring 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%B3%A8%E8%A7%A3/" rel="tag">spring 注解</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%B3%A8%E8%A7%A3%E5%BC%8F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" rel="tag">spring 注解式源码解析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot-%E5%8E%9F%E7%90%86/" rel="tag">springboot 原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot-%E5%AE%9E%E6%88%98/" rel="tag">springboot 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zuul%E5%AE%9E%E6%88%98/" rel="tag">zuul实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%8B%E7%BB%8D-%E5%AE%89%E8%A3%85/" rel="tag">介绍 安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7-turbine/" rel="tag">多应用监控 turbine</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8-ArrayList/" rel="tag">容器 ArrayList</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8-ConcurrentHashMap/" rel="tag">容器 ConcurrentHashMap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8-HashMap/" rel="tag">容器 HashMap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8-%E6%A6%82%E8%BF%B0/" rel="tag">容器 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/" rel="tag">微服务 服务发现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D/" rel="tag">微服务介绍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86%E3%80%81%E5%93%88%E5%B8%8C%E8%A1%A8%E3%80%81%E5%9B%BE/" rel="tag">数据结构 堆、哈希表、图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%95%B0%E7%BB%84/" rel="tag">数据结构 数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%88/" rel="tag">数据结构 栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91/" rel="tag">数据结构 树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%93%BE%E8%A1%A8/" rel="tag">数据结构 链表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%98%9F%E5%88%97/" rel="tag">数据结构 队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E7%AE%80%E4%BB%8B/" rel="tag">数据结构与算法 简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%97%A5%E5%BF%97-Log4j/" rel="tag">日志 Log4j</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/" rel="tag">算法 排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95-%E6%90%9C%E7%B4%A2/" rel="tag">算法 搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E5%BA%94%E7%94%A8%E6%8B%86%E5%88%86/" rel="tag">高并发 应用拆分</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E5%BA%94%E7%94%A8%E9%99%90%E6%B5%81/" rel="tag">高并发 应用限流</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%89%A9%E5%AE%B9/" rel="tag">高并发 扩容</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8/" rel="tag">高并发 数据库分库、切库、分表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD/" rel="tag">高并发 服务降级和熔断</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="tag">高并发 消息队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E7%BC%93%E5%AD%98/" rel="tag">高并发 缓存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" rel="tag">高并发 设计原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">高并发 高可用</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/" target="_blank" rel="noopener">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/" target="_blank" rel="noopener">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">南有乔木</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/sex.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">南有乔木</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">学习笔记</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">大狗哥</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/1150887961@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article
+  id="post-容器——HashMap"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+>
+  
+  <div class="article-meta">
+    <a href="/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap/" class="article-date">
+      <time datetime="2020-02-25T10:07:33.000Z" itemprop="datePublished">2020-02-25</time>
+</a>
+
+
+  </div>
+  
+  <div class="article-inner">
+    
+    <input type="hidden" class="isFancy" />
+     
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      容器——HashMap
+    </h1>
+  
+ 
+    </header>
+    
+    <div class="article-info article-info-post">
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E5%AE%B9%E5%99%A8/">容器</a>
+    </div>
+
+ 
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8-HashMap/" rel="tag">容器 HashMap</a></li></ul>
+    </div>
+
+      <div class="clearfix"></div>
+    </div>
+     
+    <div class="article-entry" itemprop="articleBody">
+        <h1 id="您能给我说说-HashMap-吗？"><a href="#您能给我说说-HashMap-吗？" class="headerlink" title="您能给我说说 HashMap 吗？"></a>您能给我说说 HashMap 吗？</h1><ol>
+<li>HashMap 是基于 Map 接口实现的一种键-值对&lt;key,value&gt;的存储结构，允许 null 值，同时非有序，非同步(即线程不安全)。</li>
+<li>HashMap 的底层实现是数组 + 链表 + 红黑树（JDK1.8 增加了红黑树部分。</li>
+<li>它存储和查找数据时，是根据键 key 的 hashCode 的值计算出具体的存储位置。</li>
+<li>HashMap 增删改查等常规操作都有不错的执行效率，是 ArrayList 和 LinkedList 等数据结构的一种折中实现。</li>
+</ol>
+<h1 id="HashMap-的一些组成部分"><a href="#HashMap-的一些组成部分" class="headerlink" title="HashMap 的一些组成部分"></a>HashMap 的一些组成部分</h1><p>HashMap 的底层实现是数组 + 链表 + 红黑树（JDK1.8 增加了红黑树部分。</p>
+<h2 id="核心组成部分"><a href="#核心组成部分" class="headerlink" title="核心组成部分"></a>核心组成部分</h2><ol>
+<li><p><code>int size;</code> 用于记录 HashMap 实际存储元素的个数；</p>
+</li>
+<li><p><code>float loadFactor;</code> 负载因子（默认是 0.75，此属性后面详细解释）。</p>
+</li>
+<li><p><code>int threshold;</code> 下一次扩容时的阈值，达到阈值便会触发扩容机制 resize（阈值 threshold = 容器容量 capacity * 负载因子 load factor）。也就是说，在容器定义好容量之后，负载因子越大，所能容纳的键值对元素个数就越多。</p>
+</li>
+<li><p><code>Node&lt;K,V&gt;[] table;</code> 底层数组，充当哈希表的作用，用于存储对应 hash 位置的元素 Node&lt;K,V&gt;，此数组长度总是 2 的 N 次幂。（具体原因后面详细解释）</p>
+</li>
+</ol>
+<h2 id="哈希表存储的核心元素"><a href="#哈希表存储的核心元素" class="headerlink" title="哈希表存储的核心元素"></a>哈希表存储的核心元素</h2><ol>
+<li><p><code>final int hash;</code> 元素的哈希值，决定元素存储在 Node&lt;K,V&gt;[] table;哈希表中的位置。由 final 修饰可知，当 hash 的值确定后，就不能再修改。</p>
+</li>
+<li><p><code>final K key;</code> 键，由 final 修饰可知，当 key 的值确定后，就不能再修改。</p>
+</li>
+<li><p><code>V value;</code> 值</p>
+</li>
+<li><p><code>Node&lt;K,V&gt; next;</code> 记录下一个元素结点(单链表结构，用于解决 hash 冲突)</p>
+</li>
+</ol>
+<p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap_2020-02-28-18-54-23.png" alt="JAVA容器——HashMap_2020-02-28-18-54-23.png"></p>
+<h1 id="您能说说-HashMap-常用操作的底层实现原理吗？如存储-put-K-key-V-value-，查找-get-Object-key-，删除-remove-Object-key-，修改-replace-K-key-V-value-等操作。"><a href="#您能说说-HashMap-常用操作的底层实现原理吗？如存储-put-K-key-V-value-，查找-get-Object-key-，删除-remove-Object-key-，修改-replace-K-key-V-value-等操作。" class="headerlink" title="您能说说 HashMap 常用操作的底层实现原理吗？如存储 put(K key, V value)，查找 get(Object key)，删除 remove(Object key)，修改 replace(K key, V value)等操作。"></a>您能说说 HashMap 常用操作的底层实现原理吗？如存储 put(K key, V value)，查找 get(Object key)，删除 remove(Object key)，修改 replace(K key, V value)等操作。</h1><h2 id="put-添加"><a href="#put-添加" class="headerlink" title="put 添加"></a>put 添加</h2><ol>
+<li><p>判断哈希表 <code>Node&lt;K,V&gt;[] table</code> 是否为空或者 <code>null</code>，是则执行 <code>resize()</code>方法进行扩容（初始化）。</p>
+</li>
+<li><p>根据插入的键值 <code>key</code> 的 <code>hash</code> 值（key 的 hashCode 值与 16 的位运算），通过<code>(n - 1) &amp; hash</code> 当前元素的 <code>hash</code> 值 <code>&amp; hash</code> 表长度 - 1（实际就是 <code>hash</code> 值 <code>% hash</code> 表长度） 计算出存储位置 <code>table[i]</code>。如果存储位置没有元素存放，则将新增结点存储在此位置 <code>table[i]</code>。</p>
+</li>
+<li><p>如果存储位置已经有键值对元素存在，则判断该位置元素的 <code>hash</code> 值和 <code>key</code> 值是否和当前操作元素一致，一致则证明是修改 <code>value</code> 操作，覆盖 <code>value</code> 即可。</p>
+</li>
+<li><p>当前存储位置即有元素，又不和当前操作元素一致，则证明此位置 <code>table[i]</code>已经发生了 <code>hash</code> 冲突，则通过判断头结点是否是 <code>treeNode</code>，如果是 <code>treeNode</code> 则证明此位置的结构是红黑树，已红黑树的方式新增结点。</p>
+<ul>
+<li>如果不是红黑树，则证明是单链表，将新增结点插入至链表的最后位置，随后判断当前链表长度是否 大于等于 8，是则将当前存储位置的链表转化为红黑树。遍历过程中如果发现 <code>key</code> 已经存在，则直接覆盖 <code>value</code>。</li>
+<li>插入成功后，判断当前存储键值对的数量 大于 阈值 <code>threshold</code> 是则扩容。</li>
+</ul>
+</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 添加key-value键值对</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key 键</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> value 值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 如果原本存在此key，则返回旧的value值，如果是新增的key-</span></span><br><span class="line"><span class="comment"> *         value，则返回nulll</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//实际调用putVal方法进行添加 key-value 键值对操作</span></span><br><span class="line">    <span class="keyword">return</span> putVal(hash(key), key, value, <span class="keyword">false</span>, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 根据key 键 的 hashCode 通过 “扰动函数” 生成对应的 hash值</span></span><br><span class="line"><span class="comment"> * 经过此操作后，使每一个key对应的hash值生成的更均匀，</span></span><br><span class="line"><span class="comment"> * 减少元素之间的碰撞几率（后面详细说明）</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 添加key-value键值对的实际调用方法（重点）</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> hash key 键的hash值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key 键</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> value 值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> onlyIfAbsent 此值如果是true, 则如果此key已存在value，则不执</span></span><br><span class="line"><span class="comment"> * 行修改操作</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> evict 此值如果是false，哈希表是在初始化模式</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 返回原本的旧值, 如果是新增，则返回null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">boolean</span> onlyIfAbsent,</span></span></span><br><span class="line"><span class="function"><span class="params">               <span class="keyword">boolean</span> evict)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 用于记录当前的hash表</span></span><br><span class="line">    Node&lt;K,V&gt;[] tab;</span><br><span class="line">    <span class="comment">// 用于记录当前的链表结点</span></span><br><span class="line">    Node&lt;K,V&gt; p;</span><br><span class="line">    <span class="comment">// n用于记录hash表的长度，i用于记录当前操作索引index</span></span><br><span class="line">    <span class="keyword">int</span> n, i;</span><br><span class="line">    <span class="comment">// 当前hash表为空</span></span><br><span class="line">    <span class="keyword">if</span> ((tab = table) == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>)</span><br><span class="line">        <span class="comment">// 初始化hash表，并把初始化后的hash表长度值赋值给n</span></span><br><span class="line">        n = (tab = resize()).length;</span><br><span class="line">    <span class="comment">// 1）通过 (n - 1) &amp; hash 当前元素的hash值 &amp; hash表长度 - 1</span></span><br><span class="line">    <span class="comment">// 2）确定当前元素的存储位置，此运算等价于 当前元素的hash值 % hash表的长度</span></span><br><span class="line">    <span class="comment">// 3）计算出的存储位置没有元素存在</span></span><br><span class="line">    <span class="keyword">if</span> ((p = tab[i = (n - <span class="number">1</span>) &amp; hash]) == <span class="keyword">null</span>)</span><br><span class="line">        <span class="comment">// 4) 则新建一个Node结点，在该位置存储此元素</span></span><br><span class="line">        tab[i] = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">    <span class="keyword">else</span> &#123; <span class="comment">// 当前存储位置已经有元素存在了(不考虑是修改的情况的话，就代表发生hash冲突了)</span></span><br><span class="line">        <span class="comment">// 用于存放新增结点</span></span><br><span class="line">        Node&lt;K,V&gt; e;</span><br><span class="line">        <span class="comment">// 用于临时存在某个key值</span></span><br><span class="line">        K k;</span><br><span class="line">        <span class="comment">// 1)如果当前位置已存在元素的hash值和新增元素的hash值相等</span></span><br><span class="line">        <span class="comment">// 2)并且key也相等，则证明是同一个key元素，想执行修改value操作</span></span><br><span class="line">        <span class="keyword">if</span> (p.hash == hash &amp;&amp;</span><br><span class="line">            ((k = p.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">            e = p;<span class="comment">// 将当前结点引用赋值给e</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (p <span class="keyword">instanceof</span> TreeNode) <span class="comment">// 如果当前结点是树结点</span></span><br><span class="line">            <span class="comment">// 则证明当前位置的链表已变成红黑树结构，则已红黑树结点结构新增元素</span></span><br><span class="line">            e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(<span class="keyword">this</span>, tab, hash, key, value);</span><br><span class="line">        <span class="keyword">else</span> &#123;<span class="comment">// 排除上述情况，则证明已发生hash冲突，并hash冲突位置现时的结构是单链表结构</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> binCount = <span class="number">0</span>; ; ++binCount) &#123;</span><br><span class="line">                <span class="comment">//遍历单链表，将新元素结点放置此链表的最后一位</span></span><br><span class="line">                <span class="keyword">if</span> ((e = p.next) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="comment">// 将新元素结点放在此链表的最后一位</span></span><br><span class="line">                    p.next = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">                    <span class="comment">// 新增结点后，当前结点数量是否大于等于 阈值 8</span></span><br><span class="line">                    <span class="keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD - <span class="number">1</span>) <span class="comment">// -1 for 1st</span></span><br><span class="line">                        <span class="comment">// 大于等于8则将链表转换成红黑树</span></span><br><span class="line">                        treeifyBin(tab, hash);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 如果链表中已经存在对应的key，则覆盖value</span></span><br><span class="line">                <span class="keyword">if</span> (e.hash == hash &amp;&amp;</span><br><span class="line">                    ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                p = e;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123; <span class="comment">// 已存在对应key</span></span><br><span class="line">            V oldValue = e.value;</span><br><span class="line">            <span class="keyword">if</span> (!onlyIfAbsent || oldValue == <span class="keyword">null</span>) <span class="comment">//如果允许修改，则修改value为新值</span></span><br><span class="line">                e.value = value;</span><br><span class="line">            afterNodeAccess(e);</span><br><span class="line">            <span class="keyword">return</span> oldValue;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ++modCount;</span><br><span class="line">    <span class="comment">// 当前存储键值对的数量 大于 阈值 是则扩容</span></span><br><span class="line">    <span class="keyword">if</span> (++size &gt; threshold)</span><br><span class="line">       <span class="comment">// 重置hash大小，将旧hash表的数据逐一复制到新的hash表中（后面详细讲解）</span></span><br><span class="line">        resize();</span><br><span class="line">    afterNodeInsertion(evict);</span><br><span class="line">    <span class="comment">// 返回null，则证明是新增操作，而不是修改操作</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="取值-get"><a href="#取值-get" class="headerlink" title="取值 get"></a>取值 get</h2><ol>
+<li><p>先调用 <code>hash(key)</code>方法计算出 <code>key</code> 的 <code>hash</code>值。</p>
+</li>
+<li><p>根据查找的键值<code>key</code>的<code>hash</code>值，通过<code>(n - 1) &amp; hash</code>当前元素的<code>hash</code>值 <code>&amp; hash</code>表长度 <code>- 1</code>（实际就是 <code>hash</code>值 <code>% hash</code>表长度） 计算出存储位置<code>table[i]</code>，判断存储位置是否有元素存在 。</p>
+<ul>
+<li>如果存储位置有元素存放，则首先比较头结点元素，如果头结点的<code>key</code>的<code>hash</code>值 和 要获取的<code>key</code>的<code>hash</code>值相等，并且 头结点的<code>key</code>本身 和要获取的 <code>key</code> 相等，则返回该位置的头结点。</li>
+<li>如果存储位置没有元素存放，则返回<code>null</code>。</li>
+</ul>
+</li>
+<li><p>如果存储位置有元素存放，但是头结点元素不是要查找的元素，则需要遍历该位置进行查找。</p>
+</li>
+<li><p>先判断头结点是否是<code>treeNode</code>，如果是<code>treeNode</code>则证明此位置的结构是红黑树，以红色树的方式遍历查找该结点，没有则返回<code>null</code>。</p>
+</li>
+<li><p>如果不是红黑树，则证明是单链表。遍历单链表，逐一比较链表结点，链表结点的<code>key</code>的<code>hash</code>值 和 要获取的<code>key</code>的<code>hash</code>值相等，并且 链表结点的<code>key</code>本身 和要获取的 <code>key</code> 相等，则返回该结点，遍历结束仍未找到对应<code>key</code>的结点，则返回<code>null</code>。</p>
+</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 返回指定 key 所映射的 value 值</span></span><br><span class="line"><span class="comment"> * 或者 返回 null 如果容器里不存在对应的key</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 更确切地讲，如果此映射包含一个满足 (key==null ? k==null :key.equals(k))</span></span><br><span class="line"><span class="comment"> * 的从 k 键到 v 值的映射关系，</span></span><br><span class="line"><span class="comment"> * 则此方法返回 v；否则返回 null。（最多只能有一个这样的映射关系。）</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 返回 null 值并不一定 表明该映射不包含该键的映射关系；</span></span><br><span class="line"><span class="comment"> * 也可能该映射将该键显示地映射为 null。可使用containsKey操作来区分这两种情况。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> #put(Object, Object)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    Node&lt;K,V&gt; e;</span><br><span class="line">    <span class="comment">// 1.先调用 hash(key)方法计算出 key 的 hash值</span></span><br><span class="line">    <span class="comment">// 2.随后调用getNode方法获取对应key所映射的value值</span></span><br><span class="line">    <span class="keyword">return</span> (e = getNode(hash(key), key)) == <span class="keyword">null</span> ? <span class="keyword">null</span> : e.value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 获取哈希表结点的方法实现</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> hash key 键的hash值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key 键</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 返回对应的结点，如果结点不存在，则返回null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">final</span> Node&lt;K,V&gt; <span class="title">getNode</span><span class="params">(<span class="keyword">int</span> hash, Object key)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 用于记录当前的hash表</span></span><br><span class="line">    Node&lt;K,V&gt;[] tab;</span><br><span class="line">    <span class="comment">// first用于记录对应hash位置的第一个结点，e充当工作结点的作用</span></span><br><span class="line">    Node&lt;K,V&gt; first, e;</span><br><span class="line">    <span class="comment">// n用于记录hash表的长度</span></span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="comment">// 用于临时存放Key</span></span><br><span class="line">    K k;</span><br><span class="line">    <span class="comment">// 通过 (n - 1) &amp; hash 当前元素的hash值 &amp; hash表长度 - 1</span></span><br><span class="line">    <span class="comment">// 判断当前元素的存储位置是否有元素存在</span></span><br><span class="line">    <span class="keyword">if</span> ((tab = table) != <span class="keyword">null</span> &amp;&amp; (n = tab.length) &gt; <span class="number">0</span> &amp;&amp;</span><br><span class="line">        (first = tab[(n - <span class="number">1</span>) &amp; hash]) != <span class="keyword">null</span>) &#123;<span class="comment">//元素存在的情况</span></span><br><span class="line">       <span class="comment">// 如果头结点的key的hash值 和 要获取的key的hash值相等</span></span><br><span class="line">       <span class="comment">// 并且 头结点的key本身 和要获取的 key 相等</span></span><br><span class="line">        <span class="keyword">if</span> (first.hash == hash &amp;&amp; <span class="comment">// always check first node 总是检查头结点</span></span><br><span class="line">            ((k = first.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">            <span class="comment">// 返回该位置的头结点</span></span><br><span class="line">            <span class="keyword">return</span> first;</span><br><span class="line">        <span class="keyword">if</span> ((e = first.next) != <span class="keyword">null</span>) &#123;<span class="comment">// 头结点不相等</span></span><br><span class="line">            <span class="keyword">if</span> (first <span class="keyword">instanceof</span> TreeNode) <span class="comment">// 如果当前结点是树结点</span></span><br><span class="line">                <span class="comment">// 则证明当前位置的链表已变成红黑树结构</span></span><br><span class="line">                <span class="comment">// 通过红黑树结点的方式获取对应key结点</span></span><br><span class="line">                <span class="keyword">return</span> ((TreeNode&lt;K,V&gt;)first).getTreeNode(hash, key);</span><br><span class="line">            <span class="keyword">do</span> &#123;<span class="comment">// 当前位置不是红黑树，则证明是单链表</span></span><br><span class="line">                <span class="comment">// 遍历单链表，逐一比较链表结点</span></span><br><span class="line">                <span class="comment">// 链表结点的key的hash值 和 要获取的key的hash值相等</span></span><br><span class="line">                <span class="comment">// 并且 链表结点的key本身 和要获取的 key 相等</span></span><br><span class="line">                <span class="keyword">if</span> (e.hash == hash &amp;&amp;</span><br><span class="line">                    ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">                    <span class="comment">// 找到对应的结点则返回</span></span><br><span class="line">                    <span class="keyword">return</span> e;</span><br><span class="line">            &#125; <span class="keyword">while</span> ((e = e.next) != <span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 通过上述查找均无找到，则返回null</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除-remove"><a href="#删除-remove" class="headerlink" title="删除 remove"></a>删除 remove</h2><ol>
+<li><p>先调用 <code>hash(key)</code>方法计算出 <code>key</code> 的 <code>hash</code>值。</p>
+</li>
+<li><p>根据查找的键值<code>key</code>的<code>hash</code>值，通过<code>(n - 1) &amp; hash</code>当前元素的<code>hash</code>值 <code>&amp; hash</code>表长度 - 1（实际就是 <code>hash</code>值 <code>% hash</code>表长度） 计算出存储位置<code>table[i]</code>，判断存储位置是否有元素存在 。</p>
+<ul>
+<li>如果存储位置有元素存放，则首先比较头结点元素，如果头结点的 key 的 hash 值 和 要获取的 key 的 hash 值相等，并且 头结点的 key 本身 和要获取的 key 相等，则该位置的头结点即为要删除的结点，记录此结点至变量 node 中。</li>
+<li>如果存储位置没有元素存放，则没有找到对应要删除的结点，则返回 null。</li>
+</ul>
+</li>
+<li><p>如果存储位置有元素存放，但是头结点元素不是要删除的元素，则需要遍历该位置进行查找。<br>4, 先判断头结点是否是<code>treeNode</code>，如果是<code>treeNode</code>则证明此位置的结构是红黑树，以红色树的方式遍历查找并删除该结点，没有则返回<code>null</code>。</p>
+</li>
+<li><p>如果不是红黑树，则证明是单链表。遍历单链表，逐一比较链表结点，链表结点的<code>key</code>的<code>hash</code>值 和 要获取的<code>key</code>的<code>hash</code>值相等，并且 链表结点的<code>key</code>本身 和要获取的<code>key</code>相等，则此为要删除的结点，记录此结点至变量 <code>node</code> 中，遍历结束仍未找到对应<code>key</code>的结点，则返回<code>null</code>。</p>
+</li>
+<li><p>如果找到要删除的结点 <code>node</code>，则判断是否需要比较 <code>value</code> 也是否一致，如果 <code>value</code> 值一致或者不需要比较 <code>value</code> 值，则执行删除结点操作，删除操作根据不同的情况与结构进行不同的处理。</p>
+<ul>
+<li>如果当前结点是树结点，则证明当前位置的链表已变成红黑树结构，通过红黑树结点的方式删除对应结点。</li>
+<li>如果不是红黑树，则证明是单链表。如果要删除的是头结点，则当前存储位置 <code>table[i]</code> 的头结点指向删除结点的下一个结点。</li>
+<li>如果要删除的结点不是头结点，则将要删除的结点的后继结点 <code>node.next</code> 赋值给要删除结点的前驱结点的 <code>next</code> 域，即 <code>p.next = node.next;</code>。</li>
+</ul>
+</li>
+<li><p><code>HashMap</code> 当前存储键值对的数量 <code>- 1</code>，并返回删除结点。</p>
+</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 从此映射中移除指定键的映射关系（如果存在）。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  key 其映射关系要从映射中移除的键</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 与 key 关联的旧值；如果 key 没有任何映射关系，则返回 null。</span></span><br><span class="line"><span class="comment"> *        （返回 null 还可能表示该映射之前将 null 与 key 关联。）</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">remove</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    Node&lt;K,V&gt; e;</span><br><span class="line">    <span class="comment">// 1.先调用 hash(key)方法计算出 key 的 hash值</span></span><br><span class="line">    <span class="comment">// 2.随后调用removeNode方法删除对应key所映射的结点</span></span><br><span class="line">    <span class="keyword">return</span> (e = removeNode(hash(key), key, <span class="keyword">null</span>, <span class="keyword">false</span>, <span class="keyword">true</span>)) == <span class="keyword">null</span> ?</span><br><span class="line">        <span class="keyword">null</span> : e.value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 删除哈希表结点的方法实现</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> hash 键的hash值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key 键</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> value 用于比较的value值，当matchValue 是 true时才有效, 否则忽略</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> matchValue 如果是 true 只有当value相等时才会移除</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> movable 如果是 false当执行移除操作时，不删除其他结点</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 返回删除结点node，不存在则返回null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">final</span> Node&lt;K,V&gt; <span class="title">removeNode</span><span class="params">(<span class="keyword">int</span> hash, Object key, Object value,</span></span></span><br><span class="line"><span class="function"><span class="params">                           <span class="keyword">boolean</span> matchValue, <span class="keyword">boolean</span> movable)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 用于记录当前的hash表</span></span><br><span class="line">    Node&lt;K,V&gt;[] tab;</span><br><span class="line">    <span class="comment">// 用于记录当前的链表结点</span></span><br><span class="line">    Node&lt;K,V&gt; p;</span><br><span class="line">    <span class="comment">// n用于记录hash表的长度，index用于记录当前操作索引index</span></span><br><span class="line">    <span class="keyword">int</span> n, index;</span><br><span class="line">    <span class="comment">// 通过 (n - 1) &amp; hash 当前元素的hash值 &amp; hash表长度 - 1</span></span><br><span class="line">    <span class="comment">// 判断当前元素的存储位置是否有元素存在</span></span><br><span class="line">    <span class="keyword">if</span> ((tab = table) != <span class="keyword">null</span> &amp;&amp; (n = tab.length) &gt; <span class="number">0</span> &amp;&amp;</span><br><span class="line">        (p = tab[index = (n - <span class="number">1</span>) &amp; hash]) != <span class="keyword">null</span>) &#123;<span class="comment">// 元素存在的情况</span></span><br><span class="line">        <span class="comment">// node 用于记录找到的结点，e为工作结点</span></span><br><span class="line">        Node&lt;K,V&gt; node = <span class="keyword">null</span>, e;</span><br><span class="line">        K k; V v;</span><br><span class="line">       <span class="comment">// 如果头结点的key的hash值 和 要获取的key的hash值相等</span></span><br><span class="line">       <span class="comment">// 并且 头结点的key本身 和要获取的 key 相等</span></span><br><span class="line">       <span class="comment">// 则证明此头结点就是要删除的结点</span></span><br><span class="line">        <span class="keyword">if</span> (p.hash == hash &amp;&amp;</span><br><span class="line">            ((k = p.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">            <span class="comment">// 记录要删除的结点的引用地址至node中</span></span><br><span class="line">            node = p;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> ((e = p.next) != <span class="keyword">null</span>) &#123;<span class="comment">// 头结点不相等</span></span><br><span class="line">            <span class="keyword">if</span> (p <span class="keyword">instanceof</span> TreeNode)<span class="comment">// 如果当前结点是树结点</span></span><br><span class="line">                <span class="comment">// 则证明当前位置的链表已变成红黑树结构</span></span><br><span class="line">                <span class="comment">// 通过红黑树结点的方式获取对应key结点</span></span><br><span class="line">                <span class="comment">// 记录要删除的结点的引用地址至node中</span></span><br><span class="line">                node = ((TreeNode&lt;K,V&gt;)p).getTreeNode(hash, key);</span><br><span class="line">            <span class="keyword">else</span> &#123;<span class="comment">// 当前位置不是红黑树，则证明是单链表</span></span><br><span class="line">                <span class="keyword">do</span> &#123;</span><br><span class="line">                    <span class="comment">// 遍历单链表，逐一比较链表结点</span></span><br><span class="line">                    <span class="comment">// 链表结点的key的hash值 和 要获取的key的hash值相等</span></span><br><span class="line">                    <span class="comment">// 并且 链表结点的key本身 和要获取的 key 相等</span></span><br><span class="line">                    <span class="keyword">if</span> (e.hash == hash &amp;&amp;</span><br><span class="line">                        ((k = e.key) == key ||</span><br><span class="line">                         (key != <span class="keyword">null</span> &amp;&amp; key.equals(k)))) &#123;</span><br><span class="line">                        <span class="comment">// 找到则记录要删除的结点的引用地址至node中，中断遍历</span></span><br><span class="line">                        node = e;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    p = e;</span><br><span class="line">                &#125; <span class="keyword">while</span> ((e = e.next) != <span class="keyword">null</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果找到要删除的结点，则判断是否需要比较value也是否一致</span></span><br><span class="line">        <span class="keyword">if</span> (node != <span class="keyword">null</span> &amp;&amp; (!matchValue || (v = node.value) == value ||</span><br><span class="line">                             (value != <span class="keyword">null</span> &amp;&amp; value.equals(v)))) &#123;</span><br><span class="line">            <span class="comment">// value值一致或者不需要比较value值，则执行删除结点操作</span></span><br><span class="line">            <span class="keyword">if</span> (node <span class="keyword">instanceof</span> TreeNode) <span class="comment">// 如果当前结点是树结点</span></span><br><span class="line">                <span class="comment">// 则证明当前位置的链表已变成红黑树结构</span></span><br><span class="line">                <span class="comment">// 通过红黑树结点的方式删除对应结点</span></span><br><span class="line">                ((TreeNode&lt;K,V&gt;)node).removeTreeNode(<span class="keyword">this</span>, tab, movable);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (node == p) <span class="comment">// node 和 p相等，则证明删除的是头结点</span></span><br><span class="line">                <span class="comment">// 当前存储位置的头结点指向删除结点的下一个结点</span></span><br><span class="line">                tab[index] = node.next;</span><br><span class="line">            <span class="keyword">else</span> <span class="comment">// 删除的不是头结点</span></span><br><span class="line">                <span class="comment">// p是删除结点node的前驱结点，p的next改为记录要删除结点node的后继结点</span></span><br><span class="line">                p.next = node.next;</span><br><span class="line">            ++modCount;</span><br><span class="line">           <span class="comment">// 当前存储键值对的数量 - 1</span></span><br><span class="line">            --size;</span><br><span class="line">            afterNodeRemoval(node);</span><br><span class="line">            <span class="comment">// 返回删除结点</span></span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 不存在要删除的结点，则返回null</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="替换-replace"><a href="#替换-replace" class="headerlink" title="替换 replace"></a>替换 replace</h2><ol>
+<li><p>先调用 <code>hash(key)</code>方法计算出 <code>key</code> 的 <code>hash</code>值</p>
+</li>
+<li><p>随后调用<code>getNode</code>方法获取对应<code>key</code>所映射的<code>value</code>值 。</p>
+</li>
+<li><p>记录元素旧值，将新值赋值给元素，返回元素旧值，如果没有找到元素，则返回<code>null</code>。</p>
+</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 替换指定 key 所映射的 value 值</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key 对应要替换value值元素的key键</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> value 要替换对应元素的新value值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 返回原本的旧值，如果没有找到key对应的元素，则返回null</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.8 JDK1.8新增方法</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">replace</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">    Node&lt;K,V&gt; e;</span><br><span class="line">    <span class="comment">// 1.先调用 hash(key)方法计算出 key 的 hash值</span></span><br><span class="line">    <span class="comment">// 2.随后调用getNode方法获取对应key所映射的value值</span></span><br><span class="line">    <span class="keyword">if</span> ((e = getNode(hash(key), key)) != <span class="keyword">null</span>) &#123;<span class="comment">// 如果找到对应的元素</span></span><br><span class="line">        <span class="comment">// 元素旧值</span></span><br><span class="line">        V oldValue = e.value;</span><br><span class="line">        <span class="comment">// 将新值赋值给元素</span></span><br><span class="line">        e.value = value;</span><br><span class="line">        afterNodeAccess(e);</span><br><span class="line">        <span class="comment">// 返回元素旧值</span></span><br><span class="line">        <span class="keyword">return</span> oldValue;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 没有找到元素，则返回null</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="hash-冲突（或者叫-hash-碰撞）是什么？为什么会出现这种现象，如何解决-hash-冲突？"><a href="#hash-冲突（或者叫-hash-碰撞）是什么？为什么会出现这种现象，如何解决-hash-冲突？" class="headerlink" title="hash 冲突（或者叫 hash 碰撞）是什么？为什么会出现这种现象，如何解决 hash 冲突？"></a>hash 冲突（或者叫 hash 碰撞）是什么？为什么会出现这种现象，如何解决 hash 冲突？</h1><h2 id="hash-冲突"><a href="#hash-冲突" class="headerlink" title="hash 冲突"></a>hash 冲突</h2><p>当我们调用<code>put(K key, V value)</code>操作添加<code>key-value</code>键值对，这个<code>key-value</code>键值对存放在的位置是通过扰动函数<code>(key == null)? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16)</code>计算键 <code>key</code> 的 <code>hash</code> 值。随后将 这个 <code>hash</code> 值 <code>%</code>模上 哈希表 <code>Node&lt;K,V&gt;[] table</code> 的长度 得到具体的存放位置。所以 <code>put(K key, V value)</code>多个元素，是有可能计算出相同的存放位置。此现象就是 <code>hash</code> 冲突或者叫 <code>hash</code> 碰撞。</p>
+<h2 id="hash-冲突的避免"><a href="#hash-冲突的避免" class="headerlink" title="hash 冲突的避免"></a>hash 冲突的避免</h2><p>既然会发生<code>hash</code>冲突，我们就应该想办法避免此现象的发生，解决这个问题最关键就是如果生成元素的<code>hash</code>值。<code>Java</code>是使用“扰动函数”生成元素的<code>hash</code>值。</p>
+<p>示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * JDK 7 的 hash方法</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="function"><span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(<span class="keyword">int</span> h)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">     h ^= k.hashCode();</span><br><span class="line"></span><br><span class="line">     h ^= (h &gt;&gt;&gt; <span class="number">20</span>) ^ (h &gt;&gt;&gt; <span class="number">12</span>);</span><br><span class="line">     <span class="keyword">return</span> h ^ (h &gt;&gt;&gt; <span class="number">7</span>) ^ (h &gt;&gt;&gt; <span class="number">4</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * JDK 8 的 hash方法</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">int</span> h;</span><br><span class="line">     <span class="keyword">return</span> (key == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>Java7 做了 4 次 16 位右位移异或混合，Java 8 中这步已经简化了，只做一次 16 位右位移异或混合，而不是四次，但原理是不变的。例子如下：</p>
+<p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap_2020-02-28-19-50-28.png" alt="JAVA容器——HashMap_2020-02-28-19-50-28.png"></p>
+<p>右位移 16 位，正好是 32bit 的一半，自己的高半区和低半区做异或，就是为了混合原始哈希码的高位和低位，以此来加大低位的随机性。而且混合后的低位掺杂了高位的部分特征，这样高位的信息也被变相保留下来</p>
+<h2 id="hash-冲突解决："><a href="#hash-冲突解决：" class="headerlink" title="hash 冲突解决："></a>hash 冲突解决：</h2><p>解决<code>hash</code>冲突的方法有很多，常见的有：开发定址法，再散列法，链地址法，公共溢出区法。<code>HashMap</code>是使用链地址法解决<code>hash</code>冲突的，当有冲突元素放进来时，会将此元素插入至此位置链表的最后一位，形成单链表。但是由于是单链表的缘故，每当通过<code>hash % length</code>找到该位置的元素时，均需要从头遍历链表，通过逐一比较<code>hash</code>值，找到对应元素。如果此位置元素过多，造成链表过长，遍历时间会大大增加，最坏情况下的时间复杂度为<code>O(N)</code>，造成查找效率过低。所以当存在位置的链表长度 大于等于 <code>8</code> 时，<code>HashMap</code>会将链表 转变为 红黑树，红黑树最坏情况下的时间复杂度为<code>O(logn)</code>。以此提高查找效率。</p>
+<h1 id="HashMap-的容量为什么一定要是-2-的-n-次方？"><a href="#HashMap-的容量为什么一定要是-2-的-n-次方？" class="headerlink" title="HashMap 的容量为什么一定要是 2 的 n 次方？"></a>HashMap 的容量为什么一定要是 2 的 n 次方？</h1><h2 id="运算效率高"><a href="#运算效率高" class="headerlink" title="运算效率高"></a>运算效率高</h2><p>因为调用 <code>put(K key, V value)</code> 操作添加<code>key-value</code>键值对时，具体确定此元素的位置是通过 <code>hash</code>值 <code>%</code> 模上 哈希表<code>Node&lt;K,V&gt;[] table</code>的长度 <code>hash % length</code> 计算的。但是”模”运算的消耗相对较大，通过位运算<code>h &amp; (length-1)</code>也可以得到取模后的存放位置，而位运算的运行效率高，但只有 length 的长度是 2 的 n 次方时，<code>h &amp; (length-1)</code> 才等价于 <code>h % length</code>。</p>
+<h2 id="分布均匀"><a href="#分布均匀" class="headerlink" title="分布均匀"></a>分布均匀</h2><p>而且当数组长度为 2 的 n 次幂的时候，不同的<code>key</code>算出的<code>index</code>相同的几率较小，那么数据在数组上分布就比较均匀，也就是说碰撞的几率小，相对的，查询的时候就不用遍历某个位置上的链表，这样查询效率也就较高了。</p>
+<h1 id="HashMap-的负载因子是什么，有什么作用？"><a href="#HashMap-的负载因子是什么，有什么作用？" class="headerlink" title="HashMap 的负载因子是什么，有什么作用？"></a>HashMap 的负载因子是什么，有什么作用？</h1><p>负载因子表示哈希表空间的使用程度</p>
+<ul>
+<li>当负载因子越大，则<code>HashMap</code>的装载程度就越高。也就是能容纳更多的元素，元素多了，发生<code>hash</code>碰撞的几率就会加大，从而链表就会拉长，此时的查询效率就会降低。</li>
+<li>当负载因子越小，则链表中的数据量就越稀疏，此时会对空间造成浪费，但是此时查询效率高。</li>
+</ul>
+<h1 id="扩容？它是怎么扩容的呢？"><a href="#扩容？它是怎么扩容的呢？" class="headerlink" title="扩容？它是怎么扩容的呢？"></a>扩容？它是怎么扩容的呢？</h1><p>当 <code>put</code> 时，如果发现目前的 <code>bucket</code> 占用程度已经超过了 <code>Load Factor</code> 所希望的比例，那么就会发生 <code>resize</code>。在 <code>resize</code> 的过程，简单的说就是把 <code>bucket</code> 扩充为 2 倍，之后重新计算 <code>index</code>，把节点再放到新的 <code>bucket</code> 中。</p>
+<p>当超过限制的时候会<code>resize</code>，然而又因为我们使用的是 2 次幂的扩展(指长度扩为原来 2 倍)，所以，元素的位置要么是在原位置，要么是在原位置再移动 2 次幂的位置。</p>
+<p>怎么理解呢？例如我们从 16 扩展为 32 时，具体的变化如下所示：</p>
+<p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap_2020-02-28-20-03-28.png" alt="JAVA容器——HashMap_2020-02-28-20-03-28.png"></p>
+<p>因此元素在重新计算 <code>hash</code> 之后，因为 n 变为 2 倍，那么 <code>n-1</code> 的 mask 范围在高位多 1bit(红色)，因此新的 index 就会发生这样的变化：</p>
+<p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap_2020-02-28-20-04-09.png" alt="JAVA容器——HashMap_2020-02-28-20-04-09.png"></p>
+<p>因此，我们在扩充 <code>HashMap</code> 的时候，不需要重新计算 <code>hash</code>，只需要看看原来的 hash 值新增的那个 bit 是 1 还是 0 就好了，是 0 的话索引没变，是 1 的话索引变成“原索引+oldCap”。</p>
+<p>这个设计确实非常的巧妙，既省去了重新计算 <code>hash</code> 值的时间，而且同时，由于新增的 1bit 是 0 还是 1 可以认为是随机的，因此 <code>resize</code> 的过程，均匀的把之前的冲突的节点分散到新的 <code>bucket</code> 了。</p>
+<h1 id="拉链法插入链表-为啥-java7-之前用头插法，java8-之后改成尾插了呢？"><a href="#拉链法插入链表-为啥-java7-之前用头插法，java8-之后改成尾插了呢？" class="headerlink" title="拉链法插入链表 为啥 java7 之前用头插法，java8 之后改成尾插了呢？"></a>拉链法插入链表 为啥 java7 之前用头插法，java8 之后改成尾插了呢？</h1><p>使用头插会改变链表的上的顺序，但是如果使用尾插，在扩容时会保持链表元素原本的顺序，就不会出现链表成环的问题了。</p>
+<ul>
+<li>Java7 在多线程操作 HashMap 时可能引起死循环，原因是扩容转移后前后链表顺序倒置，在转移过程中修改了原来链表中节点的引用关系。</li>
+<li>Java8 在同样的前提下并不会引起死循环，原因是扩容转移后前后链表顺序不变，保持之前节点的引用关系。</li>
+</ul>
+<h1 id="您能说说-HashMap-和-HashTable-的区别吗？"><a href="#您能说说-HashMap-和-HashTable-的区别吗？" class="headerlink" title="您能说说 HashMap 和 HashTable 的区别吗？"></a>您能说说 HashMap 和 HashTable 的区别吗？</h1><h2 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h2><p>Hashtable 继承了 Dictionary 类，而 HashMap 继承的是 AbstractMap 类。</p>
+<h2 id="容器整体结构"><a href="#容器整体结构" class="headerlink" title="容器整体结构"></a>容器整体结构</h2><ul>
+<li><code>HashMap</code>的<code>key</code>和<code>value</code>都允许为<code>null</code>，<code>HashMap</code>遇到<code>key</code>为<code>null</code>的时候，调用<code>putForNullKey</code>方法进行处理，而对<code>value</code>没有处理。</li>
+<li><code>Hashtable</code> 的 <code>key</code> 和 <code>value</code> 都不允许为 <code>null</code>。<code>Hashtable</code> 遇到 <code>null</code>，直接返回 <code>NullPointerException</code>。</li>
+</ul>
+<h2 id="初始化容量和扩容机制"><a href="#初始化容量和扩容机制" class="headerlink" title="初始化容量和扩容机制"></a>初始化容量和扩容机制</h2><ul>
+<li><code>HashMap</code>默认初始化容量为 16，并且容器容量一定是 2 的 n 次方，扩容时，是以原容量 2 倍 的方式 进行扩容。</li>
+<li><code>Hashtable</code>默认初始化容量为 11，扩容时，是以原容量 2 倍 再加 1 的方式进行扩容。即<code>int newCapacity = (oldCapacity &lt;&lt; 1) + 1</code>;。</li>
+</ul>
+<h2 id="迭代方式不同"><a href="#迭代方式不同" class="headerlink" title="迭代方式不同"></a>迭代方式不同</h2><p>HashMap 中的 Iterator 迭代器是 fail-fast 的，而 Hashtable 的 Enumerator 不是 fail-fast 的。</p>
+<h2 id="线程安全（最重要）"><a href="#线程安全（最重要）" class="headerlink" title="线程安全（最重要）"></a>线程安全（最重要）</h2><ul>
+<li><code>HashMap</code> 不是线程安全，如果想线程安全，可以通过调用<code>synchronizedMap(Map&lt;K,V&gt; m)</code>使其线程安全。但是使用时的运行效率会下降，所以建议使用<code>ConcurrentHashMap</code>容器以此达到线程安全。</li>
+<li><code>Hashtable</code>则是线程安全的，每个操作方法前都有<code>synchronized</code>修饰使其同步，但运行效率也不高，所以还是建议使用<code>ConcurrentHashMap</code>容器以此达到线程安全。</li>
+</ul>
+<p>因此，<code>Hashtable</code>是一个遗留容器，如果我们不需要线程同步，则建议使用<code>HashMap</code>，如果需要线程同步，则建议使用<code>ConcurrentHashMap</code>。</p>
+<h1 id="谈谈-HashMap-线程不安全的体现"><a href="#谈谈-HashMap-线程不安全的体现" class="headerlink" title="谈谈 HashMap 线程不安全的体现"></a>谈谈 HashMap 线程不安全的体现</h1><p>那么，为什么说 HashMap 是线程不安全的呢？它在多线程环境下，会发生什么情况呢？</p>
+<h2 id="resize-死循环-JDK7"><a href="#resize-死循环-JDK7" class="headerlink" title="resize 死循环(JDK7)"></a>resize 死循环(JDK7)</h2><p>我们都知道 HashMap 初始容量大小为 16,一般来说，当有数据要插入时，都会检查容量有没有超过设定的 thredhold，如果超过，需要增大 Hash 表的尺寸，但是这样一来，整个 Hash 表里的元素都需要被重算一遍。这叫 rehash，这个成本相当的大。<br>对索引数组中的元素遍历</p>
+<p>对链表上的每一个节点遍历：用 next 取得要转移那个元素的下一个，将 e 转移到新 Hash 表的头部，使用头插法插入节点。</p>
+<p>循环 2，直到链表节点全部转移</p>
+<p>循环 1，直到所有索引数组全部转移</p>
+<p>经过这几步，我们会发现转移的时候是逆序的。假如转移前链表顺序是 1-&gt;2-&gt;3，那么转移后就会变成 3-&gt;2-&gt;1。这时候就有点头绪了，死锁问题不就是因为 1-&gt;2 的同时 2-&gt;1 造成的吗？所以，HashMap 的死锁问题就出在这个 transfer()函数上。</p>
+<h2 id="fail-fast"><a href="#fail-fast" class="headerlink" title="fail-fast"></a>fail-fast</h2><p>如果在使用迭代器的过程中有其他线程修改了 map，那么将抛出 ConcurrentModificationException，这就是所谓 fail-fast 策略。</p>
+ 
+    </div>
+    
+  </div>
+   
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap/">容器——HashMap</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
+        <p><span>发布时间:</span>2020-02-25, 18:07:33</p>
+        <p><span>最后更新:</span>2020-07-16, 09:29:53</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap/" title="容器——HashMap">http://yoursite.com/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2020/03/04/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ConcurrentHashMap/">
+                    容器——ConcurrentHashMap
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/">
+                    JAVA容器——LinkedList
+                </a>
+            </div>
+        
+    </nav>
+ 
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#您能给我说说-HashMap-吗？"><span class="toc-number">1.</span> <span class="toc-text">您能给我说说 HashMap 吗？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HashMap-的一些组成部分"><span class="toc-number">2.</span> <span class="toc-text">HashMap 的一些组成部分</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#核心组成部分"><span class="toc-number">2.1.</span> <span class="toc-text">核心组成部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#哈希表存储的核心元素"><span class="toc-number">2.2.</span> <span class="toc-text">哈希表存储的核心元素</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#您能说说-HashMap-常用操作的底层实现原理吗？如存储-put-K-key-V-value-，查找-get-Object-key-，删除-remove-Object-key-，修改-replace-K-key-V-value-等操作。"><span class="toc-number">3.</span> <span class="toc-text">您能说说 HashMap 常用操作的底层实现原理吗？如存储 put(K key, V value)，查找 get(Object key)，删除 remove(Object key)，修改 replace(K key, V value)等操作。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#put-添加"><span class="toc-number">3.1.</span> <span class="toc-text">put 添加</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#取值-get"><span class="toc-number">3.2.</span> <span class="toc-text">取值 get</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除-remove"><span class="toc-number">3.3.</span> <span class="toc-text">删除 remove</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#替换-replace"><span class="toc-number">3.4.</span> <span class="toc-text">替换 replace</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hash-冲突（或者叫-hash-碰撞）是什么？为什么会出现这种现象，如何解决-hash-冲突？"><span class="toc-number">4.</span> <span class="toc-text">hash 冲突（或者叫 hash 碰撞）是什么？为什么会出现这种现象，如何解决 hash 冲突？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#hash-冲突"><span class="toc-number">4.1.</span> <span class="toc-text">hash 冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hash-冲突的避免"><span class="toc-number">4.2.</span> <span class="toc-text">hash 冲突的避免</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hash-冲突解决："><span class="toc-number">4.3.</span> <span class="toc-text">hash 冲突解决：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HashMap-的容量为什么一定要是-2-的-n-次方？"><span class="toc-number">5.</span> <span class="toc-text">HashMap 的容量为什么一定要是 2 的 n 次方？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#运算效率高"><span class="toc-number">5.1.</span> <span class="toc-text">运算效率高</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布均匀"><span class="toc-number">5.2.</span> <span class="toc-text">分布均匀</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HashMap-的负载因子是什么，有什么作用？"><span class="toc-number">6.</span> <span class="toc-text">HashMap 的负载因子是什么，有什么作用？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#扩容？它是怎么扩容的呢？"><span class="toc-number">7.</span> <span class="toc-text">扩容？它是怎么扩容的呢？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#拉链法插入链表-为啥-java7-之前用头插法，java8-之后改成尾插了呢？"><span class="toc-number">8.</span> <span class="toc-text">拉链法插入链表 为啥 java7 之前用头插法，java8 之后改成尾插了呢？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#您能说说-HashMap-和-HashTable-的区别吗？"><span class="toc-number">9.</span> <span class="toc-text">您能说说 HashMap 和 HashTable 的区别吗？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现方式"><span class="toc-number">9.1.</span> <span class="toc-text">实现方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容器整体结构"><span class="toc-number">9.2.</span> <span class="toc-text">容器整体结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化容量和扩容机制"><span class="toc-number">9.3.</span> <span class="toc-text">初始化容量和扩容机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#迭代方式不同"><span class="toc-number">9.4.</span> <span class="toc-text">迭代方式不同</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程安全（最重要）"><span class="toc-number">9.5.</span> <span class="toc-text">线程安全（最重要）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#谈谈-HashMap-线程不安全的体现"><span class="toc-number">10.</span> <span class="toc-text">谈谈 HashMap 线程不安全的体现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#resize-死循环-JDK7"><span class="toc-number">10.1.</span> <span class="toc-text">resize 死循环(JDK7)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fail-fast"><span class="toc-number">10.2.</span> <span class="toc-text">fail-fast</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"true"];
+    </script>
+  
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"容器——HashMap　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+    <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'http://yoursite.com/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap/';
+            this.page.identifier = '2020/02/25/容器——HashMap/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//qnsite.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+   
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2020/03/04/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ConcurrentHashMap/" title="上一篇: 容器——ConcurrentHashMap">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/" title="下一篇: JAVA容器——LinkedList">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/14/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94pull%E5%92%8Cpush/">消息中间件——pull和push</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/13/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E3%80%81RocketMQ%E3%80%81RabbitMQ%E7%9A%84%E4%BC%98%E5%8A%A3%E5%8A%BF%E6%AF%94%E8%BE%83/">消息中间件——Kafka、RocketMQ、RabbitMQ的优劣势比较</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/13/SpringBoot%E2%80%94%E2%80%94%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%83%EF%BC%89/">SpringBoot——定时任务（二十七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/13/SpringBoot%E2%80%94%E2%80%94%E5%BC%82%E6%AD%A5%EF%BC%88%E4%BA%8C%E5%8D%81%E5%85%AD%EF%BC%89/">SpringBoot——异步（二十六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/SpringBoot%E2%80%94%E2%80%94RabittMQ%EF%BC%88%E4%BA%8C%E5%8D%81%E5%9B%9B%EF%BC%89/">SpringBoot——RabittMQ（二十四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E5%BB%B6%E6%97%B6%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88%E4%B8%83%EF%BC%89/">消息中间件——RabbitMQ—延时消息队列（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E6%B6%88%E6%81%AF%E5%8F%AF%E9%9D%A0%E6%80%A7%EF%BC%88%E5%85%AD%EF%BC%89/">消息中间件——RabbitMQ—消息可靠性（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%88%E4%BA%94%EF%BC%89/">消息中间件——RabbitMQ—持久化（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%EF%BC%88%E5%9B%9B%EF%BC%89/">消息中间件——RabbitMQ—高可用集群（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%EF%BC%88%E4%B8%89%EF%BC%89/">消息中间件——RabbitMQ—工作模式（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%88%E4%BA%8C%EF%BC%89/">消息中间件——RabbitMQ—核心概念（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%89%E8%A3%85%EF%BC%88%E4%B8%80%EF%BC%89/">消息中间件——RabbitMQ—介绍与安装（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E4%B8%80%E5%AF%B9%E4%B8%80%E3%80%81%E4%B8%80%E5%AF%B9%E5%A4%9A%E3%80%81%E5%A4%9A%E5%AF%B9%E5%A4%9A%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89/">Mybatis——一对一、一对多、多对多（十一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E6%95%B4%E5%90%88Encache%EF%BC%88%E5%8D%81%EF%BC%89/">Mybatis——整合Encache（十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E7%BC%93%E5%AD%98%EF%BC%88%E4%B9%9D%EF%BC%89/">Mybatis——缓存（九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD%EF%BC%88%E5%85%AB%EF%BC%89/">Mybatis——延迟加载（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E5%8A%A8%E6%80%81sql%EF%BC%88%E4%B8%83%EF%BC%89/">Mybatis——动态sql（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E6%98%A0%E5%B0%84%EF%BC%88%E5%85%AD%EF%BC%89/">Mybatis——映射（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E9%85%8D%E7%BD%AE%EF%BC%88%E4%BA%94%EF%BC%89/">Mybatis——配置（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94mapper%E4%BB%A3%E7%90%86%E6%96%B9%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89/">Mybatis——mapper代理方法（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/08/Mybatis%E2%80%94%E2%80%94%E5%BC%80%E5%8F%91Dao%E6%96%B9%E6%B3%95%EF%BC%88%E4%BA%8C%EF%BC%89/">Mybatis——开发Dao方法（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/08/Mybatis%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0%EF%BC%88%E4%B8%80%EF%BC%89/">Mybatis——概述（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E7%BC%93%E5%AD%98%E4%BA%94%E5%A4%A7%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%88%E4%BA%8C%E5%8D%81%E5%9B%9B%EF%BC%89/">消息中间件——Redis—缓存五大问题的解决方案（二十四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%88%86%E5%B8%83%E5%BC%8FSession%E5%85%B1%E4%BA%AB%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%89%EF%BC%89/">消息中间件——Redis—分布式Session共享（二十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%AE%9E%E6%88%98%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%E5%8D%81%E4%BA%8C%EF%BC%89/">消息中间件——Redis—实战学习（二十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/SpringBoot%E2%80%94%E2%80%94redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%AE%9E%E7%8E%B0%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%89%EF%BC%89/">SpringBoot——redis分布式锁实现（二十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%BD%9C%E4%B8%BA%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E8%A6%81%E9%9D%A2%E4%B8%B4%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%80%EF%BC%89/">消息中间件——Redis—作为分布式锁要面临的问题（二十一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%EF%BC%88%E4%BA%8C%E5%8D%81%EF%BC%89/">消息中间件——Redis—分布式锁（二十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/SpringBoot%E2%80%94%E2%80%94redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97list%EF%BC%88%E4%BA%8C%E5%8D%81%E4%BA%8C%EF%BC%89/">SpringBoot——redis消息队列list（二十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88%E5%8D%81%E4%B9%9D%EF%BC%89/">消息中间件——Redis—消息队列（十九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/SpringBoot%E2%80%94%E2%80%94redis%E5%8F%91%E5%B8%83%E4%B8%8E%E8%AE%A2%E9%98%85%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%80%EF%BC%89/">SpringBoot——redis发布与订阅（二十一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/23/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%B6%88%E6%81%AF%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85%EF%BC%88%E5%8D%81%E5%85%AB%EF%BC%89/">消息中间件——Redis—消息发布和订阅（十八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/22/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E9%98%BB%E5%A1%9E%E5%88%86%E6%9E%90%EF%BC%88%E5%8D%81%E4%B8%83%EF%BC%89/">消息中间件——Redis—阻塞分析（十七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/22/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E3%80%81%E6%81%A2%E5%A4%8D%E4%B8%8E%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%EF%BC%88%E5%8D%81%E5%85%AD%EF%BC%89/">消息中间件——Redis—数据备份、恢复与数据迁移（十六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/19/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/">消息中间件——Redis—内存淘汰策略（十五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/15/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%EF%BC%88%E5%8D%81%E5%9B%9B%EF%BC%89/">消息中间件——Redis—哨兵机制（十四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/15/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%EF%BC%88%E5%8D%81%E4%B8%89%EF%BC%89/">消息中间件——Redis—主从复制（十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/15/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E9%9B%86%E7%BE%A4%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87%EF%BC%88%E5%8D%81%E4%BA%8C%EF%BC%89/">消息中间件——Redis—集群及数据分片（十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%BA%8B%E5%8A%A1%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89/">消息中间件——Redis—事务（十一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%88%E5%8D%81%EF%BC%89/">消息中间件——Redis—持久化（十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E8%BE%93%E5%85%A5%E7%BC%93%E5%86%B2%E5%8C%BA%E3%80%81%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%88%E4%B9%9D%EF%BC%89/">消息中间件——Redis—输入缓冲区、输出缓冲区（九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E7%BA%BF%E7%A8%8B%E6%B1%A0%EF%BC%88%E5%85%AB%EF%BC%89/">消息中间件——Redis—线程池（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%B8%B8%E7%94%A8%E7%9A%84%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%88%E4%B8%83%EF%BC%89/">消息中间件——Redis—常用的客户端（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%E9%80%9A%E4%BF%A1%EF%BC%88%E5%85%AD%EF%BC%89/">消息中间件——Redis—客户端与服务端的通信（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%88%E4%BA%94%EF%BC%89/">消息中间件——Redis—常用命令（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E5%9B%9B%EF%BC%89/">消息中间件——Redis—基础数据结构（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%BB%A3%E7%A0%81%E4%BD%BF%E7%94%A8%EF%BC%88%E4%B8%89%EF%BC%89/">消息中间件——Redis—代码使用（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/09/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%85%A5%E9%97%A8%EF%BC%88%E4%BA%8C%EF%BC%89/">消息中间件——Redis—入门（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/09/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E6%B6%88%E6%81%AF%E9%AB%98%E5%8F%AF%E7%94%A8%EF%BC%88%E5%85%AB%EF%BC%89/">消息中间件——Kafka—消息高可用（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E9%AB%98%E5%90%9E%E5%90%90%E9%87%8F%E4%B8%8E%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%88%E4%B8%83%EF%BC%89/">消息中间件——Kafka—高吞吐量与持久化（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94offsite%E9%87%8F%E7%9A%84%E7%BB%B4%E6%8A%A4%EF%BC%88%E5%85%AD%EF%BC%89/">消息中间件——Kafka—offsite量的维护（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94Consumer%20Group%E8%A7%A3%E6%9E%90%EF%BC%88%E4%BA%94%EF%BC%89/">消息中间件——Kafka—Consumer Group解析（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E6%B6%88%E8%B4%B9%E8%80%85%EF%BC%88%E5%9B%9B%EF%BC%89/">消息中间件——Kafka—消费者（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E7%94%9F%E4%BA%A7%E8%80%85%EF%BC%88%E4%B8%89%EF%BC%89/">消息中间件——Kafka—生产者（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E5%85%B3%E8%81%94Zookeeper%EF%BC%88%E4%BA%8C%EF%BC%89/">消息中间件——Kafka—关联Zookeeper（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/04/SpringBoot%E2%80%94%E2%80%94redis%E3%80%81SpringCache%EF%BC%88%E4%BA%8C%E5%8D%81%EF%BC%89/">SpringBoot——redis、SpringCache（二十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/SpringBoot%E2%80%94%E2%80%94redis%EF%BC%88%E5%8D%81%E4%B9%9D%EF%BC%89/">SpringBoot——redis（十九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%AE%89%E8%A3%85%EF%BC%88%E4%B8%80%EF%BC%89/">消息中间件——Redis——安装（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/27/docker%E2%80%94%E2%80%94centos%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/">docker——centos容器安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/27/docker%E2%80%94%E2%80%94springboot%E3%80%81centos%E3%80%81mysql%E9%83%A8%E7%BD%B2/">docker——springboot、centos、mysql部署</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/22/SpringBoot%E2%80%94%E2%80%94spring%20cache%EF%BC%88%E5%8D%81%E5%85%AB%EF%BC%89/">SpringBoot——spring cache（十八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/21/SpringBoot%E2%80%94%E2%80%94%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90-mybatis%EF%BC%88%E5%8D%81%E4%B8%83%EF%BC%89/">SpringBoot——多数据源-mybatis（十七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/21/SpringBoot%E2%80%94%E2%80%94%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90-JPA%EF%BC%88%E5%8D%81%E5%85%AD%EF%BC%89/">SpringBoot——多数据源-JPA（十六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94Mybatis-%E6%B3%A8%E8%A7%A3%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/">SpringBoot——Mybatis-注解（十五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94Mybatis-xml%EF%BC%88%E5%8D%81%E5%9B%9B%EF%BC%89/">SpringBoot——Mybatis-xml（十四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94JPA%EF%BC%88%E5%8D%81%E4%B8%89%EF%BC%89/">SpringBoot——JPA（十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/docker%E2%80%94%E2%80%94Mysql%E7%9A%84%E5%AE%89%E8%A3%85/">docker——Mysql的安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94JDBC%EF%BC%88%E5%8D%81%E4%BA%8C%EF%BC%89/">SpringBoot——JDBC（十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/19/SpringBoot%E2%80%94%E2%80%94%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89/">SpringBoot——异常处理（）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/19/SpringBoot%E2%80%94%E2%80%94%E8%BF%87%E6%BB%A4%E5%99%A8%E3%80%81%E7%9B%91%E5%90%AC%E5%99%A8%EF%BC%88%E5%8D%81%EF%BC%89/">SpringBoot——过滤器、监听器（十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/19/SpringBoot%E2%80%94%E2%80%94%E5%88%87%E9%9D%A2%EF%BC%88%E4%B9%9D%EF%BC%89/">SpringBoot——切面（九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/18/SpringBoot%E2%80%94%E2%80%94%E6%8B%A6%E6%88%AA%E5%99%A8%EF%BC%88%E5%85%AB%EF%BC%89/">SpringBoot——拦截器（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/18/%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j/">日志——Log4j</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/14/SpringBoot%E2%80%94%E2%80%94%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E%EF%BC%88%E4%B8%83%EF%BC%89/">SpringBoot——模板引擎（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/14/SpringBoot%E2%80%94%E2%80%94%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%EF%BC%88%E5%85%AD%EF%BC%89/">SpringBoot——静态资源（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/13/SpringBoot%E2%80%94%E2%80%94%E6%97%A5%E5%BF%97%EF%BC%88%E4%BA%94%EF%BC%89/">SpringBoot——日志（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/13/SpringBoot%E2%80%94%E2%80%94%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%EF%BC%88%E5%9B%9B%EF%BC%89/">SpringBoot——多环境配置（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%88%E4%B8%89%EF%BC%89/">SpringBoot——配置文件（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%EF%BC%88%E4%BA%8C%EF%BC%89/">SpringBoot——单元测试（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94Hello%E5%85%A5%E9%97%A8%EF%BC%88%E4%B8%80%EF%BC%89/">SpringBoot——Hello入门（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/30/SpringBoot%E2%80%94%E2%80%94%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E5%8E%9F%E7%90%86/">SpringBoot——自动装配原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/27/Spring%E2%80%94%E2%80%94%E4%BA%8B%E5%8A%A1%E7%90%86%E8%AE%BA/">Spring——事务理论</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/27/Spring%E2%80%94%E2%80%94Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Spring——Bean的生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/26/Spring%E2%80%94%E2%80%94%E6%B3%A8%E8%A7%A3%E5%A4%A7%E5%85%A8/">Spring——注解大全</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/26/Spring%E2%80%94%E2%80%94MVC%E7%90%86%E8%AE%BA%E4%B8%8B/">Spring——MVC理论下</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/24/Spring%E2%80%94%E2%80%94MVC%E7%90%86%E8%AE%BA%E4%B8%8A/">Spring——MVC理论上</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/21/JAVA%E4%BB%A3%E7%90%86/">java代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/20/Spring%E2%80%94%E2%80%94ApplicationContxt%E8%A7%A3%E8%AF%BB/">Spring——ApplicationContxt解读</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/20/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B8%8B/">Spring——IOC源码解析下</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/16/Spring%E2%80%94%E2%80%94AOP%E7%90%86%E8%AE%BA/">Spring——AOP理论</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/15/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89/">Spring——IOC源码解析（注解示）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/13/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B8%8A/">Spring——IOC源码解析上</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/13/Spring%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/">Spring——概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/08/JVM%E2%80%94%E2%80%94java8%E6%B0%B8%E4%B9%85%E4%BB%A3%E5%88%B0%E5%85%83%E7%A9%BA%E9%96%93/">JVM——java8永久代到元空間</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/07/JVM%E2%80%94%E2%80%94GC%E5%88%86%E6%9E%90/">JVM——GC分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/">JVM——命令调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">JVM——垃圾回收</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">JVM——类的加载机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/">JVM——内存结构</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/">JVM——学习导读</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%8D%81%EF%BC%89%E2%80%94%E2%80%94%E6%80%BB%E7%BB%93/">数据结构与算法（十）——总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E9%AB%98%E5%8F%AF%E7%94%A8%E6%89%8B%E6%AE%B5%EF%BC%88%E4%B8%83%EF%BC%89/">JAVA并发——高并发之高可用手段（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8%EF%BC%88%E5%85%AD%EF%BC%89/">JAVA并发——高并发之数据库分库、切库、分表（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD%EF%BC%88%E5%85%AD%EF%BC%89/">JAVA并发——高并发之服务降级和熔断（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E5%BA%94%E7%94%A8%E9%99%90%E6%B5%81%EF%BC%88%E4%BA%94%EF%BC%89/">JAVA并发——高并发之应用限流（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E5%BA%94%E7%94%A8%E6%8B%86%E5%88%86%EF%BC%88%E5%9B%9B%EF%BC%89/">JAVA并发——高并发之应用拆分（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E4%BF%A1%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88%E4%B8%89%EF%BC%89/">JAVA并发——高并发之信息队列（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E7%BC%93%E5%AD%98%EF%BC%88%E4%BA%8C%EF%BC%89/">JAVA并发——高并发之缓存（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%89%A9%E5%AE%B9%EF%BC%88%E4%B8%80%EF%BC%89/">JAVA并发——高并发之扩容（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/">JAVA并发——高并发与高可用的设计原则</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/27/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E6%B1%A0/">JAVA并发——线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/19/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B/">JAVA并发——线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/19/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E6%AD%BB%E9%94%81/">JAVA并发——死锁</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94ReetrantLock/">JAVA并发——ReetrantLock</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94synchronized/">JAVA并发——synchronized</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%94%81/">JAVA并发——锁</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/">JAVA并发——并发容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%90%8C%E6%AD%A5%E5%AE%B9%E5%99%A8/">JAVA并发——同步容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%AE%89%E5%85%A8%E7%B1%BB%E5%92%8C%E5%86%99%E6%B3%95/">JAVA并发——不安全类和写法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E5%B0%81%E9%97%AD/">JAVA并发——线程封闭</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/">JAVA并发——不可变对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/">JAVA并发——安全发布对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">JAVA并发——线程安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F/">JAVA并发——并发模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/11/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80/">JAVA并发——基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/11/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E8%AF%BE%E7%A8%8B%E5%AF%BC%E5%AD%A6/">JAVA并发——课程导学</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/04/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ConcurrentHashMap/">容器——ConcurrentHashMap</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap/">容器——HashMap</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/">JAVA容器——LinkedList</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/">容器——ArrayList</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/">容器——概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B9%9D%EF%BC%89%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A0/">数据结构与算法（九）——搜素</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%85%AB%EF%BC%89%E2%80%94%E2%80%94%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">数据结构与算法（八）——排序算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%83%EF%BC%89%E2%80%94%E2%80%94%E5%A0%86%E3%80%81%E5%93%88%E5%B8%8C%E8%A1%A8%E3%80%81%E5%9B%BE/">数据结构与算法（七）——堆、哈希表、图</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%85%AD%EF%BC%89%E2%80%94%E2%80%94%E6%A0%91/">数据结构与算法（六）——树</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%BA%94%EF%BC%89%E2%80%94%E2%80%94%E9%98%9F%E5%88%97/">数据结构与算法（五）——队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/17/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%9B%9B%EF%BC%89%E2%80%94%E2%80%94%E6%A0%88/">数据结构与算法（四）——栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89%E2%80%94%E2%80%94%E9%93%BE%E8%A1%A8/">数据结构与算法（三）——链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%E6%95%B0%E7%BB%84/">数据结构与算法（二）——数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B/">数据结构和算法（一）——简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/08/%E8%BF%90%E7%BB%B4%E2%80%94%E2%80%94CPU%E9%A3%99%E5%8D%87%E5%88%B0100-%E7%9A%84%E5%8E%9F%E5%9B%A0/">运维——CPU飙升到100%的原因</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/16/Linux%E2%80%94%E2%80%94shell%E8%84%9A%E6%9C%AC%EF%BC%88%E4%BA%8C%EF%BC%89/">Linux——shell脚本（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/16/Linux%E2%80%94%E2%80%94%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%EF%BC%88%E4%B8%80%EF%BC%89/">Linux——定时任务（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/05/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E5%85%A5%E9%97%A8%EF%BC%88%E4%B8%80%EF%BC%89/">消息中间件——Kafka——入门（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/05/Springboot%E2%80%94%E2%80%94kafka%EF%BC%88%E4%BA%8C%E5%8D%81%E4%BA%94%EF%BC%89/">Springboot——kafka（二十五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/04/docker%E2%80%94%E2%80%94Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/">docker——Kafka的安装使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89/">springcloud实战之Config（4）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%883%EF%BC%89/">springcloud实战之Config（3）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/Mybatis%E2%80%94%E2%80%94%20#%20%E5%92%8C%20$%20%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%88%E5%9B%9B%EF%BC%89/">Mybatis—— # 和 $ 的区别（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/29/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89/">springcloud实战之Config（2）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/28/docker%E2%80%94%E2%80%94%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%89%E8%A3%85%EF%BC%88win10%EF%BC%89/">docker——简单介绍与安装（win10）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E2%80%94%E2%80%94Eureka%E4%B8%8EZookeeper%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%88%E4%BA%8C%EF%BC%89/">微服务——Eureka与Zookeeper的区别（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%881%EF%BC%89/">springcloud实战之Config（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BConfig/">springcloud解析之Config</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BZuul/">springcloud实战之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BZuul/">springcloud解析之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%882%EF%BC%89/">springcloud实战之Hystrix（2）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%881%EF%BC%89/">springcloud实战之Hystrix（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/">springcloud解析之Hystrix</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BEuraka/">springcloud实战之Euraka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BEureka/">springcloud解析之Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/">springcloud实战之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/">springcloud解析之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BRibbon/">springcloud实战之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BRibbon/">springcloud解析之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0%EF%BC%88%E4%B8%80%EF%BC%89/">微服务——概述（一）</a></li></ul>
+
+   
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2019-2020 南有乔木
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+            
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
