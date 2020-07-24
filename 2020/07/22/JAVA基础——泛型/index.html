@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="南有乔木" />
+
+
+
+<meta name="description" content="java泛型的理解和应用">
+<meta name="keywords" content="java 泛型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA基础——泛型">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;07&#x2F;22&#x2F;JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E6%B3%9B%E5%9E%8B&#x2F;index.html">
+<meta property="og:site_name" content="南有乔木的技术博客专栏">
+<meta property="og:description" content="java泛型的理解和应用">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-07-24T05:36:26.240Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="南有乔木的技术博客专栏" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>JAVA基础——泛型 | 南有乔木的技术博客专栏</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/sex.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">南有乔木</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">学习笔记</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">大狗哥</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/1150887961@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%92%8C/" rel="tag">$和#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-HTTP%E6%93%8D%E4%BD%9C/" rel="tag">Elasticsearch HTTP操作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%89%E8%A3%85/" rel="tag">Elasticsearch 介绍与安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-%E4%BD%BF%E7%94%A8/" rel="tag">Elasticsearch 使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-%E5%88%86%E5%B8%83%E5%BC%8F%E5%8E%9F%E7%90%86/" rel="tag">Elasticsearch 分布式原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%8E%9F%E7%90%86/" rel="tag">Elasticsearch 搜索引擎原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-Dao/" rel="tag">Mybatis Dao</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-Encache/" rel="tag">Mybatis Encache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-mapper/" rel="tag">Mybatis mapper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E5%8A%A8%E6%80%81sql/" rel="tag">Mybatis 动态sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD/" rel="tag">Mybatis 延迟加载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B/" rel="tag">Mybatis 数据模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E6%98%A0%E5%B0%84/" rel="tag">Mybatis 映射</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E6%A6%82%E8%BF%B0/" rel="tag">Mybatis 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E7%BC%93%E5%AD%98/" rel="tag">Mybatis 缓存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mybatis-%E9%85%8D%E7%BD%AE/" rel="tag">Mybatis 配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis-%E5%88%86%E5%B8%83%E5%BC%8Fsession/" rel="tag">Redis 分布式session</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/condig%E5%AE%9E%E6%88%98-%E6%9C%8D%E5%8A%A1%E5%8C%96%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">condig实战 服务化与高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/" rel="tag">config 配置中心</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%88%9D%E4%BD%93%E9%AA%8C/" rel="tag">config实战 初体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%8A%A8%E6%80%81%E5%88%B7%E6%96%B0/" rel="tag">config实战 动态刷新</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/config%E5%AE%9E%E6%88%98-%E5%8A%A8%E6%80%81%E5%88%B7%E6%96%B0%EF%BC%88Bus%EF%BC%89/" rel="tag">config实战 动态刷新（Bus）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cpu/" rel="tag">cpu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker-kafka%E5%AE%89%E8%A3%85/" rel="tag">docker kafka安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker-%E5%AE%9E%E6%88%98/" rel="tag">docker 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/" rel="tag">eureka 服务发现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka%E5%AE%9E%E6%88%98/" rel="tag">eureka实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feign-%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%8F%A3%E5%8C%96/" rel="tag">feign 服务接口化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feign%E5%AE%9E%E6%88%98/" rel="tag">feign实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hystrix-%E7%86%94%E6%96%AD%E5%99%A8/" rel="tag">hystrix 熔断器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hystrix%E5%AE%9E%E6%88%98-%E5%8D%95%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7/" rel="tag">hystrix实战 单应用监控</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java-IO/" rel="tag">java IO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java-%E4%BB%A3%E7%90%86/" rel="tag">java 代理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java-%E5%8F%8D%E5%B0%84/" rel="tag">java 反射</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java-%E5%BC%82%E5%B8%B8/" rel="tag">java 异常</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java-%E6%B3%9B%E5%9E%8B/" rel="tag">java 泛型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80/" rel="tag">java并发 基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80-%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F/" rel="tag">java并发 基础 并发模拟</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E5%9F%BA%E7%A1%80-%E8%AF%BE%E7%A8%8B%E5%AF%BC%E5%AD%A6/" rel="tag">java并发 基础 课程导学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/" rel="tag">java并发 线程安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-ReetrantLock/" rel="tag">java并发 线程安全 ReetrantLock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-synchronized/" rel="tag">java并发 线程安全 synchronized</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/" rel="tag">java并发 线程安全 不可变对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E4%B8%8D%E5%AE%89%E5%85%A8%E7%B1%BB%E5%92%8C%E5%86%99%E6%B3%95/" rel="tag">java并发 线程安全 不安全类和写法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%90%8C%E6%AD%A5%E5%AE%B9%E5%99%A8/" rel="tag">java并发 线程安全 同步容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/" rel="tag">java并发 线程安全 安全发布对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/" rel="tag">java并发 线程安全 并发容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E6%AD%BB%E9%94%81/" rel="tag">java并发 线程安全 死锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E7%BA%BF%E7%A8%8B%E5%B0%81%E9%97%AD/" rel="tag">java并发 线程安全 线程封闭</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8-%E9%94%81/" rel="tag">java并发 线程安全 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-GC%E5%88%86%E6%9E%90/" rel="tag">jvm GC分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-java8/" rel="tag">jvm java8</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" rel="tag">jvm 内存结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/" rel="tag">jvm 命令调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="tag">jvm 垃圾回收</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/" rel="tag">jvm 学习导读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm-%E7%B1%BB%E5%8A%A0%E8%BD%BD/" rel="tag">jvm 类加载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-zookeeper/" rel="tag">kafka zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E5%81%8F%E7%A7%BB%E9%87%8F/" rel="tag">kafka 偏移量</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E6%B6%88%E6%81%AF%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">kafka 消息高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84/" rel="tag">kafka 消费者组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E7%94%9F%E4%BA%A7%E8%80%85/" rel="tag">kafka 生产者</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka-%E9%AB%98%E5%90%9E%E5%90%90%E9%87%8F%E5%8F%8A%E6%8C%81%E4%B9%85%E5%8C%96%E6%B6%88%E6%81%AF/" rel="tag">kafka 高吞吐量及持久化消息</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka%E5%85%A5%E9%97%A8/" rel="tag">kafka入门</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka%E6%B6%88%E8%B4%B9%E8%80%85/" rel="tag">kafka消费者</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-shell/" rel="tag">linux shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">linux 定时任务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-pom/" rel="tag">maven pom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E4%BB%93%E5%BA%93/" rel="tag">maven 仓库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E4%BE%9D%E8%B5%96%E5%86%B2%E7%AA%81/" rel="tag">maven 依赖冲突</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E5%91%BD%E4%BB%A4%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE/" rel="tag">maven 命令构建项目</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E5%BC%95%E5%85%A5%E5%A4%96%E9%83%A8%E4%BE%9D%E8%B5%96/" rel="tag">maven 引入外部依赖</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E6%8F%92%E4%BB%B6/" rel="tag">maven 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E6%9E%84%E5%BB%BA%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" rel="tag">maven 构建生命周期</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E6%A6%82%E8%BF%B0/" rel="tag">maven 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven-%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/" rel="tag">maven 自动化部署</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E4%BA%8B%E5%8A%A1/" rel="tag">redis 事务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%85%A5%E9%97%A8/" rel="tag">redis 入门</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" rel="tag">redis 分布式锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E9%97%AE%E9%A2%98/" rel="tag">redis 分布式锁问题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">redis 基础数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%89%E8%A3%85/" rel="tag">redis 安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%9E%E6%88%98/" rel="tag">redis 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%A2%E6%88%B7%E7%AB%AF/" rel="tag">redis 客户端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%E9%80%9A%E4%BF%A1/" rel="tag">redis 客户端与服务端的通信</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%8C%81%E4%B9%85%E5%8C%96/" rel="tag">redis 持久化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E3%80%81%E6%81%A2%E5%A4%8D%E4%B8%8E%E8%BF%81%E7%A7%BB/" rel="tag">redis 数据备份、恢复与迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%B6%88%E6%81%AF%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/" rel="tag">redis 消息发布和订阅</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="tag">redis 消息队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" rel="tag">redis 淘汰策略</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E7%BA%BF%E7%A8%8B%E6%B1%A0/" rel="tag">redis 线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E7%BC%93%E5%AD%98%E4%BA%94%E5%A4%A7%E9%97%AE%E9%A2%98/" rel="tag">redis 缓存五大问题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2%E5%8C%BA/" rel="tag">redis 输入输出缓冲区</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E9%98%BB%E5%A1%9E%E5%88%86%E6%9E%90/" rel="tag">redis 阻塞分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis-%E9%9B%86%E7%BE%A4%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87/" rel="tag">redis 集群及数据分片</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reids-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" rel="tag">reids 主从复制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" rel="tag">ribbon 负载均衡</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon%E5%AE%9E%E6%88%98/" rel="tag">ribbon实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ribbon%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3/" rel="tag">ribbon服务网关</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sprinboot-%E5%AE%9E%E6%88%98/" rel="tag">sprinboot 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-AOP/" rel="tag">spring AOP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-ApplicationContext/" rel="tag">spring ApplicationContext</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" rel="tag">spring Bean的生命周期</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-IOC/" rel="tag">spring IOC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-MVC/" rel="tag">spring MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E4%BA%8B%E5%8A%A1/" rel="tag">spring 事务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%A6%82%E8%BF%B0/" rel="tag">spring 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%B3%A8%E8%A7%A3/" rel="tag">spring 注解</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-%E6%B3%A8%E8%A7%A3%E5%BC%8F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" rel="tag">spring 注解式源码解析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot-%E5%8E%9F%E7%90%86/" rel="tag">springboot 原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot-%E5%AE%9E%E6%88%98/" rel="tag">springboot 实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" rel="tag">tomcat 性能优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat-%E8%A7%A3%E6%9E%90/" rel="tag">tomcat 解析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat-%E9%85%8D%E7%BD%AE/" rel="tag">tomcat 配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zuul%E5%AE%9E%E6%88%98/" rel="tag">zuul实战</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%8B%E7%BB%8D-%E5%AE%89%E8%A3%85/" rel="tag">介绍 安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E5%BA%94%E7%94%A8%E7%9B%91%E6%8E%A7-turbine/" rel="tag">多应用监控 turbine</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8-ArrayList/" rel="tag">容器 ArrayList</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8-ConcurrentHashMap/" rel="tag">容器 ConcurrentHashMap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8-HashMap/" rel="tag">容器 HashMap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8-LinkedList/" rel="tag">容器 LinkedList</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8-%E6%A6%82%E8%BF%B0/" rel="tag">容器 概述</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/" rel="tag">微服务 服务发现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D/" rel="tag">微服务介绍</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86%E3%80%81%E5%93%88%E5%B8%8C%E8%A1%A8%E3%80%81%E5%9B%BE/" rel="tag">数据结构 堆、哈希表、图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%95%B0%E7%BB%84/" rel="tag">数据结构 数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%88/" rel="tag">数据结构 栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91/" rel="tag">数据结构 树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%93%BE%E8%A1%A8/" rel="tag">数据结构 链表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%98%9F%E5%88%97/" rel="tag">数据结构 队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E7%AE%80%E4%BB%8B/" rel="tag">数据结构与算法 简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%97%A5%E5%BF%97-Log4j/" rel="tag">日志 Log4j</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/" rel="tag">算法 排序</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95-%E6%90%9C%E7%B4%A2/" rel="tag">算法 搜索</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E5%BA%94%E7%94%A8%E6%8B%86%E5%88%86/" rel="tag">高并发 应用拆分</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E5%BA%94%E7%94%A8%E9%99%90%E6%B5%81/" rel="tag">高并发 应用限流</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%89%A9%E5%AE%B9/" rel="tag">高并发 扩容</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8/" rel="tag">高并发 数据库分库、切库、分表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD/" rel="tag">高并发 服务降级和熔断</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="tag">高并发 消息队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E7%BC%93%E5%AD%98/" rel="tag">高并发 缓存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" rel="tag">高并发 设计原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91-%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag">高并发 高可用</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/" target="_blank" rel="noopener">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/" target="_blank" rel="noopener">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">南有乔木</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/sex.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">南有乔木</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">学习笔记</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">大狗哥</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/1150887961@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article
+  id="post-JAVA基础——泛型"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+>
+  
+  <div class="article-meta">
+    <a href="/2020/07/22/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E6%B3%9B%E5%9E%8B/" class="article-date">
+      <time datetime="2020-07-22T01:24:51.000Z" itemprop="datePublished">2020-07-22</time>
+</a>
+
+
+  </div>
+  
+  <div class="article-inner">
+    
+    <input type="hidden" class="isFancy" />
+     
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      JAVA基础——泛型
+    </h1>
+  
+ 
+    </header>
+    
+    <div class="article-info article-info-post">
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/JAVA/">JAVA</a>
+    </div>
+
+ 
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java-%E6%B3%9B%E5%9E%8B/" rel="tag">java 泛型</a></li></ul>
+    </div>
+
+      <div class="clearfix"></div>
+    </div>
+     
+    <div class="article-entry" itemprop="articleBody">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>泛型就是编写模板代码来适应任意类型；</p>
+<p>泛型的好处是使用时不必对类型进行强制转换，它通过编译器对类型进行检查；</p>
+<p>如 <code>ArrayList</code> 内部就是一个 Object[] 数组，配合存储一个当前分配的长度，就可以充当“可变数组”：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayList</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object[] array;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Object e)</span> </span>&#123;...&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;...&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果用上述ArrayList存储String类型，会有这么几个缺点：</p>
+<ul>
+<li>需要强制转型；</li>
+<li>不方便，易出错。</li>
+</ul>
+<p>我们也不可能为了单独数据类型创建ArrayList,此时就需要利用泛型，比如我们的ArrayList可以这么写：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayList</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T[] array;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(T e)</span> </span>&#123;...&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;...&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>T</code> 可以是任何class。这样一来，我们就实现了：编写一次模版，可以创建任意类型的ArrayList：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建可以存储String的ArrayList:</span></span><br><span class="line">ArrayList&lt;String&gt; strList = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line"><span class="comment">// 创建可以存储Float的ArrayList:</span></span><br><span class="line">ArrayList&lt;Float&gt; floatList = <span class="keyword">new</span> ArrayList&lt;Float&gt;();</span><br><span class="line"><span class="comment">// 创建可以存储Person的ArrayList:</span></span><br><span class="line">ArrayList&lt;Person&gt; personList = <span class="keyword">new</span> ArrayList&lt;Person&gt;();</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用泛型"><a href="#使用泛型" class="headerlink" title="使用泛型"></a>使用泛型</h1><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>使用泛型时，把泛型参数<T>替换为需要的class类型，例如：ArrayList<String>，ArrayList<Number>等；</li>
+<li>可以省略编译器能自动推断出的类型，例如：List<String> list = new ArrayList&lt;&gt;();</li>
+<li>不指定泛型参数类型时，编译器会给出警告，且只能将<T>视为Object类型；</li>
+</ul>
+<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>使用ArrayList时，如果不定义泛型类型时，泛型类型实际上就是Object：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 编译器警告:</span></span><br><span class="line">List list = <span class="keyword">new</span> ArrayList();</span><br><span class="line">list.add(<span class="string">"Hello"</span>);</span><br><span class="line">list.add(<span class="string">"World"</span>);</span><br><span class="line">String first = (String) list.get(<span class="number">0</span>);</span><br><span class="line">String second = (String) list.get(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>此时，只能把<T>当作Object使用，没有发挥泛型的优势。</p>
+<p>当我们定义泛型类型<String>后，List<T>的泛型接口变为强类型List<String>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 无编译器警告:</span></span><br><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">list.add(<span class="string">"Hello"</span>);</span><br><span class="line">list.add(<span class="string">"World"</span>);</span><br><span class="line"><span class="comment">// 无强制转型:</span></span><br><span class="line">String first = list.get(<span class="number">0</span>);</span><br><span class="line">String second = list.get(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>// 可以省略后面的Number，编译器可以自动推断泛型类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br></pre></td></tr></table></figure>
+
+<h1 id="泛型接口"><a href="#泛型接口" class="headerlink" title="泛型接口"></a>泛型接口</h1><h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>可以在接口中定义泛型类型，实现此接口的类必须实现正确的泛型类型。</p>
+<h2 id="举例-1"><a href="#举例-1" class="headerlink" title="举例"></a>举例</h2><p>除了ArrayList<T>使用了泛型，还可以在接口中使用泛型。例如，<code>Arrays.sort(Object[])</code> 可以对任意类型数组进行排序，但待排序的元素必须实现Comparable<T>这个泛型接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Comparable</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 返回-1: 当前实例比参数o小</span></span><br><span class="line"><span class="comment">     * 返回0: 当前实例与参数o相等</span></span><br><span class="line"><span class="comment">     * 返回1: 当前实例比参数o大</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(T o)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比如对String[] 排序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String[] ss = <span class="keyword">new</span> String[] &#123; <span class="string">"Orange"</span>, <span class="string">"Apple"</span>, <span class="string">"Pear"</span> &#125;;</span><br><span class="line">Arrays.sort(ss);</span><br><span class="line">System.out.println(Arrays.toString(ss));</span><br></pre></td></tr></table></figure>
+
+<pre><code>[Apple, Orange, Pear]</code></pre><p>这是因为String本身已经实现了Comparable<String>接口。如果换成我们自定义的Person类型试试：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Person[] ps = <span class="keyword">new</span> Person[] &#123;</span><br><span class="line">            <span class="keyword">new</span> Person(<span class="string">"Bob"</span>, <span class="number">61</span>),</span><br><span class="line">            <span class="keyword">new</span> Person(<span class="string">"Alice"</span>, <span class="number">88</span>),</span><br><span class="line">            <span class="keyword">new</span> Person(<span class="string">"Lily"</span>, <span class="number">75</span>),</span><br><span class="line">        &#125;;</span><br><span class="line">        Arrays.sort(ps);</span><br><span class="line">        System.out.println(Arrays.toString(ps));</span><br></pre></td></tr></table></figure>
+
+<p>运行程序，我们会得到 <code>ClassCastException</code>，即无法将Person转型为Comparable。我们修改代码，让Person实现Comparable<T>接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Person</span>&gt; </span>&#123;</span><br></pre></td></tr></table></figure>
+
+<p>运行上述代码，可以正确实现按name进行排序。</p>
+<p>也可以修改比较逻辑，例如，按score从高到低排序。请自行修改测试。</p>
+<h1 id="编写泛型"><a href="#编写泛型" class="headerlink" title="编写泛型"></a>编写泛型</h1><h2 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>编写泛型时，需要定义泛型类型<T>；</li>
+<li>静态方法不能引用泛型类型<T>，必须定义其他类型（例如<K>）来实现静态泛型方法；</li>
+<li>泛型可以同时定义多种类型，例如Map&lt;K, V&gt;。</li>
+</ul>
+<h2 id="举例-2"><a href="#举例-2" class="headerlink" title="举例"></a>举例</h2><p>原类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String first;</span><br><span class="line">    <span class="keyword">private</span> String last;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(String first, String last)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.first = first;</span><br><span class="line">        <span class="keyword">this</span>.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> first;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getLast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> last;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把特定类型String替换为T，并申明<T>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T first;</span><br><span class="line">    <span class="keyword">private</span> T last;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(T first, T last)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.first = first;</span><br><span class="line">        <span class="keyword">this</span>.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> first;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getLast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> last;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写泛型类时，要特别注意，泛型类型<T>不能用于静态方法。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T first;</span><br><span class="line">    <span class="keyword">private</span> T last;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(T first, T last)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.first = first;</span><br><span class="line">        <span class="keyword">this</span>.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getFirst</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getLast</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对静态方法使用&lt;T&gt;:</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Pair&lt;T&gt; <span class="title">create</span><span class="params">(T first, T last)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Pair&lt;T&gt;(first, last);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码会导致编译错误，我们无法在静态方法create()的方法参数和返回类型上使用泛型类型T。</p>
+<p>对于静态方法，我们可以单独改写为“泛型”方法，只需要使用另一个类型即可。对于上面的create()静态方法，我们应该把它改为另一种泛型类型，例如 <code>&lt;K&gt;</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T first;</span><br><span class="line">    <span class="keyword">private</span> T last;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(T first, T last)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.first = first;</span><br><span class="line">        <span class="keyword">this</span>.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getFirst</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getLast</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 静态泛型方法应该使用其他类型区分:</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;K&gt; <span class="function">Pair&lt;K&gt; <span class="title">create</span><span class="params">(K first, K last)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Pair&lt;K&gt;(first, last);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>泛型还可以定义多种类型。例如，我们希望Pair不总是存储两个类型一样的对象，就可以使用类型 <code>&lt;T, K&gt;</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span>&lt;<span class="title">T</span>, <span class="title">K</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T first;</span><br><span class="line">    <span class="keyword">private</span> K last;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(T first, K last)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.first = first;</span><br><span class="line">        <span class="keyword">this</span>.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getFirst</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> K <span class="title">getLast</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用的时候，需要指出两种类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Pair&lt;String, Integer&gt; p = <span class="keyword">new</span> Pair&lt;&gt;(<span class="string">"test"</span>, <span class="number">123</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Java标准库的 <code>Map&lt;K, V&gt;</code> 就是使用两种泛型类型的例子。它对Key使用一种类型，对Value使用另一种类型。</p>
+<h1 id="擦拭法"><a href="#擦拭法" class="headerlink" title="擦拭法"></a>擦拭法</h1><h2 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h2><p>Java的泛型是采用擦拭法实现的；</p>
+<p>擦拭法决定了泛型<T>：</p>
+<ul>
+<li>不能是基本类型，例如：int；</li>
+<li>不能获取带泛型类型的Class，例如：Pair<String>.class；</li>
+<li>不能判断带泛型类型的类型，例如：x instanceof Pair<String>；</li>
+<li>不能实例化T类型，例如：new T()。</li>
+</ul>
+<p>泛型方法要防止重复定义方法，例如：<code>public boolean equals(T obj)；</code></p>
+<p>子类可以获取父类的泛型类型 <code>&lt;T&gt;</code>。</p>
+<h2 id="举例-3"><a href="#举例-3" class="headerlink" title="举例"></a>举例</h2><p>Java语言的泛型实现方式是擦拭法（Type Erasure）。</p>
+<p>所谓擦拭法是指，<strong>虚拟机对泛型其实一无所知，所有的工作都是编译器做的。</strong></p>
+<p>例如，我们编写了一个泛型类Pair<T>，这是编译器看到的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T first;</span><br><span class="line">    <span class="keyword">private</span> T last;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(T first, T last)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.first = first;</span><br><span class="line">        <span class="keyword">this</span>.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> first;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getLast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> last;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而虚拟机并不能识别泛型，这是虚拟机执行的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object first;</span><br><span class="line">    <span class="keyword">private</span> Object last;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(Object first, Object last)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.first = first;</span><br><span class="line">        <span class="keyword">this</span>.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> first;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getLast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> last;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此，Java使用擦拭法实现泛型，导致了：</p>
+<ul>
+<li>编译器把类型<T>视为Object；</li>
+<li>编译器根据<T>实现安全的强制转型。</li>
+</ul>
+<p>使用泛型的时候，我们编写的代码也是编译器看到的代码,而虚拟机执行的代码并没有泛型。所以，Java的泛型是由编译器在编译时实行的，编译器内部永远把所有类型T视为Object处理，但是，在需要转型的时候，编译器会根据T的类型自动为我们实行安全地强制转型。</p>
+<p>了解了Java泛型的实现方式——擦拭法，我们就知道了Java泛型的局限：</p>
+<p>局限一：<T>不能是基本类型，例如int，因为实际类型是Object，Object类型无法持有基本类型：</p>
+<p>局限二：无法取得带泛型的Class。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Pair&lt;String&gt; p1 = <span class="keyword">new</span> Pair&lt;&gt;(<span class="string">"Hello"</span>, <span class="string">"world"</span>);</span><br><span class="line">        Pair&lt;Integer&gt; p2 = <span class="keyword">new</span> Pair&lt;&gt;(<span class="number">123</span>, <span class="number">456</span>);</span><br><span class="line">        Class c1 = p1.getClass();</span><br><span class="line">        Class c2 = p2.getClass();</span><br><span class="line">        System.out.println(c1==c2); <span class="comment">// true</span></span><br><span class="line">        System.out.println(c1==Pair<span class="class">.<span class="keyword">class</span>)</span>; <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pair</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T first;</span><br><span class="line">    <span class="keyword">private</span> T last;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(T first, T last)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.first = first;</span><br><span class="line">        <span class="keyword">this</span>.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> first;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getLast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> last;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为T是Object，我们对Pair<String>和Pair<Integer>类型获取Class时，获取到的是同一个Class，也就是Pair类的Class。</p>
+<p>换句话说，所有泛型实例，无论T的类型是什么，getClass()返回同一个Class实例，因为编译后它们全部都是Pair<Object>。</p>
+<p>局限三：无法判断带泛型的类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Pair&lt;Integer&gt; p = <span class="keyword">new</span> Pair&lt;&gt;(<span class="number">123</span>, <span class="number">456</span>);</span><br><span class="line"><span class="comment">// Compile error:</span></span><br><span class="line"><span class="keyword">if</span> (p <span class="keyword">instanceof</span> Pair&lt;String&gt;) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原因和前面一样，并不存在Pair<String>.class，而是只有唯一的Pair.class。</p>
+<p>局限四：不能实例化T类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T first;</span><br><span class="line">    <span class="keyword">private</span> T last;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Compile error:</span></span><br><span class="line">        first = <span class="keyword">new</span> T();</span><br><span class="line">        last = <span class="keyword">new</span> T();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码无法通过编译，因为构造方法的两行语句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">first = <span class="keyword">new</span> T();</span><br><span class="line">last = <span class="keyword">new</span> T();</span><br></pre></td></tr></table></figure>
+
+<p>擦拭后变成了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">first = <span class="keyword">new</span> Object();</span><br><span class="line">last = <span class="keyword">new</span> Object();</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，创建new Pair<String>()和创建new Pair<Integer>()就全部成了Object，显然编译器要阻止这种类型不对的代码。</p>
+<p>有些时候，一个看似正确定义的方法会无法通过编译。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(T t)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span> == t;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是因为，定义的equals(T t)方法实际上会被擦拭成equals(Object t)，而这个方法是继承自Object的，编译器会阻止一个实际上会变成覆写的泛型方法定义。</p>
+<p>一个类可以继承自一个泛型类。例如：父类的类型是Pair<Integer>，子类的类型是IntPair，可以这么继承：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IntPair</span> <span class="keyword">extends</span> <span class="title">Pair</span>&lt;<span class="title">Integer</span>&gt; </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用的时候，因为子类IntPair并没有泛型类型，所以，正常使用即可：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IntPair ip = <span class="keyword">new</span> IntPair(<span class="number">1</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在继承了泛型类型的情况下，子类可以获取父类的泛型类型。例如：IntPair可以获取到父类的泛型类型Integer。获取父类的泛型类型代码比较复杂：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.ParameterizedType;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Type;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Class&lt;IntPair&gt; clazz = IntPair<span class="class">.<span class="keyword">class</span></span>;</span><br><span class="line">        Type t = clazz.getGenericSuperclass();</span><br><span class="line">        <span class="keyword">if</span> (t <span class="keyword">instanceof</span> ParameterizedType) &#123;</span><br><span class="line">            ParameterizedType pt = (ParameterizedType) t;</span><br><span class="line">            Type[] types = pt.getActualTypeArguments(); <span class="comment">// 可能有多个泛型类型</span></span><br><span class="line">            Type firstType = types[<span class="number">0</span>]; <span class="comment">// 取第一个泛型类型</span></span><br><span class="line">            Class&lt;?&gt; typeClass = (Class&lt;?&gt;) firstType;</span><br><span class="line">            System.out.println(typeClass); <span class="comment">// Integer</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="extends-通配符"><a href="#extends-通配符" class="headerlink" title="extends 通配符"></a>extends 通配符</h1><h2 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a>总结</h2><p>使用类似 <code>&lt;? extends Number&gt;</code> 通配符作为方法参数时表示：</p>
+<ul>
+<li><p>方法内部可以调用获取Number引用的方法，例如：Number n = obj.getFirst();；</p>
+</li>
+<li><p>方法内部无法调用传入Number引用的方法（null除外），例如：obj.setFirst(Number n);。</p>
+</li>
+</ul>
+<p>即一句话总结：使用extends通配符表示可以读，不能写。</p>
+<p>使用类似 <code>&lt;T extends Number&gt;</code> 定义泛型类时表示：</p>
+<ul>
+<li>泛型类型限定为Number以及Number的子类。</li>
+</ul>
+<h2 id="举例-4"><a href="#举例-4" class="headerlink" title="举例"></a>举例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Pair&lt;Integer&gt; p = <span class="keyword">new</span> Pair&lt;&gt;(<span class="number">123</span>, <span class="number">456</span>);</span><br><span class="line">        <span class="keyword">int</span> n = add(p);</span><br><span class="line">        System.out.println(n);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(Pair&lt;Number&gt; p)</span> </span>&#123;</span><br><span class="line">        Number first = p.getFirst();</span><br><span class="line">        Number last = p.getLast();</span><br><span class="line">        <span class="keyword">return</span> first.intValue() + last.intValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pair</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T first;</span><br><span class="line">    <span class="keyword">private</span> T last;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(T first, T last)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.first = first;</span><br><span class="line">        <span class="keyword">this</span>.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> first;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getLast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> last;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>直接运行，会得到一个编译错误：</p>
+<pre><code>incompatible types: Pair&lt;Integer&gt; cannot be converted to Pair&lt;Number&gt;</code></pre><p>有没有办法使得方法参数接受Pair<Integer>？办法是有的，这就是使用 Pair&lt;? extends Number&gt; 使得方法接收所有泛型类型为Number或Number子类的Pair类型。我们把代码改写如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Pair&lt;Integer&gt; p = <span class="keyword">new</span> Pair&lt;&gt;(<span class="number">123</span>, <span class="number">456</span>);</span><br><span class="line">        <span class="keyword">int</span> n = add(p);</span><br><span class="line">        System.out.println(n);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(Pair&lt;? extends Number&gt; p)</span> </span>&#123;</span><br><span class="line">        Number first = p.getFirst();</span><br><span class="line">        Number last = p.getLast();</span><br><span class="line">        <span class="keyword">return</span> first.intValue() + last.intValue();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，给方法传入 <code>Pair&lt;Integer&gt;</code>类型时，它符合参数 <code>Pair&lt;? extends Number&gt;</code> 类型。这种使用&lt;? extends Number&gt;的泛型定义称之为上界通配符（Upper Bounds Wildcards），即把泛型类型T的上界限定在Number了。</p>
+<p>除了可以传入Pair<Integer>类型，我们还可以传入Pair<Double>类型，Pair<BigDecimal>类型等等，因为Double和BigDecimal都是Number的子类。</p>
+<p>我们再来考察一下Pair<T>的set方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Pair&lt;Integer&gt; p = <span class="keyword">new</span> Pair&lt;&gt;(<span class="number">123</span>, <span class="number">456</span>);</span><br><span class="line">        <span class="keyword">int</span> n = add(p);</span><br><span class="line">        System.out.println(n);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(Pair&lt;? extends Number&gt; p)</span> </span>&#123;</span><br><span class="line">        Number first = p.getFirst();</span><br><span class="line">        Number last = p.getLast();</span><br><span class="line">        p.setFirst(<span class="keyword">new</span> Integer(first.intValue() + <span class="number">100</span>));</span><br><span class="line">        p.setLast(<span class="keyword">new</span> Integer(last.intValue() + <span class="number">100</span>));</span><br><span class="line">        <span class="keyword">return</span> p.getFirst().intValue() + p.getFirst().intValue();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不出意外，我们会得到一个编译错误：</p>
+<pre><code>incompatible types: Integer cannot be converted to CAP#1
+where CAP#1 is a fresh type-variable:
+CAP#1 extends Number from capture of ? extends Number</code></pre><p>原因还在于擦拭法。如果我们传入的p是 <code>Pair&lt;Double&gt;</code>，显然它满足参数定义 <code>Pair&lt;? extends Number&gt;</code>，然而，<code>Pair&lt;Double&gt;</code>的 setFirst() 显然无法接受Integer类型。</p>
+<p>这就是 <code>&lt;? extends Number&gt;</code> 通配符的一个重要限制：方法参数签名 <code>setFirst(? extends Number)</code>无法传递任何Number类型给 <code>setFirst(? extends Number)</code>。</p>
+<p>这里唯一的例外是可以给方法参数传入null：</p>
+<p>使用extends限定<code>T</code>类型</p>
+<p>在定义泛型类型Pair<T>的时候，也可以使用extends通配符来限定T的类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Number</span>&gt; </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，我们只能定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Pair&lt;Number&gt; p1 = <span class="keyword">null</span>;</span><br><span class="line">Pair&lt;Integer&gt; p2 = <span class="keyword">new</span> Pair&lt;&gt;(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">Pair&lt;Double&gt; p3 = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>因为Number、Integer和Double都符合 <code>&lt;T extends Number&gt;</code>。</p>
+<p>非Number类型将无法通过编译：</p>
+<h1 id="super-通配符"><a href="#super-通配符" class="headerlink" title="super 通配符"></a>super 通配符</h1><h2 id="总结-5"><a href="#总结-5" class="headerlink" title="总结"></a>总结</h2><p>使用类似&lt;? super Integer&gt;通配符作为方法参数时表示：</p>
+<ul>
+<li>方法内部可以调用传入Integer引用的方法，例如：obj.setFirst(Integer n);；</li>
+<li>方法内部无法调用获取Integer引用的方法（Object除外），例如：Integer n = obj.getFirst();。</li>
+</ul>
+<p>即使用super通配符表示只能写不能读。</p>
+<h2 id="举例-5"><a href="#举例-5" class="headerlink" title="举例"></a>举例</h2><p>考察下面的set方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(Pair&lt;Integer&gt; p, Integer first, Integer last)</span> </span>&#123;</span><br><span class="line">    p.setFirst(first);</span><br><span class="line">    p.setLast(last);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>传入Pair<Integer>是允许的，但是传入Pair<Number>是不允许的。</p>
+<p>和extends通配符相反，这次，我们希望接受 <code>Pair&lt;Integer&gt;</code>类型，以及 <code>Pair&lt;Number&gt;</code>、<code>Pair&lt;Object&gt;</code>，因为Number和Object是Integer的父类，setFirst(Number)和setFirst(Object)实际上允许接受Integer类型。</p>
+<p>我们使用super通配符来改写这个方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(Pair&lt;? <span class="keyword">super</span> Integer&gt; p, Integer first, Integer last)</span> </span>&#123;</span><br><span class="line">    p.setFirst(first);</span><br><span class="line">    p.setLast(last);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再考察 <code>Pair&lt;? super Integer&gt;</code> 的getFirst()方法，它的方法签名实际上是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">? <span class="function"><span class="keyword">super</span> Integer <span class="title">getFirst</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>这里注意到我们无法使用Integer类型来接收getFirst()的返回值，即下面的语句将无法通过编译：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Integer x = p.getFirst();</span><br></pre></td></tr></table></figure>
+
+<p>因为如果传入的实际类型是Pair<Number>，编译器无法将Number类型转型为Integer。</p>
+<p>注意：虽然Number是一个抽象类，我们无法直接实例化它。但是，即便Number不是抽象类，这里仍然无法通过编译。此外，传入Pair<Object>类型时，编译器也无法将Object类型转型为Integer。</p>
+<p>唯一可以接收getFirst()方法返回值的是Object类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object obj = p.getFirst();</span><br></pre></td></tr></table></figure>
+
+<h1 id="对比extends和super通配符"><a href="#对比extends和super通配符" class="headerlink" title="对比extends和super通配符"></a>对比extends和super通配符</h1><p>我们再回顾一下extends通配符。作为方法参数，<code>&lt;? extends T&gt;</code> 类型和 <code>&lt;? super T&gt;</code> 类型的区别在于：</p>
+<ul>
+<li><code>&lt;? extends T&gt;</code>允许调用读方法T get()获取T的引用，但不允许调用写方法set(T)传入T的引用（传入null除外）；</li>
+<li><code>&lt;? super T&gt;</code>允许调用写方法set(T)传入T的引用，但不允许调用读方法T get()获取T的引用（获取Object除外）。</li>
+</ul>
+<p>一个是允许读不允许写，另一个是允许写不允许读。</p>
+<p>先记住上面的结论，我们来看Java标准库的Collections类定义的copy()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Collections</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 把src的每个元素复制到dest中:</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">copy</span><span class="params">(List&lt;? <span class="keyword">super</span> T&gt; dest, List&lt;? extends T&gt; src)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;src.size(); i++) &#123;</span><br><span class="line">            T t = src.get(i);</span><br><span class="line">            dest.add(t);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它的作用是把一个List的每个元素依次添加到另一个List中。它的第一个参数是 <code>List&lt;? super T&gt;</code>，表示目标List，第二个参数 <code>List&lt;? extends T&gt;</code>，表示要复制的List。我们可以简单地用for循环实现复制。在for循环中，我们可以看到，对于类型 <code>&lt;? extends T&gt;</code> 的变量src，我们可以安全地获取类型T的引用，而对于类型 <code>&lt;? super T&gt;</code>的变量dest，我们可以安全地传入T的引用。</p>
+<p>这个copy()方法的定义就完美地展示了extends和super的意图：</p>
+<ul>
+<li>copy()方法内部不会读取dest，因为不能调用dest.get()来获取T的引用；</li>
+<li>copy()方法内部也不会修改src，因为不能调用src.add(T)。</li>
+</ul>
+<h1 id="PECS原则"><a href="#PECS原则" class="headerlink" title="PECS原则"></a>PECS原则</h1><p>何时使用 extends，何时使用 super？为了便于记忆，我们可以用PECS原则：Producer Extends Consumer Super。</p>
+<p>即：如果需要返回T，它是生产者（Producer），要使用extends通配符；如果需要写入T，它是消费者（Consumer），要使用super通配符。</p>
+<h1 id="无限定通配符"><a href="#无限定通配符" class="headerlink" title="无限定通配符"></a>无限定通配符</h1><p>实际上，Java的泛型还允许使用无限定通配符（Unbounded Wildcard Type），即只定义一个?：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sample</span><span class="params">(Pair&lt;?&gt; p)</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为&lt;?&gt;通配符既没有 extends，也没有 super，因此：</p>
+<ul>
+<li>不允许调用 <code>set(T)</code> 方法并传入引用（null除外）；</li>
+<li>不允许调用 <code>T get()</code> 方法并获取T引用（只能获取Object引用）。</li>
+</ul>
+<p>换句话说，既不能读，也不能写，那只能做一些null判断：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isNull</span><span class="params">(Pair&lt;?&gt; p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> p.getFirst() == <span class="keyword">null</span> || p.getLast() == <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;?&gt;</code> 通配符有一个独特的特点，就是：<code>Pair&lt;?&gt;</code> 是所有<code>Pair&lt;T&gt;</code> 的超类：</p>
+ 
+    </div>
+    
+  </div>
+   
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2020/07/22/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E6%B3%9B%E5%9E%8B/">JAVA基础——泛型</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
+        <p><span>发布时间:</span>2020-07-22, 09:24:51</p>
+        <p><span>最后更新:</span>2020-07-24, 13:36:26</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2020/07/22/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E6%B3%9B%E5%9E%8B/" title="JAVA基础——泛型">http://yoursite.com/2020/07/22/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E6%B3%9B%E5%9E%8B/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/07/22/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E6%B3%9B%E5%9E%8B/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2020/07/22/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%BC%82%E5%B8%B8/">
+                    JAVA基础——异常
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2020/07/21/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%8F%8D%E5%B0%84/">
+                    JAVA基础——反射
+                </a>
+            </div>
+        
+    </nav>
+ 
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用泛型"><span class="toc-number">2.</span> <span class="toc-text">使用泛型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">2.1.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#举例"><span class="toc-number">2.2.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#泛型接口"><span class="toc-number">3.</span> <span class="toc-text">泛型接口</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#总结-1"><span class="toc-number">3.1.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#举例-1"><span class="toc-number">3.2.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#编写泛型"><span class="toc-number">4.</span> <span class="toc-text">编写泛型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#总结-2"><span class="toc-number">4.1.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#举例-2"><span class="toc-number">4.2.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#擦拭法"><span class="toc-number">5.</span> <span class="toc-text">擦拭法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#总结-3"><span class="toc-number">5.1.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#举例-3"><span class="toc-number">5.2.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#extends-通配符"><span class="toc-number">6.</span> <span class="toc-text">extends 通配符</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#总结-4"><span class="toc-number">6.1.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#举例-4"><span class="toc-number">6.2.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#super-通配符"><span class="toc-number">7.</span> <span class="toc-text">super 通配符</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#总结-5"><span class="toc-number">7.1.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#举例-5"><span class="toc-number">7.2.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#对比extends和super通配符"><span class="toc-number">8.</span> <span class="toc-text">对比extends和super通配符</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PECS原则"><span class="toc-number">9.</span> <span class="toc-text">PECS原则</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#无限定通配符"><span class="toc-number">10.</span> <span class="toc-text">无限定通配符</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"true"];
+    </script>
+  
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"JAVA基础——泛型　| 南有乔木的技术博客专栏　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+    <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'http://yoursite.com/2020/07/22/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E6%B3%9B%E5%9E%8B/';
+            this.page.identifier = '2020/07/22/JAVA基础——泛型/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//qnsite.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+   
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2020/07/22/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%BC%82%E5%B8%B8/" title="上一篇: JAVA基础——异常">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2020/07/21/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%8F%8D%E5%B0%84/" title="下一篇: JAVA基础——反射">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/24/Tomcat%E2%80%94%E2%80%94%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%EF%BC%88%E4%B8%89%EF%BC%89/">Tomcat——性能优化（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/24/Tomcat%E2%80%94%E2%80%94%E9%85%8D%E7%BD%AE%EF%BC%88%E4%BA%8C%EF%BC%89/">Tomcat——配置（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/24/Tomcat%E2%80%94%E2%80%94%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/">Tomcat——解析（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/22/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94IO/">JAVA——IO</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/22/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%BC%82%E5%B8%B8/">JAVA基础——异常</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/22/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E6%B3%9B%E5%9E%8B/">JAVA基础——泛型</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/21/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%8F%8D%E5%B0%84/">JAVA基础——反射</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/20/Elasticsearch%E2%80%94%E2%80%94%E4%BD%BF%E7%94%A8%EF%BC%88%E4%BA%94%EF%BC%89/">Elasticsearch——使用（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/20/SpringBoot%E2%80%94%E2%80%94Elasticsearch%EF%BC%88%E4%BA%8C%E5%8D%81%E5%85%AB%EF%BC%89/">SpringBoot——Elasticsearch（二十八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/20/Elasticsearch%E2%80%94%E2%80%94HTTP%E6%93%8D%E4%BD%9C%EF%BC%88%E5%9B%9B%EF%BC%89/">Elasticsearch——HTTP操作（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/20/Elasticsearch%E2%80%94%E2%80%94%E5%88%86%E5%B8%83%E5%BC%8F%E5%8E%9F%E7%90%86%EF%BC%88%E4%B8%89%EF%BC%89/">Elasticsearch——分布式原理（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/20/Elasticsearch%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%8E%9F%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89/">Elasticsearch——搜索引擎原理（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/20/Elasticsearch%E2%80%94%E2%80%94%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%89%E8%A3%85%EF%BC%88%E4%BA%8C%EF%BC%89/">Elasticsearch——介绍与安装（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/17/Maven%E2%80%94%E2%80%94%E4%BE%9D%E8%B5%96%E5%86%B2%E7%AA%81%EF%BC%88%E4%B9%9D%EF%BC%89/">Maven——依赖冲突（九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/17/Maven%E2%80%94%E2%80%94%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E5%85%AB%EF%BC%89/">Maven——自动化部署（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/17/Maven%E2%80%94%E2%80%94%E5%BC%95%E5%85%A5%E5%A4%96%E9%83%A8%E4%BE%9D%E8%B5%96%EF%BC%88%E4%B8%83%EF%BC%89/">Maven——引入外部依赖（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/17/Maven%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE%EF%BC%88%E5%85%AD%EF%BC%89/">Maven——命令构建项目（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/16/Maven%E2%80%94%E2%80%94%E6%8F%92%E4%BB%B6%EF%BC%88%E4%BA%94%EF%BC%89/">Maven——插件（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/16/Maven%E2%80%94%E2%80%94%E6%9E%84%E5%BB%BA%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E5%9B%9B%EF%BC%89/">Maven——构建生命周期（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/16/Maven%E2%80%94%E2%80%94%E4%BB%93%E5%BA%93%EF%BC%88%E4%B8%89%EF%BC%89/">Maven——仓库（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/16/Maven%E2%80%94%E2%80%94Pom%EF%BC%88%E4%BA%8C%EF%BC%89/">Maven——Pom（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/16/Maven%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0%EF%BC%88%E4%B8%80%EF%BC%89/">Maven——概述（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/14/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94pull%E5%92%8Cpush/">消息中间件——pull和push</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/13/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E3%80%81RocketMQ%E3%80%81RabbitMQ%E7%9A%84%E4%BC%98%E5%8A%A3%E5%8A%BF%E6%AF%94%E8%BE%83/">消息中间件——Kafka、RocketMQ、RabbitMQ的优劣势比较</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/13/SpringBoot%E2%80%94%E2%80%94%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%83%EF%BC%89/">SpringBoot——定时任务（二十七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/13/SpringBoot%E2%80%94%E2%80%94%E5%BC%82%E6%AD%A5%EF%BC%88%E4%BA%8C%E5%8D%81%E5%85%AD%EF%BC%89/">SpringBoot——异步（二十六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/SpringBoot%E2%80%94%E2%80%94RabittMQ%EF%BC%88%E4%BA%8C%E5%8D%81%E5%9B%9B%EF%BC%89/">SpringBoot——RabittMQ（二十四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E5%BB%B6%E6%97%B6%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88%E4%B8%83%EF%BC%89/">消息中间件——RabbitMQ—延时消息队列（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E6%B6%88%E6%81%AF%E5%8F%AF%E9%9D%A0%E6%80%A7%EF%BC%88%E5%85%AD%EF%BC%89/">消息中间件——RabbitMQ—消息可靠性（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%88%E4%BA%94%EF%BC%89/">消息中间件——RabbitMQ—持久化（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%EF%BC%88%E5%9B%9B%EF%BC%89/">消息中间件——RabbitMQ—高可用集群（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%EF%BC%88%E4%B8%89%EF%BC%89/">消息中间件——RabbitMQ—工作模式（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%88%E4%BA%8C%EF%BC%89/">消息中间件——RabbitMQ—核心概念（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94RabbitMQ%E2%80%94%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%89%E8%A3%85%EF%BC%88%E4%B8%80%EF%BC%89/">消息中间件——RabbitMQ—介绍与安装（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E4%B8%80%E5%AF%B9%E4%B8%80%E3%80%81%E4%B8%80%E5%AF%B9%E5%A4%9A%E3%80%81%E5%A4%9A%E5%AF%B9%E5%A4%9A%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89/">Mybatis——一对一、一对多、多对多（十一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E6%95%B4%E5%90%88Encache%EF%BC%88%E5%8D%81%EF%BC%89/">Mybatis——整合Encache（十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E7%BC%93%E5%AD%98%EF%BC%88%E4%B9%9D%EF%BC%89/">Mybatis——缓存（九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD%EF%BC%88%E5%85%AB%EF%BC%89/">Mybatis——延迟加载（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E5%8A%A8%E6%80%81sql%EF%BC%88%E4%B8%83%EF%BC%89/">Mybatis——动态sql（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E6%98%A0%E5%B0%84%EF%BC%88%E5%85%AD%EF%BC%89/">Mybatis——映射（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94%E9%85%8D%E7%BD%AE%EF%BC%88%E4%BA%94%EF%BC%89/">Mybatis——配置（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/Mybatis%E2%80%94%E2%80%94mapper%E4%BB%A3%E7%90%86%E6%96%B9%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89/">Mybatis——mapper代理方法（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/08/Mybatis%E2%80%94%E2%80%94%E5%BC%80%E5%8F%91Dao%E6%96%B9%E6%B3%95%EF%BC%88%E4%BA%8C%EF%BC%89/">Mybatis——开发Dao方法（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/08/Mybatis%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0%EF%BC%88%E4%B8%80%EF%BC%89/">Mybatis——概述（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E7%BC%93%E5%AD%98%E4%BA%94%E5%A4%A7%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%88%E4%BA%8C%E5%8D%81%E5%9B%9B%EF%BC%89/">消息中间件——Redis—缓存五大问题的解决方案（二十四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%88%86%E5%B8%83%E5%BC%8FSession%E5%85%B1%E4%BA%AB%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%89%EF%BC%89/">消息中间件——Redis—分布式Session共享（二十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%AE%9E%E6%88%98%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%E5%8D%81%E4%BA%8C%EF%BC%89/">消息中间件——Redis—实战学习（二十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/SpringBoot%E2%80%94%E2%80%94redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%AE%9E%E7%8E%B0%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%89%EF%BC%89/">SpringBoot——redis分布式锁实现（二十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/29/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%BD%9C%E4%B8%BA%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E8%A6%81%E9%9D%A2%E4%B8%B4%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%80%EF%BC%89/">消息中间件——Redis—作为分布式锁要面临的问题（二十一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%EF%BC%88%E4%BA%8C%E5%8D%81%EF%BC%89/">消息中间件——Redis—分布式锁（二十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/SpringBoot%E2%80%94%E2%80%94redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97list%EF%BC%88%E4%BA%8C%E5%8D%81%E4%BA%8C%EF%BC%89/">SpringBoot——redis消息队列list（二十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88%E5%8D%81%E4%B9%9D%EF%BC%89/">消息中间件——Redis—消息队列（十九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/24/SpringBoot%E2%80%94%E2%80%94redis%E5%8F%91%E5%B8%83%E4%B8%8E%E8%AE%A2%E9%98%85%EF%BC%88%E4%BA%8C%E5%8D%81%E4%B8%80%EF%BC%89/">SpringBoot——redis发布与订阅（二十一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/23/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%B6%88%E6%81%AF%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85%EF%BC%88%E5%8D%81%E5%85%AB%EF%BC%89/">消息中间件——Redis—消息发布和订阅（十八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/22/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E9%98%BB%E5%A1%9E%E5%88%86%E6%9E%90%EF%BC%88%E5%8D%81%E4%B8%83%EF%BC%89/">消息中间件——Redis—阻塞分析（十七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/22/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E3%80%81%E6%81%A2%E5%A4%8D%E4%B8%8E%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%EF%BC%88%E5%8D%81%E5%85%AD%EF%BC%89/">消息中间件——Redis—数据备份、恢复与数据迁移（十六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/19/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/">消息中间件——Redis—内存淘汰策略（十五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/15/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%EF%BC%88%E5%8D%81%E5%9B%9B%EF%BC%89/">消息中间件——Redis—哨兵机制（十四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/15/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%EF%BC%88%E5%8D%81%E4%B8%89%EF%BC%89/">消息中间件——Redis—主从复制（十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/15/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E9%9B%86%E7%BE%A4%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87%EF%BC%88%E5%8D%81%E4%BA%8C%EF%BC%89/">消息中间件——Redis—集群及数据分片（十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%BA%8B%E5%8A%A1%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89/">消息中间件——Redis—事务（十一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%88%E5%8D%81%EF%BC%89/">消息中间件——Redis—持久化（十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E8%BE%93%E5%85%A5%E7%BC%93%E5%86%B2%E5%8C%BA%E3%80%81%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%88%E4%B9%9D%EF%BC%89/">消息中间件——Redis—输入缓冲区、输出缓冲区（九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E7%BA%BF%E7%A8%8B%E6%B1%A0%EF%BC%88%E5%85%AB%EF%BC%89/">消息中间件——Redis—线程池（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%B8%B8%E7%94%A8%E7%9A%84%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%88%E4%B8%83%EF%BC%89/">消息中间件——Redis—常用的客户端（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/11/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%E9%80%9A%E4%BF%A1%EF%BC%88%E5%85%AD%EF%BC%89/">消息中间件——Redis—客户端与服务端的通信（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%88%E4%BA%94%EF%BC%89/">消息中间件——Redis—常用命令（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E5%9B%9B%EF%BC%89/">消息中间件——Redis—基础数据结构（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/10/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E4%BB%A3%E7%A0%81%E4%BD%BF%E7%94%A8%EF%BC%88%E4%B8%89%EF%BC%89/">消息中间件——Redis—代码使用（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/09/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%85%A5%E9%97%A8%EF%BC%88%E4%BA%8C%EF%BC%89/">消息中间件——Redis—入门（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/09/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E6%B6%88%E6%81%AF%E9%AB%98%E5%8F%AF%E7%94%A8%EF%BC%88%E5%85%AB%EF%BC%89/">消息中间件——Kafka—消息高可用（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E9%AB%98%E5%90%9E%E5%90%90%E9%87%8F%E4%B8%8E%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%88%E4%B8%83%EF%BC%89/">消息中间件——Kafka—高吞吐量与持久化（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94offsite%E9%87%8F%E7%9A%84%E7%BB%B4%E6%8A%A4%EF%BC%88%E5%85%AD%EF%BC%89/">消息中间件——Kafka—offsite量的维护（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94Consumer%20Group%E8%A7%A3%E6%9E%90%EF%BC%88%E4%BA%94%EF%BC%89/">消息中间件——Kafka—Consumer Group解析（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E6%B6%88%E8%B4%B9%E8%80%85%EF%BC%88%E5%9B%9B%EF%BC%89/">消息中间件——Kafka—消费者（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E7%94%9F%E4%BA%A7%E8%80%85%EF%BC%88%E4%B8%89%EF%BC%89/">消息中间件——Kafka—生产者（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/08/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E5%85%B3%E8%81%94Zookeeper%EF%BC%88%E4%BA%8C%EF%BC%89/">消息中间件——Kafka—关联Zookeeper（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/04/SpringBoot%E2%80%94%E2%80%94redis%E3%80%81SpringCache%EF%BC%88%E4%BA%8C%E5%8D%81%EF%BC%89/">SpringBoot——redis、SpringCache（二十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/SpringBoot%E2%80%94%E2%80%94redis%EF%BC%88%E5%8D%81%E4%B9%9D%EF%BC%89/">SpringBoot——redis（十九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Redis%E2%80%94%E5%AE%89%E8%A3%85%EF%BC%88%E4%B8%80%EF%BC%89/">消息中间件——Redis——安装（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/27/docker%E2%80%94%E2%80%94centos%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/">docker——centos容器安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/27/docker%E2%80%94%E2%80%94springboot%E3%80%81centos%E3%80%81mysql%E9%83%A8%E7%BD%B2/">docker——springboot、centos、mysql部署</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/22/SpringBoot%E2%80%94%E2%80%94spring%20cache%EF%BC%88%E5%8D%81%E5%85%AB%EF%BC%89/">SpringBoot——spring cache（十八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/21/SpringBoot%E2%80%94%E2%80%94%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90-mybatis%EF%BC%88%E5%8D%81%E4%B8%83%EF%BC%89/">SpringBoot——多数据源-mybatis（十七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/21/SpringBoot%E2%80%94%E2%80%94%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90-JPA%EF%BC%88%E5%8D%81%E5%85%AD%EF%BC%89/">SpringBoot——多数据源-JPA（十六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94Mybatis-%E6%B3%A8%E8%A7%A3%EF%BC%88%E5%8D%81%E4%BA%94%EF%BC%89/">SpringBoot——Mybatis-注解（十五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94Mybatis-xml%EF%BC%88%E5%8D%81%E5%9B%9B%EF%BC%89/">SpringBoot——Mybatis-xml（十四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94JPA%EF%BC%88%E5%8D%81%E4%B8%89%EF%BC%89/">SpringBoot——JPA（十三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/docker%E2%80%94%E2%80%94Mysql%E7%9A%84%E5%AE%89%E8%A3%85/">docker——Mysql的安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/20/SpringBoot%E2%80%94%E2%80%94JDBC%EF%BC%88%E5%8D%81%E4%BA%8C%EF%BC%89/">SpringBoot——JDBC（十二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/19/SpringBoot%E2%80%94%E2%80%94%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89/">SpringBoot——异常处理（）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/19/SpringBoot%E2%80%94%E2%80%94%E8%BF%87%E6%BB%A4%E5%99%A8%E3%80%81%E7%9B%91%E5%90%AC%E5%99%A8%EF%BC%88%E5%8D%81%EF%BC%89/">SpringBoot——过滤器、监听器（十）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/19/SpringBoot%E2%80%94%E2%80%94%E5%88%87%E9%9D%A2%EF%BC%88%E4%B9%9D%EF%BC%89/">SpringBoot——切面（九）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/18/SpringBoot%E2%80%94%E2%80%94%E6%8B%A6%E6%88%AA%E5%99%A8%EF%BC%88%E5%85%AB%EF%BC%89/">SpringBoot——拦截器（八）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/18/%E6%97%A5%E5%BF%97%E2%80%94%E2%80%94Log4j/">日志——Log4j</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/14/SpringBoot%E2%80%94%E2%80%94%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E%EF%BC%88%E4%B8%83%EF%BC%89/">SpringBoot——模板引擎（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/14/SpringBoot%E2%80%94%E2%80%94%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%EF%BC%88%E5%85%AD%EF%BC%89/">SpringBoot——静态资源（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/13/SpringBoot%E2%80%94%E2%80%94%E6%97%A5%E5%BF%97%EF%BC%88%E4%BA%94%EF%BC%89/">SpringBoot——日志（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/13/SpringBoot%E2%80%94%E2%80%94%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%EF%BC%88%E5%9B%9B%EF%BC%89/">SpringBoot——多环境配置（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%88%E4%B8%89%EF%BC%89/">SpringBoot——配置文件（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%EF%BC%88%E4%BA%8C%EF%BC%89/">SpringBoot——单元测试（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/12/SpringBoot%E2%80%94%E2%80%94Hello%E5%85%A5%E9%97%A8%EF%BC%88%E4%B8%80%EF%BC%89/">SpringBoot——Hello入门（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/30/SpringBoot%E2%80%94%E2%80%94%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E5%8E%9F%E7%90%86/">SpringBoot——自动装配原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/27/Spring%E2%80%94%E2%80%94%E4%BA%8B%E5%8A%A1%E7%90%86%E8%AE%BA/">Spring——事务理论</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/27/Spring%E2%80%94%E2%80%94Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Spring——Bean的生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/26/Spring%E2%80%94%E2%80%94%E6%B3%A8%E8%A7%A3%E5%A4%A7%E5%85%A8/">Spring——注解大全</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/26/Spring%E2%80%94%E2%80%94MVC%E7%90%86%E8%AE%BA%E4%B8%8B/">Spring——MVC理论下</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/24/Spring%E2%80%94%E2%80%94MVC%E7%90%86%E8%AE%BA%E4%B8%8A/">Spring——MVC理论上</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/21/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E4%BB%A3%E7%90%86/">JAVA基础——代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/20/Spring%E2%80%94%E2%80%94ApplicationContxt%E8%A7%A3%E8%AF%BB/">Spring——ApplicationContxt解读</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/20/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B8%8B/">Spring——IOC源码解析下</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/16/Spring%E2%80%94%E2%80%94AOP%E7%90%86%E8%AE%BA/">Spring——AOP理论</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/15/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E6%B3%A8%E8%A7%A3%EF%BC%89/">Spring——IOC源码解析（注解示）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/13/Spring%E2%80%94%E2%80%94IOC%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B8%8A/">Spring——IOC源码解析上</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/13/Spring%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/">Spring——概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/08/JVM%E2%80%94%E2%80%94java8%E6%B0%B8%E4%B9%85%E4%BB%A3%E5%88%B0%E5%85%83%E7%A9%BA%E9%96%93/">JVM——java8永久代到元空間</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/07/JVM%E2%80%94%E2%80%94GC%E5%88%86%E6%9E%90/">JVM——GC分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E8%B0%83%E4%BC%98/">JVM——命令调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">JVM——垃圾回收</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">JVM——类的加载机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/">JVM——内存结构</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/01/JVM%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E5%AF%BC%E8%AF%BB/">JVM——学习导读</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%8D%81%EF%BC%89%E2%80%94%E2%80%94%E6%80%BB%E7%BB%93/">数据结构与算法（十）——总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E9%AB%98%E5%8F%AF%E7%94%A8%E6%89%8B%E6%AE%B5%EF%BC%88%E4%B8%83%EF%BC%89/">JAVA并发——高并发之高可用手段（七）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E3%80%81%E5%88%87%E5%BA%93%E3%80%81%E5%88%86%E8%A1%A8%EF%BC%88%E5%85%AD%EF%BC%89/">JAVA并发——高并发之数据库分库、切库、分表（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7%E5%92%8C%E7%86%94%E6%96%AD%EF%BC%88%E5%85%AD%EF%BC%89/">JAVA并发——高并发之服务降级和熔断（六）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E5%BA%94%E7%94%A8%E9%99%90%E6%B5%81%EF%BC%88%E4%BA%94%EF%BC%89/">JAVA并发——高并发之应用限流（五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/31/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E5%BA%94%E7%94%A8%E6%8B%86%E5%88%86%EF%BC%88%E5%9B%9B%EF%BC%89/">JAVA并发——高并发之应用拆分（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E4%BF%A1%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88%E4%B8%89%EF%BC%89/">JAVA并发——高并发之信息队列（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E7%BC%93%E5%AD%98%EF%BC%88%E4%BA%8C%EF%BC%89/">JAVA并发——高并发之缓存（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B9%8B%E6%89%A9%E5%AE%B9%EF%BC%88%E4%B8%80%EF%BC%89/">JAVA并发——高并发之扩容（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/30/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/">JAVA并发——高并发与高可用的设计原则</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/27/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E6%B1%A0/">JAVA并发——线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/19/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B/">JAVA并发——线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/19/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E6%AD%BB%E9%94%81/">JAVA并发——死锁</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94ReetrantLock/">JAVA并发——ReetrantLock</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94synchronized/">JAVA并发——synchronized</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/16/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E9%94%81/">JAVA并发——锁</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/">JAVA并发——并发容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%90%8C%E6%AD%A5%E5%AE%B9%E5%99%A8/">JAVA并发——同步容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%AE%89%E5%85%A8%E7%B1%BB%E5%92%8C%E5%86%99%E6%B3%95/">JAVA并发——不安全类和写法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/14/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E5%B0%81%E9%97%AD/">JAVA并发——线程封闭</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1/">JAVA并发——不可变对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%AE%89%E5%85%A8%E5%8F%91%E5%B8%83%E5%AF%B9%E8%B1%A1/">JAVA并发——安全发布对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">JAVA并发——线程安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/13/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%B9%B6%E5%8F%91%E6%A8%A1%E6%8B%9F/">JAVA并发——并发模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/11/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80/">JAVA并发——基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/11/JAVA%E5%B9%B6%E5%8F%91%E2%80%94%E2%80%94%E8%AF%BE%E7%A8%8B%E5%AF%BC%E5%AD%A6/">JAVA并发——课程导学</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/04/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ConcurrentHashMap/">容器——ConcurrentHashMap</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94HashMap/">容器——HashMap</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/25/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94LinkedList/">容器——LinkedList</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/">容器——ArrayList</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0/">容器——概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B9%9D%EF%BC%89%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A0/">数据结构与算法（九）——搜素</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%85%AB%EF%BC%89%E2%80%94%E2%80%94%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">数据结构与算法（八）——排序算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%83%EF%BC%89%E2%80%94%E2%80%94%E5%A0%86%E3%80%81%E5%93%88%E5%B8%8C%E8%A1%A8%E3%80%81%E5%9B%BE/">数据结构与算法（七）——堆、哈希表、图</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%85%AD%EF%BC%89%E2%80%94%E2%80%94%E6%A0%91/">数据结构与算法（六）——树</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%BA%94%EF%BC%89%E2%80%94%E2%80%94%E9%98%9F%E5%88%97/">数据结构与算法（五）——队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/17/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%9B%9B%EF%BC%89%E2%80%94%E2%80%94%E6%A0%88/">数据结构与算法（四）——栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89%E2%80%94%E2%80%94%E9%93%BE%E8%A1%A8/">数据结构与算法（三）——链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%E6%95%B0%E7%BB%84/">数据结构与算法（二）——数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B/">数据结构和算法（一）——简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/08/%E8%BF%90%E7%BB%B4%E2%80%94%E2%80%94CPU%E9%A3%99%E5%8D%87%E5%88%B0100-%E7%9A%84%E5%8E%9F%E5%9B%A0/">运维——CPU飙升到100%的原因</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/16/Linux%E2%80%94%E2%80%94shell%E8%84%9A%E6%9C%AC%EF%BC%88%E4%BA%8C%EF%BC%89/">Linux——shell脚本（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/16/Linux%E2%80%94%E2%80%94%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%EF%BC%88%E4%B8%80%EF%BC%89/">Linux——定时任务（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/05/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%E2%80%94%E2%80%94Kafka%E2%80%94%E5%85%A5%E9%97%A8%EF%BC%88%E4%B8%80%EF%BC%89/">消息中间件——Kafka——入门（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/05/Springboot%E2%80%94%E2%80%94kafka%EF%BC%88%E4%BA%8C%E5%8D%81%E4%BA%94%EF%BC%89/">Springboot——kafka（二十五）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/04/docker%E2%80%94%E2%80%94Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/">docker——Kafka的安装使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%884%EF%BC%89/">springcloud实战之Config（4）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%883%EF%BC%89/">springcloud实战之Config（3）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/02/Mybatis%E2%80%94%E2%80%94%20#%20%E5%92%8C%20$%20%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%88%E5%9B%9B%EF%BC%89/">Mybatis—— # 和 $ 的区别（四）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/29/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%882%EF%BC%89/">springcloud实战之Config（2）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/28/docker%E2%80%94%E2%80%94%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%89%E8%A3%85%EF%BC%88win10%EF%BC%89/">docker——简单介绍与安装（win10）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E2%80%94%E2%80%94Eureka%E4%B8%8EZookeeper%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%88%E4%BA%8C%EF%BC%89/">微服务——Eureka与Zookeeper的区别（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BConfig%EF%BC%881%EF%BC%89/">springcloud实战之Config（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BConfig/">springcloud解析之Config</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BZuul/">springcloud实战之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BZuul/">springcloud解析之Zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%882%EF%BC%89/">springcloud实战之Hystrix（2）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BHystrix%EF%BC%881%EF%BC%89/">springcloud实战之Hystrix（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BHystrix/">springcloud解析之Hystrix</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BEuraka/">springcloud实战之Euraka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BEureka/">springcloud解析之Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BFeign/">springcloud实战之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BFeign/">springcloud解析之Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E5%AE%9E%E6%88%98%E4%B9%8BRibbon/">springcloud实战之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/springcloud%E8%A7%A3%E6%9E%90%E4%B9%8BRibbon/">springcloud解析之Ribbon</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E2%80%94%E2%80%94%E6%A6%82%E8%BF%B0%EF%BC%88%E4%B8%80%EF%BC%89/">微服务——概述（一）</a></li></ul>
+
+   
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2019-2020 南有乔木
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+            
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
