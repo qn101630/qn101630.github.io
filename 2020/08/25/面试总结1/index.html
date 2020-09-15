@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="南有乔木的技术博客专栏">
 <meta property="og:description" content="面试资料 数据结构与算法、容器关键点整理">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-08-27T02:10:53.015Z">
+<meta property="og:updated_time" content="2020-09-15T08:27:42.414Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -311,283 +311,293 @@
     </div>
      
     <div class="article-entry" itemprop="articleBody">
-        <h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
-<li>插入快：无序数组只需要在数组末尾插入；有序数组需要在指定的位置插入</li>
-<li>查找慢：根据下标取值是很快的，但根据元素查找的话，如果是无序数组，需要一个个遍历，是很慢的。有序数组，根据特定的算法会快一些（各种排序算法）。</li>
-<li>删除慢：根据元素值删除，我们要先找到该元素所处的位置，然后将元素后面的值整体向前面移动一个位置。也需要比较多的时间。</li>
+        <div class="output_wrapper" id="output_wrapper_id" style="font-size: 16px; color: rgb(62, 62, 62); line-height: 1.6; word-spacing: 2px; letter-spacing: 2px; font-family: 'Helvetica Neue', Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;"><h1 id="h" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.6em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">数据结构</span></h1>
+<h2 id="h-1" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.4em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">数组</span></h2>
+<h3 id="h-2" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">特点</span></h3>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">插入快：无序数组只需要在数组末尾插入；有序数组需要在指定的位置插入</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">查找慢：根据下标取值是很快的，但根据元素查找的话，如果是无序数组，需要一个个遍历，是很慢的。有序数组，根据特定的算法会快一些（各种排序算法）。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">删除慢：根据元素值删除，我们要先找到该元素所处的位置，然后将元素后面的值整体向前面移动一个位置。也需要比较多的时间。</span></li>
 </ul>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>不能动态扩展数组的元素个数。</li>
-<li>需要大块连续的内存块。</li>
+<h3 id="h-3" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">缺点</span></h3>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">不能动态扩展数组的元素个数。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">需要大块连续的内存块。</span></li>
 </ul>
-<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h3><ul>
-<li>链表的分布式没有顺序的，非连续的，也就是随心所欲，想在哪在哪，那怎么找到下一个的，就是靠指针连接的。</li>
-<li>长度没有限制</li>
-<li>插入删除速度快，查询慢</li>
+<h2 id="h-4" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.4em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">链表</span></h2>
+<h3 id="h-5" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">特点</span></h3>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">链表的分布式没有顺序的，非连续的，也就是随心所欲，想在哪在哪，那怎么找到下一个的，就是靠指针连接的。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">长度没有限制</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">插入删除速度快，查询慢</span></li>
 </ul>
-<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><ul>
-<li>单向链表：链表中的节点仅指向下一个节点，并且最后一个节点指向空。</li>
-<li>双向链表：其中每个节点具有两个指针 p、n，使得 p 指向先前节点并且 n 指向下一个节点；最后一个节点的 n 指针指向 null。</li>
-<li>循环链表：每个节点指向下一个节点并且最后一个节点指向第一个节点的链表。</li>
+<h3 id="h-6" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">分类</span></h3>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">单向链表：链表中的节点仅指向下一个节点，并且最后一个节点指向空。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">双向链表：其中每个节点具有两个指针 p、n，使得 p 指向先前节点并且 n 指向下一个节点；最后一个节点的 n 指针指向 null。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">循环链表：每个节点指向下一个节点并且最后一个节点指向第一个节点的链表。</span></li>
 </ul>
-<h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><ul>
-<li>遵循后入先出（LIFO）原则，先进入的数据被压入栈底，最后的数据在栈顶。</li>
-<li>java 中 Stack 是 Vector 的一个子类，只定义了默认构造函数，用来创建一个空栈。</li>
-<li>push 操作可以用于将元素压入栈，pop 操作可以将栈顶元素移除。</li>
-<li>栈是一种特殊的线性表，其入栈和出栈只允许在一端进行。</li>
-<li>插入、删除快，搜索慢</li>
+<h2 id="h-7" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.4em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">栈</span></h2>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">遵循后入先出（LIFO）原则，先进入的数据被压入栈底，最后的数据在栈顶。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">java 中 Stack 是 Vector 的一个子类，只定义了默认构造函数，用来创建一个空栈。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">push 操作可以用于将元素压入栈，pop 操作可以将栈顶元素移除。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">栈是一种特殊的线性表，其入栈和出栈只允许在一端进行。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">插入、删除快，搜索慢</span></li>
 </ul>
-<h2 id="队列"><a href="#队列" class="headerlink" title="队列"></a>队列</h2><ul>
-<li>支持 先进先出FIFO</li>
-<li>尾部添加、头部删除</li>
-<li>插入、删除快，搜索慢</li>
-<li>顺序队列会出现假溢出现象，所以引入循环队列</li>
+<h2 id="h-8" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.4em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">队列</span></h2>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">支持 先进先出FIFO</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">尾部添加、头部删除</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">插入、删除快，搜索慢</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">顺序队列会出现假溢出现象，所以引入循环队列</span></li>
 </ul>
-<h2 id="树"><a href="#树" class="headerlink" title="树"></a>树</h2><h3 id="特点-2"><a href="#特点-2" class="headerlink" title="特点"></a>特点</h3><ul>
-<li>计算机的树模型，是由现实中的树抽象来的，它指的是 N 个有父子关系的节点的有限集合。</li>
-<li>当 N=0 时，改节点集合为空，这课树也被称为空树</li>
-<li>在任意的非空树中，有且仅有一个根(root)节点</li>
-<li>当 N&gt;1 时，除根节点以外的其余节点可分为 M 个互为相交的有限集合 T1,T2,…,Tm，其中的每个集合本身又是一棵树，并称其为根的子树（subtree）。</li>
+<h2 id="h-9" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.4em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">树</span></h2>
+<h3 id="h-10" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">特点</span></h3>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">计算机的树模型，是由现实中的树抽象来的，它指的是 N 个有父子关系的节点的有限集合。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">当 N=0 时，改节点集合为空，这课树也被称为空树</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">在任意的非空树中，有且仅有一个根(root)节点</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">当 N&gt;1 时，除根节点以外的其余节点可分为 M 个互为相交的有限集合 T1,T2,…,Tm，其中的每个集合本身又是一棵树，并称其为根的子树（subtree）。</span></li>
 </ul>
-<h3 id="二叉树类型"><a href="#二叉树类型" class="headerlink" title="二叉树类型"></a>二叉树类型</h3><ul>
-<li>二叉树：树的每个节点最多只能有两个子节点</li>
-<li>二叉搜索树：一个节点的左节点小于这个节点，右节点大于这个节点。</li>
-<li>平衡二叉树：它的结点左子树和右子树的深度之差不超过1,而且该结点的左子树和右子树都是一棵平衡二叉树。</li>
-<li>满二叉树：每一层上的节点数都是最大节点数</li>
-<li>完全二叉树：如果一颗二叉树除最后一层外，其余层的所有节点都是满的，并且最后一层或者是满的，或者仅在右边缺少若干连续的节点，则此二叉树就是完全二叉树。</li>
-<li>哈夫曼树：叉树中有一种特别的树——哈夫曼树（最优二叉树），其通过某种规则（权值）来构造出一哈夫曼二叉树，在这个二叉树中，只有叶子节点才是有效的数据节点（很重要），其他的非叶子节点是为了构造出哈夫曼而引入的！</li>
+<h3 id="h-11" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">二叉树类型</span></h3>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">二叉树：树的每个节点最多只能有两个子节点</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">二叉搜索树：一个节点的左节点小于这个节点，右节点大于这个节点。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">平衡二叉树：它的结点左子树和右子树的深度之差不超过1,而且该结点的左子树和右子树都是一棵平衡二叉树。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">满二叉树：每一层上的节点数都是最大节点数</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">完全二叉树：如果一颗二叉树除最后一层外，其余层的所有节点都是满的，并且最后一层或者是满的，或者仅在右边缺少若干连续的节点，则此二叉树就是完全二叉树。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">哈夫曼树：叉树中有一种特别的树——哈夫曼树（最优二叉树），其通过某种规则（权值）来构造出一哈夫曼二叉树，在这个二叉树中，只有叶子节点才是有效的数据节点（很重要），其他的非叶子节点是为了构造出哈夫曼而引入的！</span></li>
 </ul>
-<h3 id="遍历二叉树"><a href="#遍历二叉树" class="headerlink" title="遍历二叉树"></a>遍历二叉树</h3><p>深度优先遍历：这种遍历算法将先访问到树中最深层次的节点</p>
-<ul>
-<li>先序遍历：访问根节点、递归遍历左子树、递归遍历右子树</li>
-<li>中序遍历：递归遍历左子树、访问根节点、递归遍历右子树</li>
-<li>后序遍历：递归遍历左子树、递归遍历右子树、访问根节点</li>
+<h3 id="h-12" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">遍历二叉树</span></h3>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">深度优先遍历：这种遍历算法将先访问到树中最深层次的节点</p>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">先序遍历：访问根节点、递归遍历左子树、递归遍历右子树</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">中序遍历：递归遍历左子树、访问根节点、递归遍历右子树</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">后序遍历：递归遍历左子树、递归遍历右子树、访问根节点</span></li>
 </ul>
-<p>广度优先遍历：这种遍历算法将逐层访问每层的节点，先访问根（第一层）节点，然后访问第二层的节点…..一次类推。因此，广度优先遍历方法又被称为按层遍历。</p>
-<h3 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h3><p>红黑树从本质上来说就是一颗二叉查找树，但是在二叉树的基础上增加了着色相关的性质，使得红黑树可以保证相对平衡，从而保证红黑树的增删改查的时间复杂度最坏也能达到 O(log N)。</p>
-<ul>
-<li>性质 1:每个节点要么是红色，要么是黑色。</li>
-<li>性质 2:根节点永远是黑色的。</li>
-<li>除质 3:所有的叶子节点都是空节点(即 null)，并且是黑色的。</li>
-<li>性质 4:每个红色节点的两个子节点都是黑色的。(从每个叶子到根的路径上不会有两个连续的红色节点)</li>
-<li>性质 5:从任一节点到其子树中每个叶子节点的路径都包含相同数量的黑色节点。</li>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">广度优先遍历：这种遍历算法将逐层访问每层的节点，先访问根（第一层）节点，然后访问第二层的节点…..一次类推。因此，广度优先遍历方法又被称为按层遍历。</p>
+<h3 id="h-13" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">红黑树</span></h3>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">红黑树从本质上来说就是一颗二叉查找树，但是在二叉树的基础上增加了着色相关的性质，使得红黑树可以保证相对平衡，从而保证红黑树的增删改查的时间复杂度最坏也能达到 O(log N)。</p>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">性质 1:每个节点要么是红色，要么是黑色。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">性质 2:根节点永远是黑色的。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">除质 3:所有的叶子节点都是空节点(即 null)，并且是黑色的。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">性质 4:每个红色节点的两个子节点都是黑色的。(从每个叶子到根的路径上不会有两个连续的红色节点)</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">性质 5:从任一节点到其子树中每个叶子节点的路径都包含相同数量的黑色节点。</span></li>
 </ul>
-<p>红黑树的 5 条特性确保了从根到叶子的最长的可能路径不多于最短的可能路径的两倍长，使得整棵树大致上是平衡的。</p>
-<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><h3 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h3><ul>
-<li>冒泡排序：两两比较相邻记录的关键字，如果反序则交换，直到没有反序的记录为止。复杂度为 O(n2)</li>
-<li>简单选择排序：每一次遍历时选取关键字最小的记录作为有序序列的第 i 个记录。复杂度为 O(n2)。</li>
-<li>直接插入排序：将一个记录插入到已排好序的序列中，从而得到一个新的有序序列（将序列的第一个数据看成是一个有序的子序列，然后从第二个记录逐个向该有序的子序列进行有序的插入，直至整个序列有序）复杂度 O(n2)</li>
-<li>二分插入排序：二分（折半）插入排序是一种在直接插入排序算法上进行小改动的排序算法。其与直接排序算法最大的区别在于查找插入位置时使用的是二分查找的方式，在速度上有一定提升。O(n^2)。</li>
-<li>快速排序：对一个未排序序列，假设从该序列中的元素中取一个基准值 pivotkey，将小于 pivotkey 放左边，大于 pivotkey 放右边；接着以该 k 为中间，左右两边的分割作为新的序列，重新进行 1 操作。 快排因为用到了递归操作，所以在简单排序中性能不如直接插入排序， 而在大量数据排序时，递归产生的性能影响对于算法的整体性能优势可以忽略。O(n*logn) </li>
-<li>希尔排序：希尔排序通过将比较的全部元素分为几个区域来提升插入排序的性能。这样可以让一个元素可以一次性地朝最终位置前进一大步。然后算法再取越来越小的步长进行排序，算法的最后一步就是普通的插入排序，但是到了这步，需排序的数据几乎是已排好的了（此时插入排序较快）。</li>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">红黑树的 5 条特性确保了从根到叶子的最长的可能路径不多于最短的可能路径的两倍长，使得整棵树大致上是平衡的。</p>
+<h2 id="h-14" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.4em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">算法</span></h2>
+<h3 id="h-15" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">排序</span></h3>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">冒泡排序：两两比较相邻记录的关键字，如果反序则交换，直到没有反序的记录为止。复杂度为 O(n2)</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">简单选择排序：每一次遍历时选取关键字最小的记录作为有序序列的第 i 个记录。复杂度为 O(n2)。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">直接插入排序：将一个记录插入到已排好序的序列中，从而得到一个新的有序序列（将序列的第一个数据看成是一个有序的子序列，然后从第二个记录逐个向该有序的子序列进行有序的插入，直至整个序列有序）复杂度 O(n2)</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">二分插入排序：二分（折半）插入排序是一种在直接插入排序算法上进行小改动的排序算法。其与直接排序算法最大的区别在于查找插入位置时使用的是二分查找的方式，在速度上有一定提升。O(n^2)。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">快速排序：对一个未排序序列，假设从该序列中的元素中取一个基准值 pivotkey，将小于 pivotkey 放左边，大于 pivotkey 放右边；接着以该 k 为中间，左右两边的分割作为新的序列，重新进行 1 操作。 快排因为用到了递归操作，所以在简单排序中性能不如直接插入排序， 而在大量数据排序时，递归产生的性能影响对于算法的整体性能优势可以忽略。O(n*logn) </span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">希尔排序：希尔排序通过将比较的全部元素分为几个区域来提升插入排序的性能。这样可以让一个元素可以一次性地朝最终位置前进一大步。然后算法再取越来越小的步长进行排序，算法的最后一步就是普通的插入排序，但是到了这步，需排序的数据几乎是已排好的了（此时插入排序较快）。</span></li>
 </ul>
-<h3 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h3><p>顺序查找：顺序查找对序列本身没有要求（比如不需要是已经排序好的），也不仅限于数字、字符，也可以用于前缀，对象信息的关键信息的匹配（比如查找指定 id 的相应信息）。</p>
-<p>二分查找：如果是顺序查找，7 个数最多可能会比较 7 次，但用二分查找，最多只要 3 次就能 OK。时间复杂度是 O（logn）(底数为 2)。</p>
-<h1 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h1><h2 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h2><ul>
-<li>ArrayList 底层是用数组实现的存储。</li>
-<li>默认空数组，只有真正对数据进行添加 add 时，才分配默认10容量，扩容为 1.5 倍。容量超过 10 时，会创建一个容量 1.5 倍的空数组，将原有数据拷贝过去。</li>
-<li>查询效率高，增删效率低，线程不安全。使用频率很高。</li>
+<h3 id="h-16" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">搜索</span></h3>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">顺序查找：顺序查找对序列本身没有要求（比如不需要是已经排序好的），也不仅限于数字、字符，也可以用于前缀，对象信息的关键信息的匹配（比如查找指定 id 的相应信息）。</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">二分查找：如果是顺序查找，7 个数最多可能会比较 7 次，但用二分查找，最多只要 3 次就能 OK。时间复杂度是 O（logn）(底数为 2)。</p>
+<h1 id="h-17" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.6em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">容器</span></h1>
+<h2 id="harraylist" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.4em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">ArrayList</span></h2>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">ArrayList 底层是用数组实现的存储。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">默认空数组，只有真正对数据进行添加 add 时，才分配默认10容量，扩容为 1.5 倍。容量超过 10 时，会创建一个容量 1.5 倍的空数组，将原有数据拷贝过去。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">查询效率高，增删效率低，线程不安全。使用频率很高。</span></li>
 </ul>
-<h2 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h2><ul>
-<li>底层是双向链表，同时实现了List接口和Deque接口</li>
-<li>LinkedList 内部存储的是 Node，不仅要维护数据域，还要维护 prev 和 next，如果 LinkedList 中的结点特别多，则 LinkedList 比 ArrayList 更占内存。</li>
-<li>插入删除效率高,循环遍历效率低 </li>
-<li>ArrayList 实现了 RandomAccess 随机访问接口，使用for遍历比较快。</li>
-<li>LinkedList 未实现 RandomAccess 接口，所以推荐使用 Iterator 迭代器来遍历数据。</li>
+<h2 id="hlinkedlist" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.4em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">LinkedList</span></h2>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">底层是双向链表，同时实现了List接口和Deque接口</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">LinkedList 内部存储的是 Node，不仅要维护数据域，还要维护 prev 和 next，如果 LinkedList 中的结点特别多，则 LinkedList 比 ArrayList 更占内存。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">插入删除效率高,循环遍历效率低 </span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">ArrayList 实现了 RandomAccess 随机访问接口，使用for遍历比较快。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">LinkedList 未实现 RandomAccess 接口，所以推荐使用 Iterator 迭代器来遍历数据。</span></li>
 </ul>
-<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><h3 id="特点-3"><a href="#特点-3" class="headerlink" title="特点"></a>特点</h3><ul>
-<li>HashMap 是基于 Map 接口实现的一种键-值对&lt;key,value&gt;的存储结构，允许 null 值 null键，同时非有序，非同步(即线程不安全)。</li>
-<li>HashMap 的底层实现是数组 + 链表 + 红黑树（JDK1.8 增加了红黑树部分。</li>
-<li>它存储和查找数据时，是根据键 key 的 hashCode 的值计算出具体的存储位置。</li>
-<li>HashMap 增删改查等常规操作都有不错的执行效率，是 ArrayList 和 LinkedList 等数据结构的一种折中实现。</li>
+<h2 id="hhashmap" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.4em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">HashMap</span></h2>
+<h3 id="h-18" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">特点</span></h3>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;">HashMap 是基于 Map 接口实现的一种键-值对<key,value style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">的存储结构，允许 null 值 null键，同时非有序，非同步(即线程不安全)。</key,value></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">HashMap 的底层实现是数组 + 链表 + 红黑树（JDK1.8 增加了红黑树部分。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">它存储和查找数据时，是根据键 key 的 hashCode 的值计算出具体的存储位置。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">HashMap 增删改查等常规操作都有不错的执行效率，是 ArrayList 和 LinkedList 等数据结构的一种折中实现。</span></li>
 </ul>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ol>
-<li><p>hash值的计算？</p>
-<p> 对于key的hashCode：Java7 做了 4 次 16 位右位移异或混合，Java 8 中这步已经简化了，只做一次 16 位右位移异或混合，而不是四次，但原理是不变的。</p>
-<p> 右位移 16 位，正好是 32bit 的一半，自己的高半区和低半区做异或，就是为了混合原始哈希码的高位和低位，以此来加大低位的随机性。而且混合后的低位掺杂了高位的部分特征，这样高位的信息也被变相保留下来。</p>
-</li>
-<li><p>hash冲突？</p>
-<p> 这个 hash 值 %模上 哈希表 Node&lt;K,V&gt;[] table 的长度 得到具体的存放位置。所以 put(K key, V value)多个元素，是有可能计算出相同的存放位置。此现象就是 hash 冲突或者叫 hash 碰撞。</p>
-</li>
-<li><p>hash冲突的解决：</p>
-<p> HashMap是使用链地址法解决hash冲突的，当有冲突元素放进来时，会将此元素插入至此位置链表的最后一位，形成单链表。但是由于是单链表的缘故，每当通过hash % length找到该位置的元素时，均需要从头遍历链表，通过逐一比较hash值，找到对应元素。</p>
-<p> 如果此位置元素过多，造成链表过长，遍历时间会大大增加，最坏情况下的时间复杂度为O(N)，造成查找效率过低。所以当存在位置的链表长度 大于等于 8 时，HashMap会将链表 转变为 红黑树，红黑树最坏情况下的时间复杂度为O(logn)。以此提高查找效率。</p>
-</li>
-<li><p>HashMap 的容量为什么一定要是 2 的 n 次方？</p>
-<p> 因为调用 put(K key, V value) 操作添加key-value键值对时，具体确定此元素的位置是通过 hash值 % 模上 哈希表Node&lt;K,V&gt;[] table的长度 hash % length 计算的。但是”模”运算的消耗相对较大，通过位运算h &amp; (length-1)也可以得到取模后的存放位置，而位运算的运行效率高，但只有 length 的长度是 2 的 n 次方时，h &amp; (length-1) 才等价于 h % length。</p>
-<p> 而且当数组长度为 2 的 n 次幂的时候，不同的key算出的index相同的几率较小，那么数据在数组上分布就比较均匀，也就是说碰撞的几率小，相对的，查询的时候就不用遍历某个位置上的链表，这样查询效率也就较高了。</p>
-</li>
-<li><p>HashMap里的size属性到底指的是数组实际长度还是键值总数?</p>
-<p> HashMap里的size属性指的就是键值总数，因为哪怕新加的元素和旧元素hash值相等而equals结果不同，会处于同一链表中，size一样会加一，而size大小最终决定了是否要进行扩容。</p>
-</li>
-<li><p>HashMap的负载因子初始值为什么是0.75？</p>
-<p> 负载因子过大，哈希冲突增加，虽然空间利用率上去了，但是时间效率降低了。<br> 负载因子过小，虽然时间效率提升了，但是空间利用率降低了。</p>
-<p> 负载因子是0.75的时候，空间利用率比较高，而且避免了相当多的Hash冲突，使得底层的链表或者是红黑树的高度比较低，提升了空间效率。</p>
-</li>
-<li><p>扩容？它是怎么扩容的呢？</p>
-<p> 当 put 时，如果发现目前的 bucket 占用程度已经超过了 Load Factor 所希望的比例，那么就会发生 resize。在 resize 的过程，简单的说就是把 bucket 扩充为 2 倍，之后重新计算 index，把节点再放到新的 bucket 中。</p>
-<p> 当超过限制的时候会resize，然而又因为我们使用的是 2 次幂的扩展(指长度扩为原来 2 倍)，所以，元素的位置要么是在原位置，要么是在原位置再移动 2 次幂的位置。</p>
-<p> 因此，我们在扩充 HashMap 的时候，不需要重新计算 hash，只需要看看原来的 hash 值新增的那个 bit 是 1 还是 0 就好了，是 0 的话索引没变，是 1 的话索引变成“原索引+oldCap”。</p>
-</li>
-<li><p>拉链法插入链表 为啥 java7 之前用头插法，java8 之后改成尾插了呢？</p>
-<p> 使用头插会改变链表的上的顺序，但是如果使用尾插，在扩容时会保持链表元素原本的顺序，就不会出现链表成环的问题了。</p>
-<p> Java7 在多线程操作 HashMap 时可能引起死循环，原因是扩容转移后前后链表顺序倒置，在转移过程中修改了原来链表中节点的引用关系。</p>
-<p> Java8 在同样的前提下并不会引起死循环，原因是扩容转移后前后链表顺序不变，保持之前节点的引用关系。</p>
-</li>
+<h3 id="h-19" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">问题</span></h3>
+<ol style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: decimal;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">hash值的计算？</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">对于key的hashCode：Java7 做了 4 次 16 位右位移异或混合，Java 8 中这步已经简化了，只做一次 16 位右位移异或混合，而不是四次，但原理是不变的。</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">右位移 16 位，正好是 32bit 的一半，自己的高半区和低半区做异或，就是为了混合原始哈希码的高位和低位，以此来加大低位的随机性。而且混合后的低位掺杂了高位的部分特征，这样高位的信息也被变相保留下来。</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">hash冲突？</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">这个 hash 值 %模上 哈希表 Node<k,v style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">[] table 的长度 得到具体的存放位置。所以 put(K key, V value)多个元素，是有可能计算出相同的存放位置。此现象就是 hash 冲突或者叫 hash 碰撞。</k,v></p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">hash冲突的解决：</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">HashMap是使用链地址法解决hash冲突的，当有冲突元素放进来时，会将此元素插入至此位置链表的最后一位，形成单链表。但是由于是单链表的缘故，每当通过hash % length找到该位置的元素时，均需要从头遍历链表，通过逐一比较hash值，找到对应元素。</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">如果此位置元素过多，造成链表过长，遍历时间会大大增加，最坏情况下的时间复杂度为O(N)，造成查找效率过低。所以当存在位置的链表长度 大于等于 8 时，HashMap会将链表 转变为 红黑树，红黑树最坏情况下的时间复杂度为O(logn)。以此提高查找效率。</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">HashMap 的容量为什么一定要是 2 的 n 次方？</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">因为调用 put(K key, V value) 操作添加key-value键值对时，具体确定此元素的位置是通过 hash值 % 模上 哈希表Node<k,v style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">[] table的长度 hash % length 计算的。但是”模”运算的消耗相对较大，通过位运算h &amp; (length-1)也可以得到取模后的存放位置，而位运算的运行效率高，但只有 length 的长度是 2 的 n 次方时，h &amp; (length-1) 才等价于 h % length。</k,v></p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">而且当数组长度为 2 的 n 次幂的时候，不同的key算出的index相同的几率较小，那么数据在数组上分布就比较均匀，也就是说碰撞的几率小，相对的，查询的时候就不用遍历某个位置上的链表，这样查询效率也就较高了。</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">HashMap里的size属性到底指的是数组实际长度还是键值总数?</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">HashMap里的size属性指的就是键值总数，因为哪怕新加的元素和旧元素hash值相等而equals结果不同，会处于同一链表中，size一样会加一，而size大小最终决定了是否要进行扩容。</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">HashMap的负载因子初始值为什么是0.75？</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">负载因子过大，哈希冲突增加，虽然空间利用率上去了，但是时间效率降低了。<br>负载因子过小，虽然时间效率提升了，但是空间利用率降低了。</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">负载因子是0.75的时候，空间利用率比较高，而且避免了相当多的Hash冲突，使得底层的链表或者是红黑树的高度比较低，提升了空间效率。</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">扩容？它是怎么扩容的呢？</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">当 put 时，如果发现目前的 bucket 占用程度已经超过了 Load Factor 所希望的比例，那么就会发生 resize。在 resize 的过程，简单的说就是把 bucket 扩充为 2 倍，之后重新计算 index，把节点再放到新的 bucket 中。</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">当超过限制的时候会resize，然而又因为我们使用的是 2 次幂的扩展(指长度扩为原来 2 倍)，所以，元素的位置要么是在原位置，要么是在原位置再移动 2 次幂的位置。</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">因此，我们在扩充 HashMap 的时候，不需要重新计算 hash，只需要看看原来的 hash 值新增的那个 bit 是 1 还是 0 就好了，是 0 的话索引没变，是 1 的话索引变成“原索引+oldCap”。</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">拉链法插入链表 为啥 java7 之前用头插法，java8 之后改成尾插了呢？</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">使用头插会改变链表的上的顺序，但是如果使用尾插，在扩容时会保持链表元素原本的顺序，就不会出现链表成环的问题了。</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">Java7 在多线程操作 HashMap 时可能引起死循环，原因是扩容转移后前后链表顺序倒置，在转移过程中修改了原来链表中节点的引用关系。</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">Java8 在同样的前提下并不会引起死循环，原因是扩容转移后前后链表顺序不变，保持之前节点的引用关系。</p></li>
 </ol>
-<h2 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h2><p>ConcurrentHashMap 对锁的粒度和锁的方式进行了优化，jdk1.7 采用了分段锁，而 jdk1.8 采用了 CAS + synchronized 的方式。保证了并发效率及安全性。</p>
-<h3 id="JDK7"><a href="#JDK7" class="headerlink" title="JDK7"></a>JDK7</h3><p>CurrentHashMap 包含一个 Segment数组，每个 Segment 包含一个HashEntry 数组并且守护它，当修改 HashEntry 数组数据时，需要先获取它对应的 Segment 锁；而 HashEntry 数组采用开链法处理冲突，所以它的每个 HashEntry 元素又是链表结构的元素。</p>
-<p>HashEntry跟HashMap差不多的，但是不同点是，他使用volatile去修饰了他的数据Value还有下一个节点next。保证了内存可见性，所以每次获取时都是最新值。ConcurrentHashMap 的 get 方法是非常高效的，因为整个过程都不需要加锁。</p>
-<p>基础变量：</p>
-<ul>
-<li>默认初始化大小值 16</li>
-<li>默认负载因子大小 0.75</li>
-<li>默认分段数量（最大并发线程数）16</li>
-<li>最大容量 1&lt;&lt;30</li>
-<li>每个 segment 分段中表的最小容量 2</li>
-<li>最大分段数量 1&lt;&lt;16</li>
-<li>containsValue 方法不锁表的情况下尝试的次数 2</li>
+<h2 id="hconcurrenthashmap" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.4em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">ConcurrentHashMap</span></h2>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">ConcurrentHashMap 对锁的粒度和锁的方式进行了优化，jdk1.7 采用了分段锁，而 jdk1.8 采用了 CAS + synchronized 的方式。保证了并发效率及安全性。</p>
+<h3 id="hjdk7" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">JDK7</span></h3>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">CurrentHashMap 包含一个 Segment数组，每个 Segment 包含一个HashEntry 数组并且守护它，当修改 HashEntry 数组数据时，需要先获取它对应的 Segment 锁；而 HashEntry 数组采用开链法处理冲突，所以它的每个 HashEntry 元素又是链表结构的元素。</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">HashEntry跟HashMap差不多的，但是不同点是，他使用volatile去修饰了他的数据Value还有下一个节点next。保证了内存可见性，所以每次获取时都是最新值。ConcurrentHashMap 的 get 方法是非常高效的，因为整个过程都不需要加锁。</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">基础变量：</p>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">默认初始化大小值 16</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">默认负载因子大小 0.75</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">默认分段数量（最大并发线程数）16</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">最大容量 1&lt;&lt;30</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">每个 segment 分段中表的最小容量 2</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">最大分段数量 1&lt;&lt;16</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">containsValue 方法不锁表的情况下尝试的次数 2</span></li>
 </ul>
-<p>segment变量：</p>
-<ul>
-<li>自旋等待尝试加锁次数，单核为1，多核为64</li>
-<li>HashEntry数组</li>
-<li>segment中元素个数</li>
-<li>修改次数</li>
-<li>扩容阀值</li>
-<li>负载因子</li>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">segment变量：</p>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">自旋等待尝试加锁次数，单核为1，多核为64</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">HashEntry数组</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">segment中元素个数</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">修改次数</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">扩容阀值</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">负载因子</span></li>
 </ul>
-<p>重要操作：</p>
-<ol>
-<li>定位segment：</li>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">重要操作：</p>
+<ol style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: decimal;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">定位segment：</span></li>
 </ol>
-<ul>
-<li>首先对 key 的 hashCode 进行 hash 操作，运用散列算法定位 segment 的位置</li>
-<li>segmentMask：段掩码，假如 segments 数组长度为 16，则段掩码为 16-1=15；segments 长度为 32，段掩码为 32-1=31。这样得到的所有 bit 位都为 1，可以更好地保证散列的均匀性</li>
-<li>segmentShift：2 的 sshift 次方等于 ssize，segmentShift=32-sshift。若 segments 长度为 16，segmentShift=32-4=28;若 segments 长度为 32，segmentShift=32-5=27。</li>
-<li>而计算得出的 hash 值最大为 32 位，无符号右移 segmentShift，则意味着只保留高几位（其余位是没用的），然后与段掩码 segmentMask 位运算来定位 Segment。</li>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">首先对 key 的 hashCode 进行 hash 操作，运用散列算法定位 segment 的位置</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">segmentMask：段掩码，假如 segments 数组长度为 16，则段掩码为 16-1=15；segments 长度为 32，段掩码为 32-1=31。这样得到的所有 bit 位都为 1，可以更好地保证散列的均匀性</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">segmentShift：2 的 sshift 次方等于 ssize，segmentShift=32-sshift。若 segments 长度为 16，segmentShift=32-4=28;若 segments 长度为 32，segmentShift=32-5=27。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">而计算得出的 hash 值最大为 32 位，无符号右移 segmentShift，则意味着只保留高几位（其余位是没用的），然后与段掩码 segmentMask 位运算来定位 Segment。</span></li>
 </ul>
-<ol start="2">
-<li>put:</li>
+<ol style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: decimal;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">put:</span></li>
 </ol>
-<ul>
-<li><p>先尝试获取锁，如果加锁失败，则 scanAndLock 自旋等待（和上面的 put 方法相似）。</p>
-</li>
-<li><p>获取锁之后，(tab.length - 1) &amp; hash 计算删除节点在 table 中的下标。如果 table 中该位置的链表 <code>HashEntry</code> 不为空,循环判断链表中节点是否存在：</p>
-<ul>
-<li>存在，则替换 value 值，返回 OldValue。</li>
-<li>如果不存在，新建节点，放在 frist 节点前。节点超出最大负载则 rehash。</li>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">先尝试获取锁，如果加锁失败，则 scanAndLock 自旋等待（和上面的 put 方法相似）。</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">获取锁之后，(tab.length - 1) &amp; hash 计算删除节点在 table 中的下标。如果 table 中该位置的链表 <code style="font-size: inherit; line-height: inherit; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0px 2px; color: rgb(233, 105, 0); background: rgb(248, 248, 248);">HashEntry</code> 不为空,循环判断链表中节点是否存在：</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">存在，则替换 value 值，返回 OldValue。</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">如果不存在，新建节点，放在 frist 节点前。节点超出最大负载则 rehash。</p></li>
 </ul>
-</li>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">自旋加锁:</p>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">自旋锁，尝试加锁一定次数仍然失败进行线程自中断。</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">该方法先计算 hash 值在 table 中的位置，循环该位置上的链表查找 key 值。</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">如果不存在则新建节点，之后尝试加锁 MAX_SCAN_RETRIES 次，如果一直失败则改为阻塞锁获取，保证能获取成功</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">期间如果链表头被修改，则重新开始该过程。</p></li>
 </ul>
-<p>自旋加锁:</p>
-<ul>
-<li><p>自旋锁，尝试加锁一定次数仍然失败进行线程自中断。</p>
-</li>
-<li><p>该方法先计算 hash 值在 table 中的位置，循环该位置上的链表查找 key 值。</p>
-</li>
-<li><p>如果不存在则新建节点，之后尝试加锁 MAX_SCAN_RETRIES 次，如果一直失败则改为阻塞锁获取，保证能获取成功</p>
-</li>
-<li><p>期间如果链表头被修改，则重新开始该过程。</p>
-</li>
-</ul>
-<ol start="3">
-<li>get:</li>
+<ol style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: decimal;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">get:</span></li>
 </ol>
-<ul>
-<li>先计算 key 落在哪个 segment 中</li>
-<li>如果 segment 不为 null 并且 table 不为 null，(tab.length - 1) &amp; h 计算在 table 中的下标</li>
-<li>循环链表的节点进行比较，如果 key 相等或者 hash 和 equals 方法相等，则返回 value 值。(Unsafe取值，保证数据一致性)</li>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">先计算 key 落在哪个 segment 中</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">如果 segment 不为 null 并且 table 不为 null，(tab.length - 1) &amp; h 计算在 table 中的下标</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">循环链表的节点进行比较，如果 key 相等或者 hash 和 equals 方法相等，则返回 value 值。(Unsafe取值，保证数据一致性)</span></li>
 </ul>
-<h3 id="JDK8"><a href="#JDK8" class="headerlink" title="JDK8"></a>JDK8</h3><ul>
-<li>其中抛弃了原有的 Segment 分段锁，对每个node进行同步操作，采用了 CAS + synchronized 来保证并发安全性。</li>
-<li>跟HashMap很像,把之前的 HashEntry 改成了 Node，但是作用不变，把值和 next 采用了 volatile 去修饰，保证了可见性，并且也引入了红黑树，在链表大于一定值的时候会转换（默认是 8）</li>
-<li>初始化操作是在第一次put时进行</li>
+<h3 id="hjdk8" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">JDK8</span></h3>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">其中抛弃了原有的 Segment 分段锁，对每个node进行同步操作，采用了 CAS + synchronized 来保证并发安全性。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">跟HashMap很像,把之前的 HashEntry 改成了 Node，但是作用不变，把值和 next 采用了 volatile 去修饰，保证了可见性，并且也引入了红黑树，在链表大于一定值的时候会转换（默认是 8）</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">初始化操作是在第一次put时进行</span></li>
 </ul>
-<p>基础变量</p>
-<ol>
-<li>最大容量 1 &lt;&lt; 30;</li>
-<li>默认初始化的容量 16，容量必须是 2 的倍数</li>
-<li>数组的最大容量，toArray 和相关方法会用到</li>
-<li>默认分段数量（不再使用，兼容老版本）16</li>
-<li>默认负载因子 0.75f</li>
-<li>链表转换为树的阈值 8</li>
-<li>树转化为链表的阈值 6</li>
-<li>树结构的最小容量 64</li>
-<li>扩容时每个核心转移的间隔数 16</li>
-<li>节点的 hash 值</li>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">基础变量</p>
+<ol style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: decimal;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">最大容量 1 &lt;&lt; 30;</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">默认初始化的容量 16，容量必须是 2 的倍数</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">数组的最大容量，toArray 和相关方法会用到</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">默认分段数量（不再使用，兼容老版本）16</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">默认负载因子 0.75f</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">链表转换为树的阈值 8</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">树转化为链表的阈值 6</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">树结构的最小容量 64</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">扩容时每个核心转移的间隔数 16</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">节点的 hash 值</span></li>
 </ol>
-<p>重要变量</p>
-<ul>
-<li><code>table</code>：默认为null，初始化发生在第一次插入操作，默认大小为16的数组，用来存储Node节点数据，扩容时大小总是2的幂次方。</li>
-<li><code>nextTable</code>：默认为null，扩容时新生成的数组，其大小为原数组的两倍。</li>
-<li><code>sizeCtl</code> ：<ul>
-<li>默认为0，用来控制table的初始化和扩容操作</li>
-<li>-1 代表table正在初始化</li>
-<li>-N 取-N对应的二进制的低16位数值为M，此时有M-1个线程进行扩容。</li>
-<li>1、如果table未初始化，表示table需要初始化的大小。</li>
-<li>2、如果table初始化完成，表示table的容量，默认是table大小的0.75倍</li>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">重要变量</p>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><code style="font-size: inherit; line-height: inherit; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0px 2px; color: rgb(233, 105, 0); background: rgb(248, 248, 248);">table</code>：默认为null，初始化发生在第一次插入操作，默认大小为16的数组，用来存储Node节点数据，扩容时大小总是2的幂次方。</li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><code style="font-size: inherit; line-height: inherit; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0px 2px; color: rgb(233, 105, 0); background: rgb(248, 248, 248);">nextTable</code>：默认为null，扩容时新生成的数组，其大小为原数组的两倍。</li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><code style="font-size: inherit; line-height: inherit; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0px 2px; color: rgb(233, 105, 0); background: rgb(248, 248, 248);">sizeCtl</code> ：</li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">默认为0，用来控制table的初始化和扩容操作</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">-1 代表table正在初始化</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">-N 取-N对应的二进制的低16位数值为M，此时有M-1个线程进行扩容。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">1、如果table未初始化，表示table需要初始化的大小。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">2、如果table初始化完成，表示table的容量，默认是table大小的0.75倍</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><code style="font-size: inherit; line-height: inherit; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0px 2px; color: rgb(233, 105, 0); background: rgb(248, 248, 248);">节点的Hash</code>:</li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">MOVED     = -1; // 表示该节点正在处理中</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">TREEBIN   = -2; // 表示该节点是树的根节点</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">RESERVED  = -3; // 暂时保留</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">HASH_BITS = 0x7fffffff; // 正常节点的hash值可用的位数</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><code style="font-size: inherit; line-height: inherit; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0px 2px; color: rgb(233, 105, 0); background: rgb(248, 248, 248);">Node</code>：主要存放 key-value 对，并且具有 next 域，其中value和next都用volatile修饰，保证并发的可见性。</li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><code style="font-size: inherit; line-height: inherit; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0px 2px; color: rgb(233, 105, 0); background: rgb(248, 248, 248);">TreeNode</code>：树节点，继承于承载数据的 Node 类。而红黑树的操作是针对 TreeBin 类的，从该类的注释也可以看出，也就是 TreeBin 会将 TreeNode 进行再一次封装</li>
 </ul>
-</li>
-<li><code>节点的Hash</code>:<ul>
-<li>MOVED     = -1; // 表示该节点正在处理中</li>
-<li>TREEBIN   = -2; // 表示该节点是树的根节点</li>
-<li>RESERVED  = -3; // 暂时保留</li>
-<li>HASH_BITS = 0x7fffffff; // 正常节点的hash值可用的位数</li>
-</ul>
-</li>
-<li><code>Node</code>：主要存放 key-value 对，并且具有 next 域，其中value和next都用volatile修饰，保证并发的可见性。</li>
-<li><code>TreeNode</code>：树节点，继承于承载数据的 Node 类。而红黑树的操作是针对 TreeBin 类的，从该类的注释也可以看出，也就是 TreeBin 会将 TreeNode 进行再一次封装</li>
-</ul>
-<p>重要方法：</p>
-<ol>
-<li>cas操作方法</li>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">重要方法：</p>
+<ol style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: decimal;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">cas操作方法</span></li>
 </ol>
-<p>获取索引对应的元素</p>
-<p>该方法用来获取 table 数组中索引为 i 的 Node 元素。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> &lt;K,V&gt; <span class="function">Node&lt;K,V&gt; <span class="title">tabAt</span><span class="params">(Node&lt;K,V&gt;[] tab, <span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (Node&lt;K,V&gt;)U.getObjectVolatile(tab, ((<span class="keyword">long</span>)i &lt;&lt; ASHIFT) + ABASE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">获取索引对应的元素</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">该方法用来获取 table 数组中索引为 i 的 Node 元素。</p>
+<pre style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;"><code class="java language-java hljs" style="overflow-wrap: break-word; margin: 0px 2px; line-height: 15px; font-size: 11px; font-weight: normal; word-spacing: -3px; letter-spacing: 0px; font-family: Consolas, Inconsolata, Courier, monospace; border-radius: 0px; overflow-x: auto; padding: 0.5em; background: rgb(238, 238, 238); color: black; white-space: pre !important; word-wrap: normal !important; word-break: normal !important; overflow: auto !important; display: -webkit-box !important;"><span class="linenum hljs-number" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); padding-right: 20px; word-spacing: 0px; word-wrap: inherit !important; word-break: inherit !important;">1</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">static</span>&nbsp;<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">final</span>&nbsp;&lt;K,V&gt;&nbsp;<span class="hljs-function" style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; word-wrap: inherit !important; word-break: inherit !important;">Node&lt;K,V&gt;&nbsp;<span class="hljs-title" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(153, 0, 0); word-wrap: inherit !important; word-break: inherit !important;">tabAt</span><span class="hljs-params" style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; word-wrap: inherit !important; word-break: inherit !important;">(Node&lt;K,V&gt;[]&nbsp;tab,&nbsp;<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">int</span>&nbsp;i)</span>&nbsp;</span>{<br><span class="linenum hljs-number" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); padding-right: 20px; word-spacing: 0px; word-wrap: inherit !important; word-break: inherit !important;">2</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">return</span>&nbsp;(Node&lt;K,V&gt;)U.getObjectVolatile(tab,&nbsp;((<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">long</span>)i&nbsp;&lt;&lt;&nbsp;ASHIFT)&nbsp;+&nbsp;ABASE);<br><span class="linenum hljs-number" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); padding-right: 20px; word-spacing: 0px; word-wrap: inherit !important; word-break: inherit !important;">3</span>&nbsp;&nbsp;&nbsp;&nbsp;}<br></code></pre>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">采用 <code style="font-size: inherit; line-height: inherit; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0px 2px; color: rgb(233, 105, 0); background: rgb(248, 248, 248);">Unsafe.getObjectVolatie()</code> 来获取，而不是直接用table[index]的原因跟ConcurrentHashMap的弱一致性有关。在java内存模型中，我们已经知道每个线程都有一个工作内存，里面存储着table的副本，虽然table是volatile修饰的，但不能保证线程每次都拿到table中的最新元素，<code style="font-size: inherit; line-height: inherit; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0px 2px; color: rgb(233, 105, 0); background: rgb(248, 248, 248);">Unsafe.getObjectVolatile</code> 可以直接获取指定内存的数据，保证了每次拿到数据都是最新的。</p>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">利用 CAS 操作设置 table 数组中索引为 i 的元素</p>
+<pre style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;"><code class="java language-java hljs" style="overflow-wrap: break-word; margin: 0px 2px; line-height: 15px; font-size: 11px; font-weight: normal; word-spacing: -3px; letter-spacing: 0px; font-family: Consolas, Inconsolata, Courier, monospace; border-radius: 0px; overflow-x: auto; padding: 0.5em; background: rgb(238, 238, 238); color: black; white-space: pre !important; word-wrap: normal !important; word-break: normal !important; overflow: auto !important; display: -webkit-box !important;"><span class="linenum hljs-number" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); padding-right: 20px; word-spacing: 0px; word-wrap: inherit !important; word-break: inherit !important;">1</span><span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">static</span>&nbsp;<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">final</span>&nbsp;&lt;K,V&gt;&nbsp;<span class="hljs-function" style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; word-wrap: inherit !important; word-break: inherit !important;"><span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">boolean</span>&nbsp;<span class="hljs-title" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(153, 0, 0); word-wrap: inherit !important; word-break: inherit !important;">casTabAt</span><span class="hljs-params" style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; word-wrap: inherit !important; word-break: inherit !important;">(Node&lt;K,V&gt;[]&nbsp;tab,&nbsp;<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">int</span>&nbsp;i,<br><span class="linenum hljs-number" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); padding-right: 20px; word-spacing: 0px; word-wrap: inherit !important; word-break: inherit !important;">2</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Node&lt;K,V&gt;&nbsp;c,&nbsp;Node&lt;K,V&gt;&nbsp;v)</span>&nbsp;</span>{<br><span class="linenum hljs-number" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); padding-right: 20px; word-spacing: 0px; word-wrap: inherit !important; word-break: inherit !important;">3</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">return</span>&nbsp;U.compareAndSwapObject(tab,&nbsp;((<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">long</span>)i&nbsp;&lt;&lt;&nbsp;ASHIFT)&nbsp;+&nbsp;ABASE,&nbsp;c,&nbsp;v);<br><span class="linenum hljs-number" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); padding-right: 20px; word-spacing: 0px; word-wrap: inherit !important; word-break: inherit !important;">4</span>}<br></code></pre>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">该方法用来设置 table 数组中索引为 i 的元素</p>
+<pre style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;"><code class="java language-java hljs" style="overflow-wrap: break-word; margin: 0px 2px; line-height: 15px; font-size: 11px; font-weight: normal; word-spacing: -3px; letter-spacing: 0px; font-family: Consolas, Inconsolata, Courier, monospace; border-radius: 0px; overflow-x: auto; padding: 0.5em; background: rgb(238, 238, 238); color: black; white-space: pre !important; word-wrap: normal !important; word-break: normal !important; overflow: auto !important; display: -webkit-box !important;"><span class="linenum hljs-number" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); padding-right: 20px; word-spacing: 0px; word-wrap: inherit !important; word-break: inherit !important;">1</span><span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">static</span>&nbsp;<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">final</span>&nbsp;&lt;K,V&gt;&nbsp;<span class="hljs-function" style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; word-wrap: inherit !important; word-break: inherit !important;"><span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">void</span>&nbsp;<span class="hljs-title" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(153, 0, 0); word-wrap: inherit !important; word-break: inherit !important;">setTabAt</span><span class="hljs-params" style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; word-wrap: inherit !important; word-break: inherit !important;">(Node&lt;K,V&gt;[]&nbsp;tab,&nbsp;<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">int</span>&nbsp;i,&nbsp;Node&lt;K,V&gt;&nbsp;v)</span>&nbsp;</span>{<br><span class="linenum hljs-number" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); padding-right: 20px; word-spacing: 0px; word-wrap: inherit !important; word-break: inherit !important;">2</span>&nbsp;&nbsp;&nbsp;&nbsp;U.putObjectVolatile(tab,&nbsp;((<span class="hljs-keyword" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); word-wrap: inherit !important; word-break: inherit !important;">long</span>)i&nbsp;&lt;&lt;&nbsp;ASHIFT)&nbsp;+&nbsp;ABASE,&nbsp;v);<br><span class="linenum hljs-number" style="font-size: inherit; line-height: inherit; margin: 0px; padding: 0px; color: rgb(0, 153, 153); padding-right: 20px; word-spacing: 0px; word-wrap: inherit !important; word-break: inherit !important;">3</span>}<br></code></pre>
+<ol start="2" style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: decimal;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">put</span></li>
+</ol>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">判断传进来的key和value是否为空，在ConcurrentHashMap中key和value都不允许为空，然而在HashMap中是可以为key和val都可以为空，这一点值得注意一下；</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">对key进行重hash计算，获得hash值；</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">如果当前的数组为空，说明这是第一插入数据，则会对table进行初始化；</span></li>
+</ul>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">插入数据，这里分为3中情况：</p>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">插入位置为空，直接将数据放入table的第一个位置中(casTabAt)；</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">插入位置不为空，并且该位置是一个ForwardingNode节点（节点的hash为MOVED），说明该位置上的链表或红黑树正在进行扩容，然后让当前线程加进去并发扩容，提高效率；</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">插入位置不为空，也不是ForwardingNode节点，若为链表则从第一节点开始组个往下遍历，如果有key的hashCode相等并且值也相等，那么就将该节点的数据替换掉，否则将数据加入到链表末段；若为红黑树，则按红黑树的规则放进相应的位置；(synchronized)</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">数据插入成功后，判断当前位置上的节点的数量，如果节点数据大于转换红黑树阈值（默认为8），则将链表转换成红黑树，提高get操作的速度；</p></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">数据量+1，并判断当前table是否需要扩容；</p></li>
+</ul>
+<ol style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: decimal;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">get</span></li>
+</ol>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">读取操作，不需要同步控制，比较简单 </p>
+<ul style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: disc;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">空tab，直接返回null </span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">计算hash值，找到相应的bucket位置，为node节点直接返回(tabAt)，否则返回null</span></li>
+</ul>
+<h3 id="hjdk7jdk8" style="color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px; font-weight: bold; font-size: 1.3em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">JDK7和JDK8的区别</span></h3>
+<p style="font-size: inherit; color: inherit; line-height: inherit; padding: 0px; margin: 1.5em 0px;">主要设计上的变化有以下几点:</p>
+<ol style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; padding-left: 32px; list-style-type: decimal;">
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">不采用 segment 而采用 node，锁住 node 来实现减小锁粒度。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">设计了 MOVED 状态 当 resize 的中过程中 线程 2 还在 put 数据，线程 2 会帮助 resize。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">使用 3 个 CAS 操作来确保 node 的一些操作的原子性，这种方式代替了锁。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">sizeCtl 的不同值来代表不同含义，起到了控制的作用。</span></li>
+<li style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px; margin-bottom: 0.5em;"><span style="font-size: inherit; color: inherit; line-height: inherit; margin: 0px; padding: 0px;">采用 synchronized 而不是 ReentrantLock。</span></li>
+</ol></div>
 
-<p>采用 <code>Unsafe.getObjectVolatie()</code> 来获取，而不是直接用table[index]的原因跟ConcurrentHashMap的弱一致性有关。在java内存模型中，我们已经知道每个线程都有一个工作内存，里面存储着table的副本，虽然table是volatile修饰的，但不能保证线程每次都拿到table中的最新元素，<code>Unsafe.getObjectVolatile</code> 可以直接获取指定内存的数据，保证了每次拿到数据都是最新的。</p>
-<p>利用 CAS 操作设置 table 数组中索引为 i 的元素</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> &lt;K,V&gt; <span class="function"><span class="keyword">boolean</span> <span class="title">casTabAt</span><span class="params">(Node&lt;K,V&gt;[] tab, <span class="keyword">int</span> i,</span></span></span><br><span class="line"><span class="function"><span class="params">                                    Node&lt;K,V&gt; c, Node&lt;K,V&gt; v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> U.compareAndSwapObject(tab, ((<span class="keyword">long</span>)i &lt;&lt; ASHIFT) + ABASE, c, v);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>该方法用来设置 table 数组中索引为 i 的元素</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> &lt;K,V&gt; <span class="function"><span class="keyword">void</span> <span class="title">setTabAt</span><span class="params">(Node&lt;K,V&gt;[] tab, <span class="keyword">int</span> i, Node&lt;K,V&gt; v)</span> </span>&#123;</span><br><span class="line">    U.putObjectVolatile(tab, ((<span class="keyword">long</span>)i &lt;&lt; ASHIFT) + ABASE, v);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li>put</li>
-</ol>
-<ul>
-<li>判断传进来的key和value是否为空，在ConcurrentHashMap中key和value都不允许为空，然而在HashMap中是可以为key和val都可以为空，这一点值得注意一下；</li>
-<li>对key进行重hash计算，获得hash值；</li>
-<li>如果当前的数组为空，说明这是第一插入数据，则会对table进行初始化；</li>
-</ul>
-<p>插入数据，这里分为3中情况：</p>
-<ul>
-<li>插入位置为空，直接将数据放入table的第一个位置中(casTabAt)；</li>
-<li>插入位置不为空，并且该位置是一个ForwardingNode节点（节点的hash为MOVED），说明该位置上的链表或红黑树正在进行扩容，然后让当前线程加进去并发扩容，提高效率；</li>
-<li>插入位置不为空，也不是ForwardingNode节点，若为链表则从第一节点开始组个往下遍历，如果有key的hashCode相等并且值也相等，那么就将该节点的数据替换掉，否则将数据加入到链表末段；若为红黑树，则按红黑树的规则放进相应的位置；(synchronized)</li>
-</ul>
-<ul>
-<li>数据插入成功后，判断当前位置上的节点的数量，如果节点数据大于转换红黑树阈值（默认为8），则将链表转换成红黑树，提高get操作的速度；</li>
-<li>数据量+1，并判断当前table是否需要扩容；</li>
-</ul>
-<ol start="3">
-<li>get</li>
-</ol>
-<p>读取操作，不需要同步控制，比较简单 </p>
-<ul>
-<li>空tab，直接返回null </li>
-<li>计算hash值，找到相应的bucket位置，为node节点直接返回(tabAt)，否则返回null</li>
-</ul>
-<h3 id="JDK7和JDK8的区别"><a href="#JDK7和JDK8的区别" class="headerlink" title="JDK7和JDK8的区别"></a>JDK7和JDK8的区别</h3><p>主要设计上的变化有以下几点:</p>
-<ol>
-<li>不采用 segment 而采用 node，锁住 node 来实现减小锁粒度。</li>
-<li>设计了 MOVED 状态 当 resize 的中过程中 线程 2 还在 put 数据，线程 2 会帮助 resize。</li>
-<li>使用 3 个 CAS 操作来确保 node 的一些操作的原子性，这种方式代替了锁。</li>
-<li>sizeCtl 的不同值来代表不同含义，起到了控制的作用。</li>
-<li>采用 synchronized 而不是 ReentrantLock。</li>
-</ol>
+
+
+
+
+
  
     </div>
     
@@ -597,7 +607,7 @@
         <p><span>本文标题:</span><a href="/2020/08/25/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%931/">面试总结1</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
         <p><span>发布时间:</span>2020-08-25, 13:31:03</p>
-        <p><span>最后更新:</span>2020-08-27, 10:10:53</p>
+        <p><span>最后更新:</span>2020-09-15, 16:27:42</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2020/08/25/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%931/" title="面试总结1">http://yoursite.com/2020/08/25/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%931/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/08/25/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%931/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -632,7 +642,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数据结构"><span class="toc-number">1.</span> <span class="toc-text">数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数组"><span class="toc-number">1.1.</span> <span class="toc-text">数组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#特点"><span class="toc-number">1.1.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缺点"><span class="toc-number">1.1.2.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#链表"><span class="toc-number">1.2.</span> <span class="toc-text">链表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#特点-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分类"><span class="toc-number">1.2.2.</span> <span class="toc-text">分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#栈"><span class="toc-number">1.3.</span> <span class="toc-text">栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#队列"><span class="toc-number">1.4.</span> <span class="toc-text">队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#树"><span class="toc-number">1.5.</span> <span class="toc-text">树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#特点-2"><span class="toc-number">1.5.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二叉树类型"><span class="toc-number">1.5.2.</span> <span class="toc-text">二叉树类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遍历二叉树"><span class="toc-number">1.5.3.</span> <span class="toc-text">遍历二叉树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#红黑树"><span class="toc-number">1.5.4.</span> <span class="toc-text">红黑树</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法"><span class="toc-number">1.6.</span> <span class="toc-text">算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#排序"><span class="toc-number">1.6.1.</span> <span class="toc-text">排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#搜索"><span class="toc-number">1.6.2.</span> <span class="toc-text">搜索</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#容器"><span class="toc-number">2.</span> <span class="toc-text">容器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ArrayList"><span class="toc-number">2.1.</span> <span class="toc-text">ArrayList</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedList"><span class="toc-number">2.2.</span> <span class="toc-text">LinkedList</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HashMap"><span class="toc-number">2.3.</span> <span class="toc-text">HashMap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#特点-3"><span class="toc-number">2.3.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#问题"><span class="toc-number">2.3.2.</span> <span class="toc-text">问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ConcurrentHashMap"><span class="toc-number">2.4.</span> <span class="toc-text">ConcurrentHashMap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JDK7"><span class="toc-number">2.4.1.</span> <span class="toc-text">JDK7</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JDK8"><span class="toc-number">2.4.2.</span> <span class="toc-text">JDK8</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JDK7和JDK8的区别"><span class="toc-number">2.4.3.</span> <span class="toc-text">JDK7和JDK8的区别</span></a></li></ol></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#h"><span class="toc-number">1.</span> <span class="toc-text">数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#h-1"><span class="toc-number">1.1.</span> <span class="toc-text">数组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#h-2"><span class="toc-number">1.1.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#h-3"><span class="toc-number">1.1.2.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#h-4"><span class="toc-number">1.2.</span> <span class="toc-text">链表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#h-5"><span class="toc-number">1.2.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#h-6"><span class="toc-number">1.2.2.</span> <span class="toc-text">分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#h-7"><span class="toc-number">1.3.</span> <span class="toc-text">栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#h-8"><span class="toc-number">1.4.</span> <span class="toc-text">队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#h-9"><span class="toc-number">1.5.</span> <span class="toc-text">树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#h-10"><span class="toc-number">1.5.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#h-11"><span class="toc-number">1.5.2.</span> <span class="toc-text">二叉树类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#h-12"><span class="toc-number">1.5.3.</span> <span class="toc-text">遍历二叉树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#h-13"><span class="toc-number">1.5.4.</span> <span class="toc-text">红黑树</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#h-14"><span class="toc-number">1.6.</span> <span class="toc-text">算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#h-15"><span class="toc-number">1.6.1.</span> <span class="toc-text">排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#h-16"><span class="toc-number">1.6.2.</span> <span class="toc-text">搜索</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#h-17"><span class="toc-number">2.</span> <span class="toc-text">容器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#harraylist"><span class="toc-number">2.1.</span> <span class="toc-text">ArrayList</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hlinkedlist"><span class="toc-number">2.2.</span> <span class="toc-text">LinkedList</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hhashmap"><span class="toc-number">2.3.</span> <span class="toc-text">HashMap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#h-18"><span class="toc-number">2.3.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#h-19"><span class="toc-number">2.3.2.</span> <span class="toc-text">问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hconcurrenthashmap"><span class="toc-number">2.4.</span> <span class="toc-text">ConcurrentHashMap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#hjdk7"><span class="toc-number">2.4.1.</span> <span class="toc-text">JDK7</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hjdk8"><span class="toc-number">2.4.2.</span> <span class="toc-text">JDK8</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hjdk7jdk8"><span class="toc-number">2.4.3.</span> <span class="toc-text">JDK7和JDK8的区别</span></a></li></ol></li></ol></li></ol>
         
     </div>
     <style>
