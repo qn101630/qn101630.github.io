@@ -23,15 +23,8 @@
 <meta property="og:site_name" content="南有乔木的技术博客专栏">
 <meta property="og:description" content="ArrayList的原理分析">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-15-55-53.png">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-15-56-30.png">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-04-27.png">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-04-56.png">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-05-25.png">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-05-52.png">
-<meta property="og:updated_time" content="2020-07-16T01:29:13.111Z">
+<meta property="og:updated_time" content="2020-10-15T08:14:43.735Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-15-55-53.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -318,37 +311,36 @@
     </div>
      
     <div class="article-entry" itemprop="articleBody">
-        <h1 id="ArrayList-有用过吗？它是一个什么东西？可以用来干嘛？"><a href="#ArrayList-有用过吗？它是一个什么东西？可以用来干嘛？" class="headerlink" title="ArrayList 有用过吗？它是一个什么东西？可以用来干嘛？"></a>ArrayList 有用过吗？它是一个什么东西？可以用来干嘛？</h1><h2 id="底层"><a href="#底层" class="headerlink" title="底层"></a>底层</h2><p>ArrayList 就是数组列表，主要用来装载数据，当我们装载的是基本类型的数据 int，long，boolean，short，byte…的时候我们只能存储他们对应的包装类，它的主要底层实现是数组 Object[] elementData。</p>
-<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>ArrayList 就是数组列表,相比数组，可以装载各种类型的数据。</p>
+<p>底层实现主要依靠 Object[] elementData。</p>
+<h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><ul>
 <li>ArrayList 底层是用数组实现的存储。</li>
-<li>初始化容量为 10，扩容为 1.5 倍。</li>
 <li>查询效率高，增删效率低，线程不安全。使用频率很高。</li>
+<li>可以通过构造方法在初始化的时候指定底层数组的大小；</li>
+<li>无参构造方法1.7初始化，默认为调用有参构造方法，创造10容量的数组。</li>
+<li>无参构造1.8初始化，默认为空数组，只有真正<code>add</code>时，才分配初始10的容量。</li>
+<li>初始化容量为 10，超过10，会创建一个容量 <code>1.5</code> 倍的空数组，将原有数据拷贝过去。</li>
 </ul>
-<h1 id="为啥线程不安全还使用他呢？"><a href="#为啥线程不安全还使用他呢？" class="headerlink" title="为啥线程不安全还使用他呢？"></a>为啥线程不安全还使用他呢？</h1><h2 id="用于查询较多"><a href="#用于查询较多" class="headerlink" title="用于查询较多"></a>用于查询较多</h2><p>因为我们正常使用的场景中，都是用来查询，不会涉及太频繁的增删，如果涉及频繁的增删，可以使用 LinkedList，如果你需要线程安全就使用 Vector，这就是三者的区别了，实际开发过程中还是 ArrayList 使用最多的。</p>
-<h2 id="综合考虑安全和性能"><a href="#综合考虑安全和性能" class="headerlink" title="综合考虑安全和性能"></a>综合考虑安全和性能</h2><p>不存在一个集合工具是查询效率又高，增删效率也高的，还线程安全的，至于为啥大家看代码就知道了，因为数据结构的特性就是优劣共存的，想找个平衡点很难，牺牲了性能，那就安全，牺牲了安全那就快速。</p>
-<h1 id="您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？"><a href="#您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？" class="headerlink" title="您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？"></a>您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？</h1><p>ArrayList 可以通过构造方法在初始化的时候指定底层数组的大小；</p>
-<p>通过无参构造方法的方式 <code>ArrayList()</code> 初始化，则赋值底层数 <code>Object[] elementData</code> 为一个默认空数组 <code>Object[]DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {}</code> 所以数组容量为 <code>0</code>，只有真正对数据进行添加 <code>add</code> 时，才分配默认 <code>DEFAULT_CAPACITY = 10</code> 的初始容量。</p>
-<p>容量超过 <code>10</code> 时，会创建一个容量 <code>1.5</code> 倍的空数组，将原有数据拷贝过去。</p>
-<h1 id="能具体说下-1-7-和-1-8-版本初始化的时候的区别么？"><a href="#能具体说下-1-7-和-1-8-版本初始化的时候的区别么？" class="headerlink" title="能具体说下 1.7 和 1.8 版本初始化的时候的区别么？"></a>能具体说下 1.7 和 1.8 版本初始化的时候的区别么？</h1><p>1.7 开始变化有点大，一个是初始化的时候，1.7 以前会调用 <code>this(10)</code> 才是真正的容量为 10，1.7 即本身以后是默认走了空数组，只有第一次 <code>add</code> 的时候容量会变成 10。</p>
-<h1 id="我记得你说到了，他增删很慢，你能说一下-ArrayList-在增删的时候是怎么做的么？主要说一下他为啥慢。"><a href="#我记得你说到了，他增删很慢，你能说一下-ArrayList-在增删的时候是怎么做的么？主要说一下他为啥慢。" class="headerlink" title="我记得你说到了，他增删很慢，你能说一下 ArrayList 在增删的时候是怎么做的么？主要说一下他为啥慢。"></a>我记得你说到了，他增删很慢，你能说一下 ArrayList 在增删的时候是怎么做的么？主要说一下他为啥慢。</h1><h2 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h2><p>他有指定 index 新增，也有直接新增的，在这之前他会有一步校验长度的判断 ensureCapacityInternal，就是说如果长度不够，是需要扩容的。</p>
-<p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-15-55-53.png" alt="JAVA容器——ArrayList_2020-02-24-15-55-53.png"></p>
-<p>在扩容的时候，老版本的 jdk 和 8 以后的版本是有区别的，8 之后的效率更高了，采用了位运算，右移一位，其实就是除以 2 这个操作。</p>
-<p>1.7 的时候 3/2+1 ，1.8 直接就是 3/2。</p>
-<p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-15-56-30.png" alt="JAVA容器——ArrayList_2020-02-24-15-56-30.png"></p>
-<h2 id="copy"><a href="#copy" class="headerlink" title="copy"></a>copy</h2><p>指定位置新增的时候，在校验之后的操作很简单，就是数组的 copy，大家可以看下代码。</p>
-<p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-04-27.png" alt="JAVA容器——ArrayList_2020-02-24-16-04-27.png"></p>
-<p>不知道大家看懂 arraycopy 的代码没有，我画个图解释下，你可能就明白一点：</p>
-<p>比如有下面这样一个数组我需要在 index 5 的位置去新增一个元素 A</p>
-<p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-04-56.png" alt="JAVA容器——ArrayList_2020-02-24-16-04-56.png"></p>
-<p>那从代码里面我们可以看到，他复制了一个数组，是从 index 5 的位置开始的，然后把它放在了 index 5+1 的位置</p>
-<p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-05-25.png" alt="JAVA容器——ArrayList_2020-02-24-16-05-25.png"></p>
-<p>给我们要新增的元素腾出了位置，然后在 index 的位置放入元素 A 就完成了新增的操作了</p>
-<p><img src="/images/JAVA%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList_2020-02-24-16-05-52.png" alt="JAVA容器——ArrayList_2020-02-24-16-05-52.png"></p>
-<p>至于为啥说他效率低，我想我不说你也应该知道了，我这只是在一个这么小的 List 里面操作，要是我去一个几百几千几万大小的 List 新增一个元素，那就需要后面所有的元素都复制，然后如果再涉及到扩容啥的就更慢了不是嘛。</p>
-<h1 id="ArrayList-插入删除一定慢么？"><a href="#ArrayList-插入删除一定慢么？" class="headerlink" title="ArrayList 插入删除一定慢么？"></a>ArrayList 插入删除一定慢么？</h1><p>取决于你删除的元素离数组末端有多远，ArrayList 拿来作为堆栈来用还是挺合适的，push 和 pop 操作完全不涉及数据移动操作。</p>
-<h1 id="那他的删除是怎么实现的那？"><a href="#那他的删除是怎么实现的那？" class="headerlink" title="那他的删除是怎么实现的那？"></a>那他的删除是怎么实现的那？</h1><p>删除其实跟新增是一样的，不过叫是叫删除，但是在代码里面我们发现，他还是在 copy 一个数组。</p>
-<h1 id="ArrayList-的遍历和-LinkedList-遍历性能比较如何？"><a href="#ArrayList-的遍历和-LinkedList-遍历性能比较如何？" class="headerlink" title="ArrayList 的遍历和 LinkedList 遍历性能比较如何？"></a>ArrayList 的遍历和 LinkedList 遍历性能比较如何？</h1><p>论遍历 ArrayList 要比 LinkedList 快得多，ArrayList 遍历最大的优势在于内存的连续性，CPU 的内部缓存结构会缓存连续的内存片段，可以大幅降低读取内存的性能开销。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>ArrayList 就是动态数组，用 MSDN 中的说法，就是 Array 的复杂版本，它提供了动态的增加和减少元素，实现了 ICollection 和 IList 接口，灵活的设置数组的大小等好处。</p>
+<h1 id="增删为啥慢"><a href="#增删为啥慢" class="headerlink" title="增删为啥慢"></a>增删为啥慢</h1><ol>
+<li><p>扩容：</p>
+<p> 当数组的容量超过限制，会扩容1.5倍，数组的扩容是将原数组的数据复制到一个1.5倍容量新数组上。</p>
+</li>
+<li><p>add()有两种：</p>
+<ul>
+<li>add(E e): 和数组一样，会在有数据的索引后一位添加数据，只是设及到临界扩容问题</li>
+<li>add(int i,E e): 在指定位置新增数据，如涉及到数据位置的移动，这里与数组的实现方式不同，是在原有数据的基础上拷贝黏贴。</li>
+</ul>
+</li>
+<li><p>remove()有四种：</p>
+<ul>
+<li>remove(): 删除最后一位有数据的元素</li>
+<li>remove(int i): 指定位置删除，如涉及到元素的移动，需要拷贝到新数组。</li>
+<li>remove(Object o): 先遍历定位位置，如涉及到元素的移动，需要拷贝到新数组。</li>
+<li>removeAll(Collection&lt;?&gt; c): 遍历确定位置，涉及到元素的移动，需拷贝的新数组。</li>
+</ul>
+</li>
+</ol>
+<p>由此我们可以知道，在末端添加或删除数组，效率不错；但只要涉及到元素的移动，就会触发数组的拷贝，效率低下。</p>
  
     </div>
     
@@ -358,7 +350,7 @@
         <p><span>本文标题:</span><a href="/2020/02/24/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/">容器——ArrayList</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
         <p><span>发布时间:</span>2020-02-24, 15:44:53</p>
-        <p><span>最后更新:</span>2020-07-16, 09:29:13</p>
+        <p><span>最后更新:</span>2020-10-15, 16:14:43</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2020/02/24/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/" title="容器——ArrayList">http://yoursite.com/2020/02/24/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/24/%E5%AE%B9%E5%99%A8%E2%80%94%E2%80%94ArrayList/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -393,7 +385,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ArrayList-有用过吗？它是一个什么东西？可以用来干嘛？"><span class="toc-number">1.</span> <span class="toc-text">ArrayList 有用过吗？它是一个什么东西？可以用来干嘛？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#底层"><span class="toc-number">1.1.</span> <span class="toc-text">底层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特点"><span class="toc-number">1.2.</span> <span class="toc-text">特点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#为啥线程不安全还使用他呢？"><span class="toc-number">2.</span> <span class="toc-text">为啥线程不安全还使用他呢？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#用于查询较多"><span class="toc-number">2.1.</span> <span class="toc-text">用于查询较多</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#综合考虑安全和性能"><span class="toc-number">2.2.</span> <span class="toc-text">综合考虑安全和性能</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？"><span class="toc-number">3.</span> <span class="toc-text">您说它的底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#能具体说下-1-7-和-1-8-版本初始化的时候的区别么？"><span class="toc-number">4.</span> <span class="toc-text">能具体说下 1.7 和 1.8 版本初始化的时候的区别么？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#我记得你说到了，他增删很慢，你能说一下-ArrayList-在增删的时候是怎么做的么？主要说一下他为啥慢。"><span class="toc-number">5.</span> <span class="toc-text">我记得你说到了，他增删很慢，你能说一下 ArrayList 在增删的时候是怎么做的么？主要说一下他为啥慢。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#扩容"><span class="toc-number">5.1.</span> <span class="toc-text">扩容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#copy"><span class="toc-number">5.2.</span> <span class="toc-text">copy</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ArrayList-插入删除一定慢么？"><span class="toc-number">6.</span> <span class="toc-text">ArrayList 插入删除一定慢么？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#那他的删除是怎么实现的那？"><span class="toc-number">7.</span> <span class="toc-text">那他的删除是怎么实现的那？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ArrayList-的遍历和-LinkedList-遍历性能比较如何？"><span class="toc-number">8.</span> <span class="toc-text">ArrayList 的遍历和 LinkedList 遍历性能比较如何？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">9.</span> <span class="toc-text">总结</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#特点"><span class="toc-number">2.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#增删为啥慢"><span class="toc-number">3.</span> <span class="toc-text">增删为啥慢</span></a></li></ol>
         
     </div>
     <style>
