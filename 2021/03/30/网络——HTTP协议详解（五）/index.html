@@ -24,7 +24,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89_2021-03-30-14-09-00.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89_2021-03-30-14-09-52.png">
-<meta property="og:updated_time" content="2021-03-30T06:33:08.597Z">
+<meta property="og:updated_time" content="2021-03-30T07:06:08.432Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89_2021-03-30-14-09-00.png">
 
@@ -394,6 +394,20 @@
 <h1 id="HTTP和RPC"><a href="#HTTP和RPC" class="headerlink" title="HTTP和RPC"></a>HTTP和RPC</h1><p>HTTP 和 RPC 其实是两个维度的东西， HTTP 指的是通信协议。</p>
 <p>而 RPC 则是远程调用，其对应的是本地调用。</p>
 <p>RPC 的通信可以用 HTTP 协议，也可以自定义协议，是不做约束的。主要用来来屏蔽这些底层调用细节，使得我们编码上还是和之前本地调用相差不多。</p>
+<h1 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h1><h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>简单的说：Http + 加密 + 认证 + 完整性保护 = Https。</p>
+<p>传统的Http协议是一种应用层的传输协议，Http直接与TCP协议通信。</p>
+<p>其本身存在一些缺点：</p>
+<ul>
+<li>Http协议使用明文传输，容易遭到窃听；</li>
+<li>Http对于通信双方都没有进行身份验证，通信的双方无法确认对方是否是伪装的客户端或者服务端；</li>
+<li>Http对于传输内容的完整性没有确认的办法，往往容易在传输过程中被劫持篡改。</li>
+</ul>
+<p>因此，在一些需要保证安全性的场景下，比如涉及到银行账户的请求时，Http无法抵御这些攻击。  Https则可以通过增加的SSL\TLS，支持对于通信内容的加密，以及对通信双方的身份进行验证。</p>
+<h2 id="加密原理"><a href="#加密原理" class="headerlink" title="加密原理"></a>加密原理</h2><p>近代密码学中加密的方式主要有两类：</p>
+<p>1）对称秘钥加密；<br>2）非对称秘钥加密。</p>
+<p>对称秘钥加密是指加密与解密过程使用同一把秘钥。这种方式的优点是处理速度快，但是如何安全的从一方将秘钥传递到通信的另一方是一个问题。</p>
+<p>非对称秘钥加密是指加密与解密使用两把不同的秘钥。这两把秘钥，一把叫公开秘钥，可以随意对外公开。一把叫私有秘钥，只用于本身持有。得到公开秘钥的客户端可以使用公开秘钥对传输内容进行加密，而只有私有秘钥持有者本身可以对公开秘钥加密的内容进行解密。这种方式克服了秘钥交换的问题，但是相对于对称秘钥加密的方式，处理速度较慢。</p>
+<p>SSL\TLS的加密方式则是结合了两种加密方式的优点。首先采用非对称秘钥加密，将一个对称秘钥使用公开秘钥加密后传输到对方。对方使用私有秘钥解密，得到传输的对称秘钥。之后双方再使用对称秘钥进行通信。这样即解决了对称秘钥加密的秘钥传输问题，又利用了对称秘钥的高效率来进行通信内容的加密与解密。</p>
  
     </div>
     
@@ -403,7 +417,7 @@
         <p><span>本文标题:</span><a href="/2021/03/30/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89/">网络——HTTP协议详解（五）</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">南有乔木</a></p>
         <p><span>发布时间:</span>2021-03-30, 13:37:24</p>
-        <p><span>最后更新:</span>2021-03-30, 14:33:08</p>
+        <p><span>最后更新:</span>2021-03-30, 15:06:08</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2021/03/30/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89/" title="网络——HTTP协议详解（五）">http://yoursite.com/2021/03/30/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2021/03/30/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89/　　作者: 南有乔木" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -432,7 +446,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HTTP报文"><span class="toc-number">2.</span> <span class="toc-text">HTTP报文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#继承概念"><span class="toc-number">2.1.</span> <span class="toc-text">继承概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#method"><span class="toc-number">2.2.</span> <span class="toc-text">method</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#状态码"><span class="toc-number">2.3.</span> <span class="toc-text">状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#header"><span class="toc-number">2.4.</span> <span class="toc-text">header</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实体"><span class="toc-number">2.5.</span> <span class="toc-text">实体</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#版本"><span class="toc-number">3.</span> <span class="toc-text">版本</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-0-9"><span class="toc-number">3.1.</span> <span class="toc-text">HTTP/0.9</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-1-0"><span class="toc-number">3.2.</span> <span class="toc-text">HTTP/1.0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-1-1"><span class="toc-number">3.3.</span> <span class="toc-text">HTTP/1.1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-2"><span class="toc-number">3.4.</span> <span class="toc-text">HTTP/2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HTTP和RPC"><span class="toc-number">4.</span> <span class="toc-text">HTTP和RPC</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HTTP报文"><span class="toc-number">2.</span> <span class="toc-text">HTTP报文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#继承概念"><span class="toc-number">2.1.</span> <span class="toc-text">继承概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#method"><span class="toc-number">2.2.</span> <span class="toc-text">method</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#状态码"><span class="toc-number">2.3.</span> <span class="toc-text">状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#header"><span class="toc-number">2.4.</span> <span class="toc-text">header</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实体"><span class="toc-number">2.5.</span> <span class="toc-text">实体</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#版本"><span class="toc-number">3.</span> <span class="toc-text">版本</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-0-9"><span class="toc-number">3.1.</span> <span class="toc-text">HTTP/0.9</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-1-0"><span class="toc-number">3.2.</span> <span class="toc-text">HTTP/1.0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-1-1"><span class="toc-number">3.3.</span> <span class="toc-text">HTTP/1.1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-2"><span class="toc-number">3.4.</span> <span class="toc-text">HTTP/2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HTTP和RPC"><span class="toc-number">4.</span> <span class="toc-text">HTTP和RPC</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HTTPS"><span class="toc-number">5.</span> <span class="toc-text">HTTPS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基础"><span class="toc-number">5.1.</span> <span class="toc-text">基础</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加密原理"><span class="toc-number">5.2.</span> <span class="toc-text">加密原理</span></a></li></ol></li></ol>
         
     </div>
     <style>
