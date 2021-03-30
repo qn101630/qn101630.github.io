@@ -273,6 +273,308 @@
       <div class="body-wrap">
   
     <article
+  id="post-网络——HTTP协议详解（五）"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+>
+  
+  <div class="article-meta">
+    <a href="/2021/03/30/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89/" class="article-date">
+      <time datetime="2021-03-30T05:37:24.000Z" itemprop="datePublished">2021-03-30</time>
+</a>
+
+ 
+    <a href="/2021/03/30/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89/#comments" title="查看评论">
+        <i class="fa fa-comments-o" aria-hidden="true"></i>
+        <span class="count-comment"></span>
+        
+        
+            <span class="disqus-comment-count" data-disqus-identifier="2021/03/30/网络——HTTP协议详解（五）/"></span>
+        
+    </a>
+
+  </div>
+  
+  <div class="article-inner">
+    
+    <input type="hidden" class="isFancy" />
+     
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/30/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89/">网络——HTTP协议详解（五）</a>
+    </h1>
+  
+ 
+    </header>
+     
+    <div class="article-entry" itemprop="articleBody">
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Http协议都是我们最常打交道的网络应用层协议，基于TCP连接。</p>
+<h1 id="HTTP报文"><a href="#HTTP报文" class="headerlink" title="HTTP报文"></a>HTTP报文</h1><h2 id="继承概念"><a href="#继承概念" class="headerlink" title="继承概念"></a>继承概念</h2><p>http报文可以分为请求报文和响应报文，格式大同小异。</p>
+<p>主要分为三个部分：</p>
+<ul>
+<li>1）起始行；</li>
+<li>2）首部；</li>
+<li>3）主体。</li>
+</ul>
+<p>请求报文格式：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">method</span>&gt;</span> <span class="tag">&lt;<span class="name">request-url</span>&gt;</span> <span class="tag">&lt;<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">headers</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">entity-body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>响应报文格式：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span> <span class="tag">&lt;<span class="name">status</span>&gt;</span> <span class="tag">&lt;<span class="name">reason-phrase</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">headers</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">entity-body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>从请求报文格式和响应报文格式可以看出，两者主要在起始行上有差异。</p>
+<p>这里稍微解释一下各个标签：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">method</span>&gt;</span> 指请求方法，常用的主要是Get、 Post、Head 还有其他一些我们这里就不说了，有兴趣的可以自己查阅一下</span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span> 指协议版本，现在通常都是Http/1.1了</span><br><span class="line"><span class="tag">&lt;<span class="name">request-url</span>&gt;</span> 请求地址</span><br><span class="line"><span class="tag">&lt;<span class="name">status</span>&gt;</span> 指响应状态码， 我们熟悉的200、404等等</span><br><span class="line"><span class="tag">&lt;<span class="name">reason-phrase</span>&gt;</span> 原因短语，200 OK 、404 Not Found 这种后面的描述就是原因短语，通常不必太关注。</span><br></pre></td></tr></table></figure>
+
+<h2 id="method"><a href="#method" class="headerlink" title="method"></a>method</h2><p>最常用的就是GET和POST。</p>
+<p>通过Get方法发起请求时，会将请求参数拼接在request-url尾部，格式是url?param1=xxx¶m2=xxx&amp;[…]，所以通过GET方法发起的请求参数不能够太长。<br>另外get最好作为读取或者获取资源，不应该有其他的副作用</p>
+<p>而通过POST方法发起的请求是将参数放在请求体中的，所以不会有GET参数的这些问题。</p>
+<p>但以上只限于浏览器请求的情形，实际上对于HTTP协议来说，get和post没有什么区别，get也可以有body。在安全方面讲，都不够安全，毕竟消息暴漏在传输过程中。</p>
+<h2 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h2><p>HTTP状态码共分为5种类型：</p>
+<p><img src="/images/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89_2021-03-30-14-09-00.png" alt="网络——HTTP协议详解（五）_2021-03-30-14-09-00.png"></p>
+<h2 id="header"><a href="#header" class="headerlink" title="header"></a>header</h2><p>在请求报文和响应报文中都可以携带一些信息，通过与其他部分配合，能够实现各种强大的功能。这些信息位于起始行之下与请求实体之间，以键值对的形式，称之为首部。每条首部以回车换行符结尾，最后一个首部额外多一个换行，与实体分隔开。</p>
+<p><img src="/images/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%94%EF%BC%89_2021-03-30-14-09-52.png" alt="网络——HTTP协议详解（五）_2021-03-30-14-09-52.png"></p>
+<h2 id="实体"><a href="#实体" class="headerlink" title="实体"></a>实体</h2><p>请求发送的资源，或是响应返回的资源。</p>
+<h1 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h1><h2 id="HTTP-0-9"><a href="#HTTP-0-9" class="headerlink" title="HTTP/0.9"></a>HTTP/0.9</h2><p>该版本极其简单，只有一个命令GET：</p>
+<p>GET /index.html</p>
+<p>上面命令表示，TCP 连接（connection）建立后，客户端向服务器请求（request）网页index.html。</p>
+<p>协议规定，服务器只能回应HTML格式的字符串，不能回应别的格式：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>服务器发送完毕，就关闭TCP连接。</p>
+<h2 id="HTTP-1-0"><a href="#HTTP-1-0" class="headerlink" title="HTTP/1.0"></a>HTTP/1.0</h2><p>首先，任何格式的内容都可以发送。这使得互联网不仅可以传输文字，还能传输图像、视频、二进制文件。</p>
+<p>其次，除了GET命令，还引入了POST命令和HEAD命令。</p>
+<p>再次，HTTP请求和回应的格式也变了。除了数据部分，每次通信都必须包括头信息（HTTP header），用来描述一些元数据。</p>
+<p>其他的新增功能还包括状态码（status code）、多字符集支持、多部分发送（multi-part type）、权限（authorization）、缓存（cache）、内容编码（content encoding）等。</p>
+<p>HTTP/1.0 版的主要缺点是，每个TCP连接只能发送一个请求。发送数据完毕，连接就关闭，如果还要请求其他资源，就必须再新建一个连接。</p>
+<p>TCP连接的新建成本很高，因为需要客户端和服务器三次握手，并且开始时发送速率较慢（slow start）。所以，HTTP 1.0版本的性能比较差。随着网页加载的外部资源越来越多，这个问题就愈发突出了。</p>
+<p>为了解决这个问题，有些浏览器在请求时，用了一个非标准的Connection字段：</p>
+<p>Connection: keep-alive</p>
+<p>但是，这不是标准字段，不同实现的行为可能不一致，因此不是根本的解决办法。</p>
+<h2 id="HTTP-1-1"><a href="#HTTP-1-1" class="headerlink" title="HTTP/1.1"></a>HTTP/1.1</h2><p>HTTP/1.1进一步完善了 HTTP 协议</p>
+<ol>
+<li><p>持久连接</p>
+<p> TCP连接默认不关闭，可以被多个请求复用，客户端和服务器发现对方一段时间没有活动，就可以主动关闭连接。不过，规范的做法是，客户端在最后一个请求时，发送Connection: close，明确要求服务器关闭TCP连接</p>
+</li>
+<li><p>管道机制</p>
+<p> 即在同一个TCP连接里面，客户端可以同时发送多个请求。这样就进一步改进了HTTP协议的效率。</p>
+<p> 举例来说，客户端需要请求两个资源。以前的做法是，在同一个TCP连接里面，先发送A请求，然后等待服务器做出回应，收到后再发出B请求。管道机制则是允许浏览器同时发出A请求和B请求，但是服务器还是按照顺序，先回应A请求，完成后再回应B请求。</p>
+</li>
+<li><p>分块传输</p>
+<p> 对于一些很耗时的动态操作来说，这意味着，服务器要等到所有操作完成，才能发送数据，显然这样的效率不高。更好的处理方法是，产生一块数据，就发送一块，采用”流模式”（stream）取代”缓存模式”（buffer）。</p>
+</li>
+<li><p>Host</p>
+<p> 客户端请求的头信息新增了Host字段，用来指定服务器的域名：<br> Host: example.com</p>
+<p> 有了Host字段，就可以将请求发往同一台服务器上的不同网站，为虚拟主机的兴起打下了基础。   </p>
+</li>
+</ol>
+<p>虽然1.1版允许复用TCP连接，但是同一个TCP连接里面，所有的数据通信是按次序进行的。服务器只有处理完一个回应，才会进行下一个回应。要是前面的回应特别慢，后面就会有许多请求排队等着。这称为”队头堵塞”（Head-of-line blocking）。</p>
+<p>为了避免这个问题，只有两种方法：一是减少请求数，二是同时多开持久连接。这导致了很多的网页优化技巧，比如合并脚本和样式表、将图片嵌入CSS代码、域名分片（domain sharding）等等。如果HTTP协议设计得更好一些，这些额外的工作是可以避免的。</p>
+<h2 id="HTTP-2"><a href="#HTTP-2" class="headerlink" title="HTTP/2"></a>HTTP/2</h2><ol>
+<li><p>二进制</p>
+<p> HTTP/1.1 版的头信息肯定是文本（ASCII编码），数据体可以是文本，也可以是二进制。HTTP/2 则是一个彻底的二进制协议，头信息和数据体都是二进制，并且统称为”帧”（frame）：头信息帧和数据帧。</p>
+</li>
+<li><p>多工</p>
+<p> HTTP/2 复用TCP连接，在一个连接里，客户端和浏览器都可以同时发送多个请求或回应，而且不用按照顺序一一对应，这样就避免了”队头堵塞”。</p>
+<p> 举例来说，在一个TCP连接里面，服务器同时收到了A请求和B请求，于是先回应A请求，结果发现处理过程非常耗时，于是就发送A请求已经处理好的部分， 接着回应B请求，完成后，再发送A请求剩下的部分。</p>
+<p> 这样双向的、实时的通信，就叫做多工（Multiplexing）。</p>
+</li>
+<li><p>数据流</p>
+<p> 因为 HTTP/2 的数据包是不按顺序发送的，同一个连接里面连续的数据包，可能属于不同的回应。因此，必须要对数据包做标记，指出它属于哪个回应。</p>
+<p> HTTP/2 将每个请求或回应的所有数据包，称为一个数据流（stream）。每个数据流都有一个独一无二的编号。数据包发送的时候，都必须标记数据流ID，用来区分它属于哪个数据流。另外还规定，客户端发出的数据流，ID一律为奇数，服务器发出的，ID为偶数。</p>
+<p> 数据流发送到一半的时候，客户端和服务器都可以发送信号（RST_STREAM帧），取消这个数据流。1.1版取消数据流的唯一方法，就是关闭TCP连接。这就是说，HTTP/2 可以取消某一次请求，同时保证TCP连接还打开着，可以被其他请求使用。</p>
+<p> 客户端还可以指定数据流的优先级。优先级越高，服务器就会越早回应。</p>
+</li>
+<li><p>头信息压缩</p>
+<p> HTTP 协议不带有状态，每次请求都必须附上所有信息。所以，请求的很多字段都是重复的，比如Cookie和User Agent，一模一样的内容，每次请求都必须附带，这会浪费很多带宽，也影响速度。</p>
+<p> HTTP/2 对这一点做了优化，引入了头信息压缩机制（header compression）。一方面，头信息使用gzip或compress压缩后再发送；另一方面，客户端和服务器同时维护一张头信息表，所有字段都会存入这个表，生成一个索引号，以后就不发送同样字段了，只发送索引号，这样就提高速度了。</p>
+</li>
+<li><p>服务器推送</p>
+<p> HTTP/2 允许服务器未经请求，主动向客户端发送资源，这叫做服务器推送（server push）。</p>
+<p> 常见场景是客户端请求一个网页，这个网页里面包含很多静态资源。正常情况下，客户端必须收到网页后，解析HTML源码，发现有静态资源，再发出静态资源请求。其实，服务器可以预期到客户端请求网页后，很可能会再请求静态资源，所以就主动把这些静态资源随着网页一起发给客户端了。</p>
+</li>
+</ol>
+<h1 id="HTTP和RPC"><a href="#HTTP和RPC" class="headerlink" title="HTTP和RPC"></a>HTTP和RPC</h1><p>HTTP 和 RPC 其实是两个维度的东西， HTTP 指的是通信协议。</p>
+<p>而 RPC 则是远程调用，其对应的是本地调用。</p>
+<p>RPC 的通信可以用 HTTP 协议，也可以自定义协议，是不做约束的。主要用来来屏蔽这些底层调用细节，使得我们编码上还是和之前本地调用相差不多。</p>
+ 
+    </div>
+    
+    <div class="article-info article-info-index">
+       
+  
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+    
+
+  
+    <article
+  id="post-网络——socket详解（四）"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+>
+  
+  <div class="article-meta">
+    <a href="/2021/03/29/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94socket%E8%AF%A6%E8%A7%A3%EF%BC%88%E5%9B%9B%EF%BC%89/" class="article-date">
+      <time datetime="2021-03-29T06:59:15.000Z" itemprop="datePublished">2021-03-29</time>
+</a>
+
+ 
+    <a href="/2021/03/29/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94socket%E8%AF%A6%E8%A7%A3%EF%BC%88%E5%9B%9B%EF%BC%89/#comments" title="查看评论">
+        <i class="fa fa-comments-o" aria-hidden="true"></i>
+        <span class="count-comment"></span>
+        
+        
+            <span class="disqus-comment-count" data-disqus-identifier="2021/03/29/网络——socket详解（四）/"></span>
+        
+    </a>
+
+  </div>
+  
+  <div class="article-inner">
+    
+    <input type="hidden" class="isFancy" />
+     
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/29/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94socket%E8%AF%A6%E8%A7%A3%EF%BC%88%E5%9B%9B%EF%BC%89/">网络——socket详解（四）</a>
+    </h1>
+  
+ 
+    </header>
+     
+    <div class="article-entry" itemprop="articleBody">
+        <h1 id="Socket与HTTP的区别"><a href="#Socket与HTTP的区别" class="headerlink" title="Socket与HTTP的区别"></a>Socket与HTTP的区别</h1><p>Http协议是基于TCP链接的。</p>
+<p>Socket是对TCP/IP协议的封装，Socket本身并不是协议，而是一个调用接口（API），通过Socket，我们才能使用TCP/IP协议。</p>
+<p>Http连接：http连接就是所谓的短连接，及客户端向服务器发送一次请求，服务器端相应后连接即会断掉。</p>
+<p>socket连接：socket连接及时所谓的长连接，理论上客户端和服务端一旦建立连接，则不会主动断掉；</p>
+<h1 id="Socket读写的简单过程理解"><a href="#Socket读写的简单过程理解" class="headerlink" title="Socket读写的简单过程理解"></a>Socket读写的简单过程理解</h1><p>当客户端和服务器使用TCP协议进行通信时，客户端封装一个请求对象req，将请求对象req序列化成字节数组，然后通过套接字socket将字节数组发送到服务器，服务器通过套接字socket读取到字节数组，再反序列化成请求对象req，进行处理，处理完毕后，生成一个响应对应res，将响应对象res序列化成字节数组，然后通过套接字将字节数组发送给客户端，客户端通过套接字socket读取到字节数组，再反序列化成响应对象。</p>
+<h1 id="Socket读写的细节过程分析"><a href="#Socket读写的细节过程分析" class="headerlink" title="Socket读写的细节过程分析"></a>Socket读写的细节过程分析</h1><p>我们平时用到的套接字其实只是一个引用(一个对象ID)，这个套接字对象实际上是放在操作系统内核中。这个套接字对象内部有两个重要的缓冲结构，一个是读缓冲(read buffer)，一个是写缓冲(write buffer)，它们都是有限大小的数组结构。</p>
+<p>当我们对客户端的socket写入字节数组时(序列化后的请求消息对象req)，是将字节数组拷贝到内核区套接字对象的write buffer中，内核网络模块会有单独的线程负责不停地将write buffer的数据拷贝到网卡硬件，网卡硬件再将数据送到网线，经过一些列路由器交换机，最终送达服务器的网卡硬件中。</p>
+<p>同样，服务器内核的网络模块也会有单独的线程不停地将收到的数据拷贝到套接字的read buffer中等待用户层来读取。最终服务器的用户进程通过socket引用的read方法将read buffer中的数据拷贝到用户程序内存中进行反序列化成请求对象进行处理。然后服务器将处理后的响应对象走一个相反的流程发送给客户端，这里就不再具体描述。</p>
+<h2 id="阻塞"><a href="#阻塞" class="headerlink" title="阻塞"></a>阻塞</h2><p>我们注意到write buffer空间都是有限的，所以如果应用程序往套接字里写的太快，这个空间是会满的。一旦满了，写操作就会阻塞，直到这个空间有足够的位置腾出来。不过有了NIO(非阻塞IO)，写操作也可以不阻塞，能写多少是多少，通过返回值来确定到底写进去多少，那些没有写进去的内容用户程序会缓存起来，后续会继续重试写入。</p>
+<p>同样我们也注意到read buffer的内容可能会是空的。这样套接字的读操作(一般是读一个定长的字节数组)也会阻塞，直到read buffer中有了足够的内容(填充满字节数组)才会返回。有了NIO，就可以有多少读多少，无须阻塞了。读不够的，后续会继续尝试读取。</p>
+<h2 id="ack"><a href="#ack" class="headerlink" title="ack"></a>ack</h2><p>比如当写缓冲的内容拷贝到网卡后，是不会立即从写缓冲中将这些拷贝的内容移除的，而要等待对方的ack过来之后才会移除。如果网络状况不好，ack迟迟不过来，写缓冲很快就会满的。</p>
+<h2 id="包头"><a href="#包头" class="headerlink" title="包头"></a>包头</h2><p>核的网络模块会将缓冲区的消息进行分块传输，如果缓冲区的内容太大，是会被拆分成多个独立的小消息包的。并且还要在每个消息包上附加上一些额外的头信息，比如源网卡地址和目标网卡地址、消息的序号等信息，到了接收端需要对这些消息包进行重新排序组装去头后才会扔进读缓冲中。</p>
+<h2 id="速率"><a href="#速率" class="headerlink" title="速率"></a>速率</h2><p>有个问题那就是如果读缓冲满了怎么办，网卡收到了对方的消息要怎么处理？一般的做法就是丢弃掉不给对方ack，对方如果发现ack迟迟没有来，就会重发消息。那缓冲为什么会满？是因为消息接收方处理的慢而发送方生产的消息太快了，这时候tcp协议就会有个动态窗口调整算法来限制发送方的发送速率，使得收发效率趋于匹配。如果是udp协议的话，消息一丢那就彻底丢了。</p>
+ 
+    </div>
+    
+    <div class="article-info article-info-index">
+       
+  
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+    
+
+  
+    <article
+  id="post-网路——TCP三次握手和四次握手（三）"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+>
+  
+  <div class="article-meta">
+    <a href="/2021/03/29/%E7%BD%91%E8%B7%AF%E2%80%94%E2%80%94TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%88%E4%B8%89%EF%BC%89/" class="article-date">
+      <time datetime="2021-03-29T06:26:34.000Z" itemprop="datePublished">2021-03-29</time>
+</a>
+
+ 
+    <a href="/2021/03/29/%E7%BD%91%E8%B7%AF%E2%80%94%E2%80%94TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%88%E4%B8%89%EF%BC%89/#comments" title="查看评论">
+        <i class="fa fa-comments-o" aria-hidden="true"></i>
+        <span class="count-comment"></span>
+        
+        
+            <span class="disqus-comment-count" data-disqus-identifier="2021/03/29/网路——TCP三次握手和四次握手（三）/"></span>
+        
+    </a>
+
+  </div>
+  
+  <div class="article-inner">
+    
+    <input type="hidden" class="isFancy" />
+     
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/29/%E7%BD%91%E8%B7%AF%E2%80%94%E2%80%94TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%88%E4%B8%89%EF%BC%89/">网路——TCP三次握手和四次握手（三）</a>
+    </h1>
+  
+ 
+    </header>
+     
+    <div class="article-entry" itemprop="articleBody">
+        <h1 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h1><p>TCP提供一种面向连接的、可靠的字节流服务。面向连接意味着两个使用TCP的应用（通常是一个客户和一个服务器）在彼此交换数据之前必须先建立一个TCP连接。</p>
+<p>确认ACK，仅当ACK=1时，确认号字段才有效。TCP规定，在连接建立后所有报文的传输都必须把ACK置1；</p>
+<p>同步SYN，在连接建立时用来同步序号。当SYN=1，ACK=0，表明是连接请求报文，若同意连接，则响应报文中应该使SYN=1，ACK=1；</p>
+<p>终止FIN，用来释放连接。当FIN=1，表明此报文的发送方的数据已经发送完毕，并且要求释放</p>
+<h1 id="建立连接（三次握手）"><a href="#建立连接（三次握手）" class="headerlink" title="建立连接（三次握手）"></a>建立连接（三次握手）</h1><ol>
+<li><p>TCP服务器进程先创建传输控制块TCB，时刻准备接受客户进程的连接请求，此时服务器就进入了LISTEN（监听）状态；</p>
+</li>
+<li><p>TCP客户进程也是先创建传输控制块TCB，然后向服务器发出连接请求报文，这是报文首部中的同部位SYN=1，同时选择一个初始序列号 seq=x ，此时，TCP客户端进程进入了 SYN-SENT（同步已发送状态）状态。TCP规定，SYN报文段（SYN=1的报文段）不能携带数据，但需要消耗掉一个序号。</p>
+</li>
+<li><p>TCP服务器收到请求报文后，如果同意连接，则发出确认报文。确认报文中应该 ACK=1，SYN=1，确认号是ack=x+1，同时也要为自己初始化一个序列号 seq=y，此时，TCP服务器进程进入了SYN-RCVD（同步收到）状态。这个报文也不能携带数据，但是同样要消耗一个序号。</p>
+</li>
+<li><p>TCP客户进程收到确认后，还要向服务器给出确认。确认报文的ACK=1，ack=y+1，自己的序列号seq=x+1，此时，TCP连接建立，客户端进入ESTABLISHED（已建立连接）状态。TCP规定，ACK报文段可以携带数据，但是如果不携带数据则不消耗序号。</p>
+</li>
+<li><p>当服务器收到客户端的确认后也进入ESTABLISHED状态，此后双方就可以开始通信了。</p>
+</li>
+</ol>
+<h1 id="释放连接（四次握手）"><a href="#释放连接（四次握手）" class="headerlink" title="释放连接（四次握手）"></a>释放连接（四次握手）</h1><ol>
+<li><p>客户端进程发出连接释放报文，并且停止发送数据。释放数据报文首部，FIN=1，其序列号为seq=u（等于前面已经传送过来的数据的最后一个字节的序号加1），此时，客户端进入FIN-WAIT-1（终止等待1）状态。 TCP规定，FIN报文段即使不携带数据，也要消耗一个序号。</p>
+</li>
+<li><p>服务器收到连接释放报文，发出确认报文，ACK=1，ack=u+1，并且带上自己的序列号seq=v，此时，服务端就进入了CLOSE-WAIT（关闭等待）状态。TCP服务器通知高层的应用进程，客户端向服务器的方向就释放了，这时候处于半关闭状态，即客户端已经没有数据要发送了，但是服务器若发送数据，客户端依然要接受。这个状态还要持续一段时间，也就是整个CLOSE-WAIT状态持续的时间。</p>
+</li>
+<li><p>客户端收到服务器的确认请求后，此时，客户端就进入FIN-WAIT-2（终止等待2）状态，等待服务器发送连接释放报文（在这之前还需要接受服务器发送的最后的数据）。</p>
+</li>
+<li><p>服务器将最后的数据发送完毕后，就向客户端发送连接释放报文，FIN=1，ack=u+1，由于在半关闭状态，服务器很可能又发送了一些数据，假定此时的序列号为seq=w，此时，服务器就进入了LAST-ACK（最后确认）状态，等待客户端的确认。</p>
+</li>
+<li><p>客户端收到服务器的连接释放报文后，必须发出确认，ACK=1，ack=w+1，而自己的序列号是seq=u+1，此时，客户端就进入了TIME-WAIT（时间等待）状态。注意此时TCP连接还没有释放，必须经过2∗ *∗MSL（最长报文段寿命）的时间后，当客户端撤销相应的TCB后，才进入CLOSED状态。</p>
+</li>
+<li><p>服务器只要收到了客户端发出的确认，立即进入CLOSED状态。同样，撤销TCB后，就结束了这次的TCP连接。可以看到，服务器结束TCP连接的时间要比客户端早一些。</p>
+</li>
+</ol>
+<h1 id="为什么TCP客户端最后还要发送一次确认呢？"><a href="#为什么TCP客户端最后还要发送一次确认呢？" class="headerlink" title="为什么TCP客户端最后还要发送一次确认呢？"></a>为什么TCP客户端最后还要发送一次确认呢？</h1><p>防止网络滞留，导致重复连接。</p>
+<p>如果使用的是两次握手建立连接，假设有这样一种场景，客户端发送了第一个请求连接并且没有丢失，只是因为在网络结点中滞留的时间太长了，由于TCP的客户端迟迟没有收到确认报文，以为服务器没有收到，此时重新向服务器发送这条报文，此后客户端和服务器经过两次握手完成连接，传输数据，然后关闭连接。此时此前滞留的那一次请求连接，网络通畅了到达了服务器，这个报文本该是失效的，但是，两次握手的机制将会让客户端和服务器再次建立连接，这将导致不必要的错误和资源的浪费。</p>
+<p>如果采用的是三次握手，就算是那一次失效的报文传送过来了，服务端接受到了那条失效报文并且回复了确认报文，但是客户端不会再次发出确认。由于服务器收不到确认，就知道客户端并没有请求连接。</p>
+<h1 id="为什么客户端最后还要等待2MSL？"><a href="#为什么客户端最后还要等待2MSL？" class="headerlink" title="为什么客户端最后还要等待2MSL？"></a>为什么客户端最后还要等待2MSL？</h1><p>MSL（Maximum Segment Lifetime），TCP允许不同的实现可以设置不同的MSL值。</p>
+<p>第一，保证客户端发送的最后一个ACK报文能够到达服务器，因为这个ACK报文可能丢失，站在服务器的角度看来，我已经发送了FIN+ACK报文请求断开了，客户端还没有给我回应，应该是我发送的请求断开报文它没有收到，于是服务器又会重新发送一次，而客户端就能在这个2MSL时间段内收到这个重传的报文，接着给出回应报文，并且会重启2MSL计时器。</p>
+<p>第二，防止类似与“三次握手”中提到了的“已经失效的连接请求报文段”出现在本连接中。客户端发送完最后一个确认报文后，在这个2MSL时间中，就可以使本连接持续的时间内所产生的所有报文段都从网络中消失。这样新的连接中不会出现旧连接的请求报文。</p>
+<h1 id="为什么建立连接是三次握手，关闭连接确是四次挥手呢？"><a href="#为什么建立连接是三次握手，关闭连接确是四次挥手呢？" class="headerlink" title="为什么建立连接是三次握手，关闭连接确是四次挥手呢？"></a>为什么建立连接是三次握手，关闭连接确是四次挥手呢？</h1><p>建立连接的时候， 服务器在LISTEN状态下，收到建立连接请求的SYN报文后，把ACK和SYN放在一个报文里发送给客户端。<br>而关闭连接时，服务器收到对方的FIN报文时，仅仅表示对方不再发送数据了但是还能接收数据，而自己也未必全部数据都发送给对方了，所以己方可以立即关闭，也可以发送一些数据给对方后，再发送FIN报文给对方来表示同意现在关闭连接，因此，己方ACK和FIN一般都会分开发送，从而导致多了一次。</p>
+<h1 id="如果已经建立了连接，但是客户端突然出现故障了怎么办？"><a href="#如果已经建立了连接，但是客户端突然出现故障了怎么办？" class="headerlink" title="如果已经建立了连接，但是客户端突然出现故障了怎么办？"></a>如果已经建立了连接，但是客户端突然出现故障了怎么办？</h1><p>TCP还设有一个保活计时器，显然，客户端如果出现故障，服务器不能一直等下去，白白浪费资源。服务器每收到一次客户端的请求后都会重新复位这个计时器，时间通常是设置为2小时，若两小时还没有收到客户端的任何数据，服务器就会发送一个探测报文段，以后每隔75秒发送一次。若一连发送10个探测报文仍然没反应，服务器就认为客户端出了故障，接着就关闭连接。</p>
+ 
+    </div>
+    
+    <div class="article-info article-info-index">
+       
+  
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+    
+
+  
+    <article
   id="post-网络——网络分层详解（二）"
   class="article article-type-post"
   itemscope
@@ -316,6 +618,29 @@
 <p>为了能够把它设计的更好，决定采用分层划分的结构，既能规定不同层的完成的功能，又能实现层与层之间的改动而不相互影响，这就是我们经常听到网络划分层次的好处。</p>
 <h1 id="如何进行分层？"><a href="#如何进行分层？" class="headerlink" title="如何进行分层？"></a>如何进行分层？</h1><p>起初网络分层是标准的七层，也就是我们所说的 OSI 七层模型。</p>
 <p><img src="/images/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94%E7%BD%91%E7%BB%9C%E5%88%86%E5%B1%82%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89_2021-03-29-13-31-51.png" alt="网络——网络分层详解（二）_2021-03-29-13-31-51.png"></p>
+<p>TCP/IP 四层模型和 TCP/IP 五层模型是以 OSI 七层优化而来，把某些层进行合并了，其实本质上还是相同的。</p>
+<p><img src="/images/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94%E7%BD%91%E7%BB%9C%E5%88%86%E5%B1%82%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89_2021-03-29-13-53-27.png" alt="网络——网络分层详解（二）_2021-03-29-13-53-27.png"></p>
+<h1 id="每一层的作用？"><a href="#每一层的作用？" class="headerlink" title="每一层的作用？"></a>每一层的作用？</h1><h2 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h2><p>物理层，顾名思义，用物理手段将电脑连接起来，主要用来传输0、1信号，而0、1信号毕竟没有任何的现实意义，所有我们用另一层用来规定不同0、1组合的意义是什么。</p>
+<h2 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h2><p>么我们在数据链路层规定一套协议，专门的给0、1信号进行分组，以及规定不同的组代表什么意思，从而双方计算机都能够进行识别，这个协议就是“以太网协议”。</p>
+<p>但是问题又来了，我们要发送给对方计算机，怎么标识对方以及怎么知道对方的地址呢？</p>
+<p>MAC地址：它就是作为网络中计算机设备的唯一标识，从计算机在厂商生产出来就被十六进制的数标识为MAC地址。</p>
+<p>既然我们知道了用MAC地址作为标识，那么怎么才能知道我们要进行通信的计算机MAC地址呢？</p>
+<p>广播：广播可以帮助我们能够知道对方的 MAC 地址。那么既然知道了MAC地址就可以通信了？没有想得那么简单，广播中还存在两种情况，一种是，在同一子网络下（同一局域网下）的计算机是通过 ARP 协议获取到对方 MAC地址的。不同自网络中（不同局域网）中是交给两个局域网的网关（路由器）去处理的。</p>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><p>网络层的由来是因为在数据链路层中我们说说两台计算机之间的通信是分为同一子网络和不同子网络之间，那么问题就来了，怎么判断两台计算机是否在同一子网络（局域网）中？这就是网络层要解决的问题。</p>
+<p>IP协议：</p>
+<p>我们可以将 IP 地址抽象成一种逻辑上的地址，也就是说 MAC 地址是物理上的地址，就是定死了。IP 地址呢，是动态分配的，不是固定死的。</p>
+<p>既然我们通过 IP 地址来判断两个计算机是否处于同一局域网中，那么首先要知道对方的 IP 地址吧？DNS 解析想必大家都知道，可以将域名解析为 IP 地址。好了，我们知道两台计算机的 IP 地址了，怎么进行判断是否同一局域网中？</p>
+<p>子网掩码：</p>
+<p>子网掩码也是由 32 个二进制位组成的，但是只能用 0 或 1 来表示，如：11111111.11111111.11111111.00000000。</p>
+<p>两台计算机的 IP 地址分别和子网掩码进行一种运算（AND 运算），如果结果相同，两台计算机就在同一局域网中，否则就不在同一局域网中。</p>
+<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><p>传输层的主要功能就是为了能够实现“端口到端口”的通信。计算机上运行的不同程序都会分配不同的端口，所以才能使得数据能够正确的传送给不同的应用程序。</p>
+<p>UDP 协议：</p>
+<p>加入端口号也需要一套规则，那就是 UDP 协议，但是 UDP协议有个缺点，一旦进行通信，就不知道对方是否接收到数据了，我们再定义一套规则，让其可以和对方进行确认，那么 TCP 出现了。</p>
+<p>TCP 协议：</p>
+<p>我们通常说 TCP 三次握手和四次挥手，没错，这就是传输层中完成的，TCP 三次握手涉及到的内容贼多，都可以单独写一篇长文，这里不多陈述，知道它是在传输层中完成的以及它的作用是什么，能够认识到它就好了。</p>
+<h2 id="应用层协议"><a href="#应用层协议" class="headerlink" title="应用层协议"></a>应用层协议</h2><p>应用层的功能就是规定了应用程序的数据格式。我们经常用得到的电子邮件、HTTP协议、以及FTP数据的格式，就是在应用层定义的。</p>
+<p>应用层是最高一层，直接面向用户，它的数据包会放在 TCP 的数据包的“数据”部分，那么整个五层的数据包就会变成一下这样。</p>
+<p><img src="/images/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94%E7%BD%91%E7%BB%9C%E5%88%86%E5%B1%82%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BA%8C%EF%BC%89_2021-03-29-14-11-04.png" alt="网络——网络分层详解（二）_2021-03-29-14-11-04.png"></p>
  
     </div>
     
@@ -370,40 +695,87 @@
     </header>
      
     <div class="article-entry" itemprop="articleBody">
-        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Java 中的 BIO、NIO和 AIO 理解为是 Java 语言对操作系统的各种 IO 模型的封装。</p>
-<h1 id="IO-模型"><a href="#IO-模型" class="headerlink" title="IO 模型"></a>IO 模型</h1><ul>
-<li>同步(synchronous) IO和异步(asynchronous) IO</li>
-<li>阻塞(blocking) IO和非阻塞(non-blocking)IO</li>
-<li>同步阻塞(blocking-IO)简称BIO</li>
-<li>同步非阻塞(non-blocking-IO)简称NIO</li>
-<li>异步非阻塞(synchronous-non-blocking-IO)简称AIO</li>
-</ul>
-<h1 id="同步和异步的区别"><a href="#同步和异步的区别" class="headerlink" title="同步和异步的区别"></a>同步和异步的区别</h1><ul>
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>通常IO进程包括等待数据、拷贝数据与操作数据，其中与系统内核相关的是等待数据与拷贝数据，绝大部分时间也花在这里。</p>
+<h1 id="阻塞"><a href="#阻塞" class="headerlink" title="阻塞"></a>阻塞</h1><p><img src="/images/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94BIO%E3%80%81NIO%E3%80%81AIO_2021-03-30-09-17-00.png" alt="JAVA基础——BIO、NIO、AIO_2021-03-30-09-17-00.png"></p>
+<p>阻塞分为两部分：</p>
+<ol>
+<li>CPU把数据从磁盘读到内核缓冲区。</li>
+<li>CPU把数据从内核缓冲区拷贝到用户缓冲区。</li>
+</ol>
+<h1 id="非阻塞"><a href="#非阻塞" class="headerlink" title="非阻塞"></a>非阻塞</h1><p><img src="/images/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94BIO%E3%80%81NIO%E3%80%81AIO_2021-03-30-09-21-32.png" alt="JAVA基础——BIO、NIO、AIO_2021-03-30-09-21-32.png"></p>
+<p>非阻塞IO发出read请求后发现数据没准备好，会继续往下执行，此时应用程序会不断轮询polling内核询问数据是否准备好，当数据没有准备好时，内核立即返回EWOULDBLOCK错误。直到数据被拷贝到应用程序缓冲区，read请求才获取到结果。并且你要注意！这里最后一次 read 调用获取数据的过程，是一个同步的过程，是需要等待的过程。这里的同步指的是内核态的数据拷贝到用户程序的缓存区这个过程。</p>
+<h1 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h1><p><img src="/images/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94BIO%E3%80%81NIO%E3%80%81AIO_2021-03-30-09-23-13.png" alt="JAVA基础——BIO、NIO、AIO_2021-03-30-09-23-13.png"></p>
+<p>非阻塞情况下无可用数据时，应用程序每次轮询内核看数据是否准备好了也耗费CPU，能否不让它轮询，当内核缓冲区数据准备好了，以事件通知当机制告知应用进程数据准备好了呢？应用进程在没有收到数据准备好的事件通知信号时可以忙写其他的工作。此时IO多路复用就派上用场了。</p>
+<p>实现一个线程监控多个IO请求，哪个IO有请求就把数据从内核拷贝到进程缓冲区，拷贝期间是阻塞的！</p>
+<p>像select、poll、epoll 都是I/O多路复用的具体的实现。</p>
+<p>select是第一版IO复用，提出后暴漏了很多问题。</p>
+<ol>
+<li>select 会修改传入的参数数组，这个对于一个需要调用很多次的函数，是非常不友好的。</li>
+<li>select 如果任何一个sock(I/O stream)出现了数据，select 仅仅会返回，但不会告诉是那个sock上有数据，只能自己遍历查找。</li>
+<li>select 只能监视1024个链接。</li>
+<li>select 不是线程安全的，如果你把一个sock加入到select, 然后突然另外一个线程发现这个sock不用，要收回，这个select 不支持的。</li>
+</ol>
+<p>poll 修复了 select 的很多问题。</p>
+<ol>
+<li>poll 去掉了1024个链接的限制。</li>
+<li>poll 从设计上来说不再修改传入数组。</li>
+</ol>
+<p>但是poll仍然不是线程安全的， 这就意味着不管服务器有多强悍，你也只能在一个线程里面处理一组 I/O 流。</p>
+<p>epoll 可以说是 I/O  多路复用最新的一个实现，epoll 修复了poll 和select绝大部分问题， 比如：</p>
+<ol>
+<li>epoll 现在是线程安全的。</li>
+<li>epoll 现在不仅告诉你sock组里面数据，还会告诉你具体哪个sock有数据，你不用自己去找了。</li>
+<li>epoll 内核态管理了各种IO文件描述符， 以前用户态发送所有文件描述符到内核态，然后内核态负责筛选返回可用数组，现在epoll模式下所有文件描述符在内核态有存，查询时不用传文件描述符进去了。</li>
+</ol>
+<h1 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h1><p><img src="/images/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94BIO%E3%80%81NIO%E3%80%81AIO_2021-03-30-09-41-09.png" alt="JAVA基础——BIO、NIO、AIO_2021-03-30-09-41-09.png"></p>
+<p>然后你会发现上面的提到过的操作都不是真正的异步，因为两个阶段总要等待会儿！而真正的异步 I/O 是内核数据准备好和数据从内核态拷贝到用户态这两个过程都不用等待。</p>
+<p>很庆幸，Linux给我们准备了aio_read跟aio_write函数实现真实的异步，当用户发起aio_read请求后就会自动返回。内核会自动将数据从内核缓冲区拷贝到用户进程空间，应用进程啥都不用管。</p>
+<h1 id="同步阻塞"><a href="#同步阻塞" class="headerlink" title="同步阻塞"></a>同步阻塞</h1><p>此时一个线程维护一个连接，该线程完成数据到读写跟处理到全部过程，数据读写时时线程是被阻塞的。</p>
+<h1 id="同步非阻塞"><a href="#同步非阻塞" class="headerlink" title="同步非阻塞"></a>同步非阻塞</h1><p>非阻塞的意思是用户线程发出读请求后，读请求不会阻塞当前用户线程，不过用户线程还是要不断的去主动判断数据是否准备OK了。此时还是会阻塞等待内核复制数据到用户进程。他与同步BIO区别是使用一个连接全程等待</p>
+<h1 id="BIO"><a href="#BIO" class="headerlink" title="BIO"></a>BIO</h1><p>同步阻塞IO</p>
+<p>使用一个独立的线程维护一个socket连接，随着连接数量的增多，对虚拟机造成一定压力。</p>
+<p>使用流来读取数据，流是阻塞的，当没有可读／可写数据时，线程等待，会造成资源的浪费。</p>
+<h1 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h1><p>同步非阻塞IO</p>
+<p>服务器端保存一个Socket连接列表，然后对这个列表进行轮询，如果发现某个Socket端口上有数据可读时说明读就绪，则调用该socket连接的相应读操作。如果发现某个 Socket端口上有数据可写时说明写就绪，则调用该socket连接的相应写操作。如果某个端口的Socket连接已经中断，则调用相应的析构方法关闭该端口。这样能充分利用服务器资源，效率得到了很大提高，在进行IO操作请求时候再用个线程去处理，是一个请求一个线程。Java中使用Selector、Channel、Buffer来实现上述效果。</p>
+<p><img src="/images/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94BIO%E3%80%81NIO%E3%80%81AIO_2021-03-30-10-23-33.png" alt="JAVA基础——BIO、NIO、AIO_2021-03-30-10-23-33.png"></p>
+<p>每个线程中包含一个Selector对象，它相当于一个通道管理器，可以实现在一个线程中处理多个通道的目的，减少线程的创建数量。远程连接对应一个channel，数据的读写通过buffer均在同一个channel中完成，并且数据的读写是非阻塞的。通道创建后需要注册在selector中，同时需要为该通道注册感兴趣事件（客户端连接服务端事件、服务端接收客户端连接事件、读事件、写事件），selector线程需要采用轮训的方式调用selector的select函数，直到所有注册通道中有兴趣的事件发生，则返回，否则一直阻塞。而后循环处理所有就绪的感兴趣事件。以上步骤解决BIO的两个瓶颈：</p>
+<ol>
+<li>不必对每个连接分别创建线程。</li>
+<li>数据读写非阻塞。</li>
+</ol>
+<h1 id="AIO"><a href="#AIO" class="headerlink" title="AIO"></a>AIO</h1><p>AIO是异步非阻塞IO，相比NIO更进一步，进程读取数据时只负责发送跟接收指令，数据的准备工作完全由操作系统来处理。</p>
+<ul>
 <li>同步</li>
 </ul>
-<p>发送一个请求，等待返回，再发送下一个请求，同步可以避免出现死锁，脏读的发生。</p>
+<p>线程需要等待IO的操作。</p>
 <ul>
 <li>异步</li>
 </ul>
-<p>发送一个请求，不等待返回，随时可以再发送下一个请求，可以提高效率，保证并发。</p>
+<p>线程不需要等待IO的操作。</p>
 <h1 id="阻塞和非阻塞的区别"><a href="#阻塞和非阻塞的区别" class="headerlink" title="阻塞和非阻塞的区别"></a>阻塞和非阻塞的区别</h1><ul>
 <li>阻塞</li>
 </ul>
-<p>传统的IO流都是阻塞式的。也就是说，当一个线程调用read()或者write()方法时，该线程将被阻塞，直到有一些数据读读取或者被写入，在此期间，该线程不能执行其他任何任务。在完成网络通信进行IO操作时，由于线程会阻塞，所以服务器端必须为每个客户端都提供一个独立的线程进行处理，当服务器端需要处理大量的客户端时，性能急剧下降。</p>
+<p>拷贝数据线程要阻塞在那里。</p>
 <ul>
 <li>非阻塞</li>
 </ul>
-<p>JavaNIO是非阻塞式的。当线程从某通道进行读写数据时，若没有数据可用时，该线程会去执行其他任务。线程通常将非阻塞IO的空闲时间用于在其他通道上执行IO操作，所以单独的线程可以管理多个输入和输出通道。因此NIO可以让服务器端使用一个或有限几个线程来同时处理连接到服务器端的所有客户端。</p>
-<h1 id="BIO"><a href="#BIO" class="headerlink" title="BIO"></a>BIO</h1><p>数据的读取写入必须阻塞在一个线程内等待其完成。</p>
-<p>这里使用那个经典的烧开水例子，这里假设一个烧开水的场景，有一排水壶在烧开水，BIO的工作模式就是， 叫一个线程停留在一个水壶那，直到这个水壶烧开，才去处理下一个水壶。但是实际上线程在等待水壶烧开的时间段什么都没有做。</p>
-<h1 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h1><p>同时支持阻塞与非阻塞模式，但这里我们以其同步非阻塞I/O模式来说明，那么什么叫做同步非阻塞？</p>
-<p>如果还拿烧开水来说，NIO的做法是叫一个线程不断的轮询每个水壶的状态，看看是否有水壶的状态发生了改变，从而进行下一步的操作。</p>
-<h1 id="AIO"><a href="#AIO" class="headerlink" title="AIO"></a>AIO</h1><p>异步非阻塞与同步非阻塞的区别在哪里？异步非阻塞无需一个线程去轮询所有IO操作的状态改变，在相应的状态改变后，系统会通知对应的线程来处理。对应到烧开水中就是，为每个水壶上面装了一个开关，水烧开之后，水壶会自动通知我水烧开了。</p>
-<h1 id="BIO、NIO、AIO适用场景"><a href="#BIO、NIO、AIO适用场景" class="headerlink" title="BIO、NIO、AIO适用场景"></a>BIO、NIO、AIO适用场景</h1><ul>
-<li>BIO方式适用于连接数目比较小且固定的架构，这种方式对服务器资源要求比较高，并发局限于应用中，JDK1.4以前的唯一选择。</li>
-<li>NIO方式适用于连接数目多且连接比较短（轻操作）的架构，比如聊天服务器，并发局限于应用中，编程比较复杂。</li>
-<li>AIO方式使用于连接数目多且连接比较长（重操作）的架构，比如相册服务器，充分调用OS参与并发操作，编程比较复杂，JDK7开始支持。</li>
-</ul>
+<p>拷贝数据的过程线程可以去做其他事。</p>
+<h1 id="面向流和面向缓冲区"><a href="#面向流和面向缓冲区" class="headerlink" title="面向流和面向缓冲区"></a>面向流和面向缓冲区</h1><p>Java NIO和BIO之间的第一个重要区别是BIO是面向流的，其中NIO是面向缓冲区的。</p>
+<p>面向流的Java BIO意味着您可以从流中一次读取一个或多个字节。你对读取的字节做什么取决于你。它们不会缓存在任何地方。此外，您无法在流中的数据中前后移动。如果需要在从流中读取的数据中前后移动，则需要先将其缓存在缓冲区中。</p>
+<p>Java NIO的面向缓冲区的方法略有不同。数据被读入缓冲区，稍后处理该缓冲区。你可以根据需要在缓冲区中前后移动。这使你在处理过程中具有更大的灵活性。但是，你还需要检查缓冲区是否包含完整处理所需的所有数据。并且，你需要确保在将更多数据读入缓冲区时，不要覆盖尚未处理的缓冲区中的数据。</p>
+<h1 id="NIO-三大核心"><a href="#NIO-三大核心" class="headerlink" title="NIO 三大核心"></a>NIO 三大核心</h1><p><img src="/images/JAVA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94BIO%E3%80%81NIO%E3%80%81AIO_2021-03-29-15-41-49.png" alt="JAVA基础——BIO、NIO、AIO_2021-03-29-15-41-49.png"></p>
+<ol>
+<li>每个 Channel 对应一个 Buffer。</li>
+<li>Selector 对应一个线程，一个线程对应多个 Channel。</li>
+<li>该图反应了有三个 Channel 注册到该 Selector。</li>
+<li>程序切换到那个 Channel 是由事件决定的（Event）。</li>
+<li>Selector 会根据不同的事件，在各个通道上切换。</li>
+<li>Buffer 就是一个内存块，底层是有一个数组。</li>
+<li>数据的读取和写入是通过 Buffer，但是需要flip()切换读写模式。而 BIO 是单向的，要么输入流要么输出流。</li>
+</ol>
+<h2 id="Selectors"><a href="#Selectors" class="headerlink" title="Selectors"></a>Selectors</h2><p>Java NIO的选择器允许单个线程监视多个输入通道。你可以使用选择器注册多个通道，然后使用单个线程“选择”具有可用于处理的输入的通道，或者选择准备写入的通道。这种选择器机制使单个线程可以轻松管理多个通道。</p>
+<p>IO多路复用：IO多路复用模型是建立在内核提供的多路分离函数select基础上的，查询每个socket是否有到达事件，如果有就通知，使用select可以避免非阻塞模型中轮询情况</p>
+<h1 id="AIO-1"><a href="#AIO-1" class="headerlink" title="AIO"></a>AIO</h1><p>异步非阻塞I/O模型,线程既没有参与等待过程也没有参与拷贝过程。</p>
  
     </div>
     
@@ -552,24 +924,24 @@
 
   
     <article
-  id="post-网络——一次HTTP请求的完整过程（一）"
+  id="post-网络——DNS解析（一）"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
 >
   
   <div class="article-meta">
-    <a href="/2021/01/22/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94%E4%B8%80%E6%AC%A1HTTP%E8%AF%B7%E6%B1%82%E7%9A%84%E5%AE%8C%E6%95%B4%E8%BF%87%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/" class="article-date">
+    <a href="/2021/01/22/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94DNS%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/" class="article-date">
       <time datetime="2021-01-22T06:44:15.000Z" itemprop="datePublished">2021-01-22</time>
 </a>
 
  
-    <a href="/2021/01/22/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94%E4%B8%80%E6%AC%A1HTTP%E8%AF%B7%E6%B1%82%E7%9A%84%E5%AE%8C%E6%95%B4%E8%BF%87%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/#comments" title="查看评论">
+    <a href="/2021/01/22/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94DNS%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/#comments" title="查看评论">
         <i class="fa fa-comments-o" aria-hidden="true"></i>
         <span class="count-comment"></span>
         
         
-            <span class="disqus-comment-count" data-disqus-identifier="2021/01/22/网络——一次HTTP请求的完整过程（一）/"></span>
+            <span class="disqus-comment-count" data-disqus-identifier="2021/01/22/网络——DNS解析（一）/"></span>
         
     </a>
 
@@ -583,7 +955,7 @@
       
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/22/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94%E4%B8%80%E6%AC%A1HTTP%E8%AF%B7%E6%B1%82%E7%9A%84%E5%AE%8C%E6%95%B4%E8%BF%87%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/">网络——一次HTTP请求的完整过程（一）</a>
+      <a class="article-title" href="/2021/01/22/%E7%BD%91%E7%BB%9C%E2%80%94%E2%80%94DNS%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/">网络——DNS解析（一）</a>
     </h1>
   
  
@@ -614,7 +986,7 @@
 <li>运营商DNS服务器获得权威域名服务器的响应信息后，返回给请求的主机，DNS解析完成。</li>
 </ol>
 <p>DNS主要是通过UDP通信，报文结构主要分为头部Header、查询部分Question、应答部分Answer/Authority/Addition。</p>
-<h1 id="TCP-连接过程"><a href="#TCP-连接过程" class="headerlink" title="TCP 连接过程"></a>TCP 连接过程</h1> 
+ 
     </div>
     
     <div class="article-info article-info-index">
@@ -752,359 +1124,6 @@
         <a href="/2021/01/07/Linux%E2%80%94%E2%80%94%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%EF%BC%88%E5%9B%9B%EF%BC%89/#more">more >></a>
       </p>
       
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-    
-
-  
-    <article
-  id="post-Linux——运维实用（三）"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
->
-  
-  <div class="article-meta">
-    <a href="/2021/01/07/Linux%E2%80%94%E2%80%94%E8%BF%90%E7%BB%B4%E5%AE%9E%E7%94%A8%EF%BC%88%E4%B8%89%EF%BC%89/" class="article-date">
-      <time datetime="2021-01-07T02:15:30.000Z" itemprop="datePublished">2021-01-07</time>
-</a>
-
- 
-    <a href="/2021/01/07/Linux%E2%80%94%E2%80%94%E8%BF%90%E7%BB%B4%E5%AE%9E%E7%94%A8%EF%BC%88%E4%B8%89%EF%BC%89/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2021/01/07/Linux——运维实用（三）/"></span>
-        
-    </a>
-
-  </div>
-  
-  <div class="article-inner">
-    
-    <input type="hidden" class="isFancy" />
-     
-    <header class="article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/07/Linux%E2%80%94%E2%80%94%E8%BF%90%E7%BB%B4%E5%AE%9E%E7%94%A8%EF%BC%88%E4%B8%89%EF%BC%89/">Linux——运维实用（三）</a>
-    </h1>
-  
- 
-    </header>
-     
-    <div class="article-entry" itemprop="articleBody">
-        运维实用操作命令  
-    </div>
-    
-    <div class="article-info article-info-index">
-       
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-    </div>
-
- 
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux-%E8%BF%90%E7%BB%B4%E5%AE%9E%E7%94%A8/" rel="tag">linux 运维实用</a></li></ul>
-    </div>
- 
-      <p class="article-more-link">
-        <a href="/2021/01/07/Linux%E2%80%94%E2%80%94%E8%BF%90%E7%BB%B4%E5%AE%9E%E7%94%A8%EF%BC%88%E4%B8%89%EF%BC%89/#more">more >></a>
-      </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-    
-
-  
-    <article
-  id="post-计算机基础——编码"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
->
-  
-  <div class="article-meta">
-    <a href="/2021/01/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E7%BC%96%E7%A0%81/" class="article-date">
-      <time datetime="2021-01-07T01:10:46.000Z" itemprop="datePublished">2021-01-07</time>
-</a>
-
- 
-    <a href="/2021/01/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E7%BC%96%E7%A0%81/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2021/01/07/计算机基础——编码/"></span>
-        
-    </a>
-
-  </div>
-  
-  <div class="article-inner">
-    
-    <input type="hidden" class="isFancy" />
-     
-    <header class="article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E7%BC%96%E7%A0%81/">计算机基础——编码</a>
-    </h1>
-  
- 
-    </header>
-     
-    <div class="article-entry" itemprop="articleBody">
-        ASCII，Unicode 和 UTF-8  
-    </div>
-    
-    <div class="article-info article-info-index">
-       
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
-    </div>
-
- 
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA-%E7%BC%96%E7%A0%81/" rel="tag">计算机 编码</a></li></ul>
-    </div>
- 
-      <p class="article-more-link">
-        <a href="/2021/01/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E7%BC%96%E7%A0%81/#more">more >></a>
-      </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-    
-
-  
-    <article
-  id="post-Git学习"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
->
-  
-  <div class="article-meta">
-    <a href="/2020/12/01/Git%E5%AD%A6%E4%B9%A0/" class="article-date">
-      <time datetime="2020-12-01T01:43:05.000Z" itemprop="datePublished">2020-12-01</time>
-</a>
-
- 
-    <a href="/2020/12/01/Git%E5%AD%A6%E4%B9%A0/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2020/12/01/Git学习/"></span>
-        
-    </a>
-
-  </div>
-  
-  <div class="article-inner">
-    
-    <input type="hidden" class="isFancy" />
-     
-    <header class="article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/12/01/Git%E5%AD%A6%E4%B9%A0/">Git学习</a>
-    </h1>
-  
- 
-    </header>
-     
-    <div class="article-entry" itemprop="articleBody">
-        <h1 id="与SVN的区别"><a href="#与SVN的区别" class="headerlink" title="与SVN的区别"></a>与SVN的区别</h1><p>git为分布式相对于svn为集中式，git可以很容易的创建分支，克隆文本代码，离线也可现在本地分支提交修改。</p>
-<p>但是git相对于svn要记住很多命令，入门相对复杂。</p>
-<h1 id="四度空间"><a href="#四度空间" class="headerlink" title="四度空间"></a>四度空间</h1><p>在Git仓库目录下的文件改动（增删改操作）共有如下4个空间来记录/存储，Git命令就是用于将文件改动切换到不同的空间来记录。</p>
-<ul>
-<li>Workspace：工作区</li>
-<li>Index / Stage / Cached：暂存区</li>
-<li>Repository：本地仓库</li>
-<li>Remote：远程仓库</li>
-</ul>
-<p><img src="/images/Git%E5%AD%A6%E4%B9%A0_2020-12-01-13-53-26.png" alt="Git学习_2020-12-01-13-53-26.png"></p>
-<h1 id="四种状态"><a href="#四种状态" class="headerlink" title="四种状态"></a>四种状态</h1><p>对应四度空间，处于这四种空间的文本有着4种状态来标识：</p>
-<ul>
-<li>Untracked：新增的文件的状态，未受Git管理，记录在工作区</li>
-<li>Modified：受Git管理过的文件的改动状态（包括改动内容、删除文件），记录在工作区</li>
-<li>Staged：将记录在工作区的文件变动状态通知了Git，记录在暂存区</li>
-<li>Unmodified：受Git管理中的文件状态（没有变动），记录在本地仓库/远程仓库</li>
-</ul>
-<h1 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h1><p>初始化：</p>
-<p>git init </p>
-<p>添加远程仓库： </p>
-<p>git remote add origin “url”</p>
-<p>生成公钥： </p>
-<p>ssh-keygen -t rsa</p>
-<p>cat ~/.ssh/id_rsa.pub 添加到github配置</p>
-<p>查看配置列表： </p>
-<p>git config –local –list</p>
-<p>克隆远程分支： </p>
-<p>git clone “url”</p>
-<p>文件加入暂存区：</p>
-<p>git add </p>
-<p>提交到本地分支：</p>
-<p>git commit -m “注释”</p>
-<p>推送到远程仓库:</p>
-<p>git push -u origin master</p>
-<h1 id="过滤"><a href="#过滤" class="headerlink" title="过滤"></a>过滤</h1><p>touch .gitignore</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">/project/demo.o</span>       <span class="string">#过滤具体文件demo.o</span></span><br><span class="line"><span class="meta">/project/settings/</span>    <span class="string">#过滤整个settings文件夹</span></span><br><span class="line"><span class="meta">*.o</span>                   <span class="string">#过滤所有.o文件</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>以斜杠“/”开头表示目录</li>
-<li>以星号“*”通配多个字符</li>
-<li>以问号“?”通配单个字符</li>
-<li>以方括号“[]”包含单个字符的匹配列表</li>
-<li>以叹号“!”表示不忽略(跟踪)匹配到的文件或目录</li>
-</ul>
-<h1 id="变动"><a href="#变动" class="headerlink" title="变动"></a>变动</h1><p>查看文件改动状态：</p>
-<p>git status</p>
-<p>查看文件具体改动：</p>
-<p>git diff file</p>
-<p>查看暂存区的改动:</p>
-<p>git diff –cached</p>
-<p>查看工作区与本地仓库的改动:</p>
-<p>git diff HEAD file</p>
-<p>查看历史变更:</p>
-<p>git diff commitID1 commitID2</p>
-<p>查看本地分支与远程分支的改动</p>
-<p>git diff origin/master..master</p>
-<h1 id="转移"><a href="#转移" class="headerlink" title="转移"></a>转移</h1><p>添加文件到暂存区：</p>
-<p>git add file</p>
-<p>git add -A /app</p>
-<p>git add *</p>
-<p>将文件退回工作区：</p>
-<p>git rm –cache file</p>
-<p>直接删除:</p>
-<p>git rm -f file</p>
-<p>文件重命名:</p>
-<p>git mv fileold filenew </p>
-<p>文件移动位置：</p>
-<p>git mv [src file] [dir]</p>
-<h1 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h1><p>将暂存区内容提交：</p>
-<p>git commit -m “注释”</p>
-<p>追加提交并修改注释：</p>
-<p>git commit –amend -m “新注释”</p>
-<p>将工作区和暂存区的改动一次提交到本地仓库：</p>
-<p>git commit -a -m “注释”</p>
-<h1 id="补丁"><a href="#补丁" class="headerlink" title="补丁"></a>补丁</h1><p>将本地提交打补丁，可以交由他人继续开发:</p>
-<p>git format-patch -1 commitID</p>
-<p>git format-patch HEAD~3</p>
-<p>应用补丁包：</p>
-<p>git am 补丁包名</p>
-<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><p>标准日志：</p>
-<p>git log</p>
-<p>精简查看：</p>
-<p>git log –pretty=oneline</p>
-<p>完整查看：</p>
-<p>git log -p</p>
-<p>工具查看：</p>
-<p>gitk</p>
-<p>查看本地历史操作：</p>
-<p>git reflog</p>
-<h1 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h1><p>缓存本地改动：</p>
-<p>git stash save -a “add test stash0()”</p>
-<p>查看所有缓存：</p>
-<p>git stash list</p>
-<p>查看缓存细节：</p>
-<p>git stash show -p stash@{1}</p>
-<p>启动某个缓存：</p>
-<p>git stash pop stash@{1}</p>
-<p>丢弃某个缓存：</p>
-<p>git stash drop stash@{1}</p>
-<p>清空缓存：</p>
-<p>git stash clear</p>
-<h1 id="回退"><a href="#回退" class="headerlink" title="回退"></a>回退</h1><p>回退到某个版本，只回退了commit的信息，不会恢复到index file一级：</p>
-<p>git reset –-soft</p>
-<p>彻底回退到某个版本，本地的源码也会变为上一个版本的内容，撤销的commit中所包含的更改被冲掉：</p>
-<p>git reset -–hard</p>
-<p>回退到某个版本，回退了commit的信息及暂存区的回退，工作区不回退</p>
-<p>git reset –mixed</p>
-<h1 id="清理"><a href="#清理" class="headerlink" title="清理"></a>清理</h1><p>撤销不能管理到未加入到git的文件，这时需要git clean配合。</p>
-<p>git reset –hard</p>
-<p>git clean -df</p>
-<p>这样可以做到完全清理。</p>
-<h1 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a>撤销</h1><p>撤销 某次操作，此次操作之前和之后的commit和history都会保留，并且把这次撤销作为一次最新的提交。</p>
-<p>撤销前一次 commit：</p>
-<p>git revert HEAD  </p>
-<p>撤销前前一次 commit：</p>
-<p>git revert HEAD^    </p>
-<p>撤销指定的版本：</p>
-<p>git revert commit</p>
-<h1 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h1><p>查看分支：</p>
-<p>git branch</p>
-<p>创建分支：</p>
-<p>git branch <name></p>
-<p>切换分支：</p>
-<p>git checkout <name>或者git switch <name></p>
-<p>创建+切换分支：</p>
-<p>git checkout -b <name>或者git switch -c <name></p>
-<p>合并某分支到当前分支：</p>
-<p>git merge <name></p>
-<p>删除分支：</p>
-<p>git branch -d <name></p>
-<p>禁用Fast forward：</p>
-<p>git merge –no-ff -m “merge with no-ff” dev</p>
-<p>由远程分支创建本地分支：</p>
-<p>git checkout -b branch-name origin/branch-name</p>
-<p>建立本地分支和远程分支的关联：</p>
-<p>git branch –set-upstream branch-name origin/branch-name</p>
-<h1 id="git-pull-get-fetch"><a href="#git-pull-get-fetch" class="headerlink" title="git pull/get fetch"></a>git pull/get fetch</h1><p>git fetch和git pull都可以将远端仓库更新至本地,不过git pull相当于git fetch + git merge。</p>
-<p>在本地新建一个temp分支，并将远程origin仓库的master分支代码下载到本地temp分支:</p>
-<p>git fetch origin master:tmp </p>
-<p>来比较本地代码与刚刚从远程下载下来的代码的区别:</p>
-<p>git diff tmp </p>
-<p>合并temp分支到本地的master分支:</p>
-<p>git merge tmp</p>
-<p>如果不想保留temp分支,可以用这步删除:</p>
-<p>git branch -d temp</p>
-<h1 id="挑拣"><a href="#挑拣" class="headerlink" title="挑拣"></a>挑拣</h1><p>在当前分支挑其他分支的 commit，把那部分的变动那过来：</p>
-<p>git cherry-pick commit-sha1</p>
-<p>支持一次性拿多个：</p>
-<p>git cherry-pick master<del>4 master</del>2</p>
-<p>支持区间, 区间中间：</p>
-<p>git cherry-pick startGitSha1..endGitSha1</p>
-<ul>
-<li>continue：继续 pick,一般有冲突解决后才需要这样</li>
-<li>skip：跳过这次进入队列下一次行为 </li>
-<li>abort : 完全放弃 pick，恢复 pick 之前的状态</li>
-<li>quit: 未冲突的自动变更，冲突的不要，退出这次 pick</li>
-</ul>
-<h1 id="变基"><a href="#变基" class="headerlink" title="变基"></a>变基</h1><p>整个功能开发完毕的时侯，会有非常多的 commit，用 rebase 可以让我们的commit记录很干净。</p>
-<p>带 -i 可以进入交互模式，效果如下：</p>
-<p>git rebase -i git-sha1|branch(HEAD)</p>
-<p>若是中间毫无冲突，变基则一步到位，否则需要逐步调整</p>
-<p>提交变更后继续变基下一步：</p>
-<p>git rebase –continue </p>
-<p>引起冲突的commits会被丢弃，continue提示没有需要改动的也可以用这个跳过：</p>
-<p>git rebase –skip </p>
-<p>若是变基改残废了，但是走到一半，可以彻底回滚变基之前的状态：</p>
-<p>git rebase –abort</p>
- 
-    </div>
-    
-    <div class="article-info article-info-index">
-       
-  
       <div class="clearfix"></div>
     </div>
     
